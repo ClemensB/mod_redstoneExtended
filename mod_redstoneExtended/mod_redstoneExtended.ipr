@@ -184,7 +184,7 @@
     </group>
   </component>
   <component name="ProjectDictionaryState">
-    <dictionary name="Cle">
+    <dictionary name="mod_redstoneAdvanced">
       <words>
         <w>nand</w>
         <w>redstone</w>
@@ -209,31 +209,31 @@
   <component name="libraryTable">
     <library name="JInput">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/jinput.jar!/" />
+        <root url="jar://$MCP_DIR$/jars/bin/jinput.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="LWJGL">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/lwjgl_util.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/lwjgl.jar!/" />
+        <root url="jar://$MCP_DIR$/jars/bin/lwjgl_util.jar!/" />
+        <root url="jar://$MCP_DIR$/jars/bin/lwjgl.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="MCP">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/../../MCP/bin/minecraft" />
+        <root url="file://$MCP_DIR$/bin/minecraft" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/../../MCP/src/minecraft" />
+        <root url="file://$MCP_DIR$/src/minecraft" />
       </SOURCES>
     </library>
     <library name="Minecraft">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/minecraft.jar!/" />
+        <root url="jar://$MCP_DIR$/jars/bin/minecraft.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
