@@ -204,36 +204,36 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
   </component>
   <component name="libraryTable">
     <library name="JInput">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../MCP/jars/bin/jinput.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/jinput.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="LWJGL">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../MCP/jars/bin/lwjgl_util.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../MCP/jars/bin/lwjgl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/lwjgl_util.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/lwjgl.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="MCP">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/../MCP/bin/minecraft" />
+        <root url="file://$PROJECT_DIR$/../../MCP/bin/minecraft" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/../MCP/src/minecraft" />
+        <root url="file://$PROJECT_DIR$/../../MCP/src/minecraft" />
       </SOURCES>
     </library>
     <library name="Minecraft">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../MCP/jars/bin/minecraft.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../MCP/jars/bin/minecraft.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
