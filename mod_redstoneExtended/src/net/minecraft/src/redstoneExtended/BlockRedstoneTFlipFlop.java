@@ -20,8 +20,8 @@ public class BlockRedstoneTFlipFlop extends BlockRedstoneFlipFlop {
             world.setBlockWithNotify(x, y, z, 0);
         }
 
-        boolean inputToggleBeingPowered = isInputToggleBeingPowered(world, x, y, z);
-        boolean inputClockBeingPowered = isInputClockBeingPowered(world, x, y, z);
+        boolean inputToggleBeingPowered = isInputTopBeingPowered(world, x, y, z);
+        boolean inputClockBeingPowered = isInputLeftBeingPowered(world, x, y, z);
 
         if (inputToggleBeingPowered && (inputClockBeingPowered && !getLastClockState(world, x, y, z)))
             world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
@@ -80,35 +80,5 @@ public class BlockRedstoneTFlipFlop extends BlockRedstoneFlipFlop {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setLastClockStateInMetadata(oldMetadata, lastClockState);
         world.setBlockMetadata(x, y, z, newMetadata);
-    }
-
-    private boolean isInputClockBeingPowered(World world, int x, int y, int z) {
-        switch (getOrientation(world, x, y, z)) {
-            case 0:
-                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
-            case 2:
-                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
-            case 3:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
-            case 1:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
-            default:
-                return false;
-        }
-    }
-
-    private boolean isInputToggleBeingPowered(World world, int x, int y, int z) {
-        switch (getOrientation(world, x, y, z)) {
-            case 0:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
-            case 2:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
-            case 3:
-                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
-            case 1:
-                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
-            default:
-                return false;
-        }
     }
 }

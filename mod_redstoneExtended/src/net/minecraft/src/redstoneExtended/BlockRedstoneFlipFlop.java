@@ -137,4 +137,64 @@ public abstract class BlockRedstoneFlipFlop extends Block {
 
     @Override
     public abstract int getBlockTextureFromSide(int side);
+
+    protected boolean isInputTopBeingPowered(World world, int x, int y, int z) {
+        switch (getOrientation(world, x, y, z)) {
+            case 0:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
+            case 2:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
+            case 3:
+                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
+            case 1:
+                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
+            default:
+                return false;
+        }
+    }
+
+    protected boolean isInputLeftBeingPowered(World world, int x, int y, int z) {
+        switch (getOrientation(world, x, y, z)) {
+            case 0:
+                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
+            case 2:
+                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
+            case 3:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
+            case 1:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
+            default:
+                return false;
+        }
+    }
+
+    protected boolean isInputBottomBeingPowered(World world, int x, int y, int z) {
+        switch (getOrientation(world, x, y, z)) {
+            case 0:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
+            case 2:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
+            case 3:
+                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
+            case 1:
+                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
+            default:
+                return false;
+        }
+    }
+
+    protected boolean isInputRightBeingPowered(World world, int x, int y, int z) {
+        switch (getOrientation(world, x, y, z)) {
+            case 0:
+                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
+            case 2:
+                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
+            case 3:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
+            case 1:
+                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
+            default:
+                return false;
+        }
+    }
 }

@@ -20,8 +20,8 @@ public class BlockRedstoneRSNORLatch extends BlockRedstoneFlipFlop {
             world.setBlockWithNotify(x, y, z, 0);
         }
 
-        boolean inputSBeingPowered = isInputSBeingPowered(world, x, y, z);
-        boolean inputRBeingPowered = isInputRBeingPowered(world, x, y, z);
+        boolean inputSBeingPowered = isInputRightBeingPowered(world, x, y, z);
+        boolean inputRBeingPowered = isInputLeftBeingPowered(world, x, y, z);
 
         if (inputSBeingPowered ^ inputRBeingPowered) {
             boolean active = getState(world, x, y, z);
@@ -62,36 +62,6 @@ public class BlockRedstoneRSNORLatch extends BlockRedstoneFlipFlop {
                 return textureInvOutput;
             default:
                 return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
-        }
-    }
-
-    private boolean isInputRBeingPowered(World world, int x, int y, int z) {
-        switch (getOrientation(world, x, y, z)) {
-            case 0:
-                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
-            case 2:
-                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
-            case 3:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
-            case 1:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
-            default:
-                return false;
-        }
-    }
-
-    private boolean isInputSBeingPowered(World world, int x, int y, int z) {
-        switch (getOrientation(world, x, y, z)) {
-            case 0:
-                return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
-            case 2:
-                return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
-            case 3:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
-            case 1:
-                return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
-            default:
-                return false;
         }
     }
 }
