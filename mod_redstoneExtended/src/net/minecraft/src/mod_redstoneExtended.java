@@ -27,6 +27,7 @@ public class mod_redstoneExtended extends BaseMod {
     public final Block blockRedstoneDFlipFlop;
     public final Block blockRedstoneTFlipFlop;
     public final Block blockRedstoneJKFlipFlop;
+    public final Block blockRedstoneRandom;
     public final Block blockCheat;
 
 
@@ -43,6 +44,7 @@ public class mod_redstoneExtended extends BaseMod {
     public final Item itemRedstoneDFlipFlop;
     public final Item itemRedstoneTFlipFlop;
     public final Item itemRedstoneJKFlipFlop;
+    public final Item itemRedstoneRandom;
 
 
     public final int renderBlockRedstoneLogicGate;
@@ -249,6 +251,17 @@ public class mod_redstoneExtended extends BaseMod {
 
         ModLoader.AddRecipe(new ItemStack(itemRedstoneJKFlipFlop, 1), new Object[] {
                 "#  ", "IRI", "#  ", 'I', Block.torchRedstoneActive, '#', Item.redstone, 'R', itemRedstoneRSNORLatch
+        });
+
+
+        blockRedstoneRandom = (new BlockRedstoneRandom(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRandom");
+        ModLoader.RegisterBlock(blockRedstoneRandom);
+
+        itemRedstoneRandom = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneRandom)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/Random/icon.png")).setItemName("redstoneRandom");
+        ModLoader.AddName(itemRedstoneRandom, "Random Number Generator");
+
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRandom, 1), new Object[] {
+                "#  ", "III", "#  ", 'I', Block.torchRedstoneActive, '#', Item.redstone, 'R', itemRedstoneRSNORLatch
         });
 
 
