@@ -51,9 +51,9 @@ public class MyRenderBlocks {
     public static boolean renderBlockRedstoneFlipFlop(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
-        double rotation = BlockRedstoneRSNORLatch.getOrientation(iBlockAccess, x, y, z) * 90D;
+        double rotation = BlockRedstoneFlipFlop.getOrientation(iBlockAccess, x, y, z) * 90D;
         RenderHelper.renderBlockOverlay(iBlockAccess, block, x, y, z, block.getBlockTextureFromSide(6), 0, 0D, 0D, 1D, 1D, rotation, false, 0D, 0D, 1D, 1D);
-        boolean isActive = BlockRedstoneRSNORLatch.getState(iBlockAccess, x, y, z);
+        boolean isActive = BlockRedstoneFlipFlop.getState(iBlockAccess, x, y, z);
         float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
         RenderHelper.renderBlockOverlay(iBlockAccess, block, x, y, z, block.getBlockTextureFromSide(7), 0, 0D, 0D, 1D, 1D, rotation, redstoneColor[0], redstoneColor[1], redstoneColor[2], true, 0D, 0D, 1D, 1D);
         redstoneColor = isActive ? RenderBlocks.redstoneColors[0] : RenderBlocks.redstoneColors[13];
