@@ -41,10 +41,7 @@ public class BlockRedstoneDFlipFlop extends BlockRedstoneFlipFlop {
     public boolean isPoweringTo(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         boolean state = getState(iBlockAccess, x, y, z);
         int orientation = getOrientation(iBlockAccess, x, y, z);
-        return (state && ((orientation == 0 && direction == 2) || (orientation == 1 && direction == 5) ||
-                (orientation == 2 && direction == 3) || (orientation == 3 && direction == 4))) ||
-                (!state && ((orientation == 0 && direction == 4) || (orientation == 1 && direction == 2) ||
-                        (orientation == 2 && direction == 5) || (orientation == 3 && direction == 3)));
+        return (state && isOutputBottom(direction, orientation) || (!state && isOutputRight(direction, orientation)));
     }
 
     @Override

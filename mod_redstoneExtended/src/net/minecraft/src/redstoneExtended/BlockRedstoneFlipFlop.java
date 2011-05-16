@@ -197,4 +197,19 @@ public abstract class BlockRedstoneFlipFlop extends Block {
                 return false;
         }
     }
+
+    protected boolean isOutputBottom(int direction, int orientation) {
+        return ((orientation == 0 && direction == 2) || (orientation == 1 && direction == 5) ||
+                (orientation == 2 && direction == 3) || (orientation == 3 && direction == 4));
+    }
+
+    protected boolean isOutputTop(int direction, int orientation) {
+        return ((orientation == 0 && direction == 3) || (orientation == 1 && direction == 4) ||
+                (orientation == 2 && direction == 2) || (orientation == 3 && direction == 5));
+    }
+
+    protected boolean isOutputRight(int direction, int orientation) {
+        return ((orientation == 0 && direction == 4) || (orientation == 1 && direction == 2) ||
+                (orientation == 2 && direction == 5) || (orientation == 3 && direction == 3));
+    }
 }
