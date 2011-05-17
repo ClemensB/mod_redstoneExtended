@@ -62,15 +62,24 @@ public class mod_redstoneExtended extends BaseMod {
         if (configDir.exists() || configDir.mkdir()) {
             File configFile = new File(configDir, "config.properties");
 
+            if (!configFile.exists()) {
+                try {
+                    if (!configFile.createNewFile())
+                        log("Config file has not been created");
+                } catch (IOException e) {
+                    log("Couldn't create config file: " + e.getMessage());
+                }
+            }
+
             Properties config = new Properties();
 
             try {
                 config.load(new FileInputStream(configFile));
             } catch (FileNotFoundException e) {
-                log("[redstoneExtended] Couldn't load config file: Config file not found");
+                log("Couldn't load config file: Config file not found");
                 return getFirstFreeBlock();
             } catch (IOException e) {
-                log("[redstoneExtended] Couldn't load config file: " + e.getMessage());
+                log("Couldn't load config file: " + e.getMessage());
                 return getFirstFreeBlock();
             }
 
