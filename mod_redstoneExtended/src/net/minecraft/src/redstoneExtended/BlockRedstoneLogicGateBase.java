@@ -15,7 +15,7 @@ public abstract class BlockRedstoneLogicGateBase extends Block {
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 
         if ((operatingModeCount() < 1) || (operatingModeCount() > 4))
-            System.err.println("[ERROR] [RedstoneExtended] Operating mode count must be between 1 and 4.");
+            mod_redstoneExtended.getInstance().log("[ERROR] in " + this.getClass().getName() + ": operatingModeCount must be between 1 and 4!");
     }
 
 

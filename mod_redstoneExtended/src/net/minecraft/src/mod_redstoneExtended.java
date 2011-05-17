@@ -1,6 +1,10 @@
 package net.minecraft.src;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.redstoneExtended.*;
+
+import java.io.*;
+import java.util.Properties;
 
 public class mod_redstoneExtended extends BaseMod {
     private static mod_redstoneExtended instance;
@@ -53,151 +57,230 @@ public class mod_redstoneExtended extends BaseMod {
     public final int renderBlockRedstoneFlipFlop;
     public final int renderBlockRedstoneLightBulb;
 
+    private int getBlockOrItemId(String name, boolean isItem) {
+        File configDir = new File(Minecraft.getMinecraftDir(), "/mods/mod_redstoneExtended/");
+        if (configDir.exists() || configDir.mkdir()) {
+            File configFile = new File(configDir, "config.properties");
+
+            Properties config = new Properties();
+
+            try {
+                config.load(new FileInputStream(configFile));
+            } catch (FileNotFoundException e) {
+                log("[redstoneExtended] Couldn't load config file: Config file not found");
+                return getFirstFreeBlock();
+            } catch (IOException e) {
+                log("[redstoneExtended] Couldn't load config file: " + e.getMessage());
+                return getFirstFreeBlock();
+            }
+
+            String propertyName = "Id." + (isItem ? "item" : "block") + "." + name;
+            String stringId = config.getProperty(propertyName);
+            int Id;
+
+            if (stringId == null) {
+                Id = isItem ? ModLoader.getUniqueEntityId() : getFirstFreeBlock();
+                stringId = Integer.toString(Id);
+                config.setProperty(propertyName, stringId);
+                log("Assigned Id " + stringId + " to " + name);
+
+                try {
+                    config.store(new FileOutputStream(configFile), null);
+                } catch (FileNotFoundException e) {
+                    log("Couldn't save config file: Config file not found");
+                } catch (IOException e) {
+                    log("Couldn't save config file: " + e.getMessage());
+                }
+            } else {
+                Id = Integer.parseInt(stringId);
+
+                if (!isItem && Block.blocksList[Id] != null) {
+                    int altId = getFirstFreeBlock();
+                    String stringAltId = Integer.toString(altId);
+                    config.setProperty(propertyName, stringAltId);
+                    log("Conflict detected: Id " + stringId + " already in use. Now using Id " + stringAltId + " for " + name);
+                    Id = altId;
+
+                    try {
+                        config.store(new FileOutputStream(configFile), null);
+                    } catch (FileNotFoundException e) {
+                        log("Couldn't save config file: Config file not found");
+                    } catch (IOException e) {
+                        log("Couldn't save config file: " + e.getMessage());
+                    }
+                }
+
+                if (isItem)
+                    ModLoader.getUniqueEntityId();
+
+                log("Using Id " + stringId + " for " + name);
+            }
+
+            return Id;
+        }
+
+        log("Couldn't create/access config directory, using dynamic Id");
+        return getFirstFreeBlock();
+    }
+
+    private int getFirstFreeBlock() {
+        for (int i = Block.blocksList.length - 1; i >= 0; --i) {
+            if (Block.blocksList[i] == null)
+                return i;
+        }
+
+        return -1;
+    }
+
+    public void log(String message) {
+        System.out.println("[redstoneExtended] " + message);
+    }
+
     public mod_redstoneExtended() {
         instance = this;
 
         renderBlockRedstoneLogicGate = ModLoader.getUniqueBlockModelID(this, false);
 
-        blockRedstoneLogicGateANDIdle = (new BlockRedstoneLogicGateAND(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateAND");
+        blockRedstoneLogicGateANDIdle = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateANDIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateANDIdle);
 
-        blockRedstoneLogicGateANDActive = (new BlockRedstoneLogicGateAND(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateAND");
+        blockRedstoneLogicGateANDActive = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateANDActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateANDActive);
 
-        itemRedstoneLogicGateAND = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/AND/icon.png")).setItemName("logicGateAND");
+        itemRedstoneLogicGateAND = (new ItemReed(getBlockOrItemId("logicGateAND", true), blockRedstoneLogicGateANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/AND/icon.png")).setItemName("logicGateAND");
         ModLoader.AddName(itemRedstoneLogicGateAND, "AND Gate");
 
 
-        blockRedstoneLogicGateNANDIdle = (new BlockRedstoneLogicGateNAND(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNAND");
+        blockRedstoneLogicGateNANDIdle = (new BlockRedstoneLogicGateNAND(getBlockOrItemId("logicGateNANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNANDIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNANDIdle);
 
-        blockRedstoneLogicGateNANDActive = (new BlockRedstoneLogicGateNAND(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNAND");
+        blockRedstoneLogicGateNANDActive = (new BlockRedstoneLogicGateNAND(getBlockOrItemId("logicGateNANDActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNANDActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNANDActive);
 
-        itemRedstoneLogicGateNAND = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateNANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NAND/icon.png")).setItemName("logicGateNAND");
+        itemRedstoneLogicGateNAND = (new ItemReed(getBlockOrItemId("logicGateNAND", true), blockRedstoneLogicGateNANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NAND/icon.png")).setItemName("logicGateNAND");
         ModLoader.AddName(itemRedstoneLogicGateNAND, "NAND Gate");
 
 
-        blockRedstoneLogicGateORIdle = (new BlockRedstoneLogicGateOR(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateOR");
+        blockRedstoneLogicGateORIdle = (new BlockRedstoneLogicGateOR(getBlockOrItemId("logicGateORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateORIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateORIdle);
 
-        blockRedstoneLogicGateORActive = (new BlockRedstoneLogicGateOR(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateOR");
+        blockRedstoneLogicGateORActive = (new BlockRedstoneLogicGateOR(getBlockOrItemId("logicGateORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateORActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateORActive);
 
-        itemRedstoneLogicGateOR = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/OR/icon.png")).setItemName("logicGateOR");
+        itemRedstoneLogicGateOR = (new ItemReed(getBlockOrItemId("logicGateOR", true), blockRedstoneLogicGateORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/OR/icon.png")).setItemName("logicGateOR");
         ModLoader.AddName(itemRedstoneLogicGateOR, "OR Gate");
 
 
-        blockRedstoneLogicGateNORIdle = (new BlockRedstoneLogicGateNOR(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOR");
+        blockRedstoneLogicGateNORIdle = (new BlockRedstoneLogicGateNOR(getBlockOrItemId("logicGateNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNORIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNORIdle);
 
-        blockRedstoneLogicGateNORActive = (new BlockRedstoneLogicGateNOR(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOR");
+        blockRedstoneLogicGateNORActive = (new BlockRedstoneLogicGateNOR(getBlockOrItemId("logicGateNORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNORActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNORActive);
 
-        itemRedstoneLogicGateNOR = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOR/icon.png")).setItemName("logicGateNOR");
+        itemRedstoneLogicGateNOR = (new ItemReed(getBlockOrItemId("logicGateNOR", true), blockRedstoneLogicGateNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOR/icon.png")).setItemName("logicGateNOR");
         ModLoader.AddName(itemRedstoneLogicGateNOR, "NOR Gate");
 
 
-        blockRedstoneLogicGateXORIdle = (new BlockRedstoneLogicGateXOR(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXOR");
+        blockRedstoneLogicGateXORIdle = (new BlockRedstoneLogicGateXOR(getBlockOrItemId("logicGateXORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXORIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateXORIdle);
 
-        blockRedstoneLogicGateXORActive = (new BlockRedstoneLogicGateXOR(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXOR");
+        blockRedstoneLogicGateXORActive = (new BlockRedstoneLogicGateXOR(getBlockOrItemId("logicGateXORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXORActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateXORActive);
 
-        itemRedstoneLogicGateXOR = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateXORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XOR/icon.png")).setItemName("logicGateXOR");
+        itemRedstoneLogicGateXOR = (new ItemReed(getBlockOrItemId("logicGateXOR", true), blockRedstoneLogicGateXORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XOR/icon.png")).setItemName("logicGateXOR");
         ModLoader.AddName(itemRedstoneLogicGateXOR, "XOR Gate");
 
 
-        blockRedstoneLogicGateXNORIdle = (new BlockRedstoneLogicGateXNOR(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNOR");
+        blockRedstoneLogicGateXNORIdle = (new BlockRedstoneLogicGateXNOR(getBlockOrItemId("logicGateXNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNORIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateXNORIdle);
 
-        blockRedstoneLogicGateXNORActive = (new BlockRedstoneLogicGateXNOR(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNOR");
+        blockRedstoneLogicGateXNORActive = (new BlockRedstoneLogicGateXNOR(getBlockOrItemId("logicGateXNORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNORActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateXNORActive);
 
-        itemRedstoneLogicGateXNOR = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateXNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XNOR/icon.png")).setItemName("logicGateXNOR");
+        itemRedstoneLogicGateXNOR = (new ItemReed(getBlockOrItemId("logicGateXNOR", true), blockRedstoneLogicGateXNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XNOR/icon.png")).setItemName("logicGateXNOR");
         ModLoader.AddName(itemRedstoneLogicGateXNOR, "XNOR Gate");
 
 
-        blockRedstoneLogicGateNOTIdle = (new BlockRedstoneLogicGateNOT(getFirstFreeBlock(), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOT");
+        blockRedstoneLogicGateNOTIdle = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNOTIdle);
 
-        blockRedstoneLogicGateNOTActive = (new BlockRedstoneLogicGateNOT(getFirstFreeBlock(), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOT");
+        blockRedstoneLogicGateNOTActive = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTActive");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNOTActive);
 
-        itemRedstoneLogicGateNOT = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLogicGateNOTIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOT/icon.png")).setItemName("logicGateNOT");
+        itemRedstoneLogicGateNOT = (new ItemReed(getBlockOrItemId("logicGateNOT", true), blockRedstoneLogicGateNOTIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOT/icon.png")).setItemName("logicGateNOT");
         ModLoader.AddName(itemRedstoneLogicGateNOT, "NOT Gate");
 
 
-        blockRedstoneClock = (new BlockRedstoneClock(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneClock");
+        blockRedstoneClock = (new BlockRedstoneClock(getBlockOrItemId("redstoneClock", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneClock");
         ModLoader.RegisterBlock(blockRedstoneClock);
 
         ModLoader.RegisterTileEntity(TileEntityRedstoneClock.class, "RedstoneClock");
 
-        itemRedstoneClock = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneClock)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/clock/icon.png")).setItemName("redstoneClock");
+        itemRedstoneClock = (new ItemReed(getBlockOrItemId("redstoneClock", true), blockRedstoneClock)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/clock/icon.png")).setItemName("redstoneClock");
         ModLoader.AddName(itemRedstoneClock, "Redstone Clock");
 
         renderBlockRedstoneClock = ModLoader.getUniqueBlockModelID(this, false);
 
 
-        blockRedstoneLightSensor = (new BlockRedstoneLightSensor(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneLightSensor");
+        blockRedstoneLightSensor = (new BlockRedstoneLightSensor(getBlockOrItemId("redstoneLightSensor", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneLightSensor");
         ModLoader.RegisterBlock(blockRedstoneLightSensor);
 
         ModLoader.RegisterTileEntity(TileEntityLightSensor.class, "RedstoneLightSensor");
 
-        itemRedstoneLightSensor = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneLightSensor)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/lightSensor/icon.png")).setItemName("redstoneLightSensor");
+        itemRedstoneLightSensor = (new ItemReed(getBlockOrItemId("redstoneLightSensor", true), blockRedstoneLightSensor)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/lightSensor/icon.png")).setItemName("redstoneLightSensor");
         ModLoader.AddName(itemRedstoneLightSensor, "Light Sensor");
 
         renderBlockRedstoneLightSensor = ModLoader.getUniqueBlockModelID(this, false);
 
 
-        blockRedstoneRSNORLatch = (new BlockRedstoneRSNORLatch(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRSNORLatch");
+        blockRedstoneRSNORLatch = (new BlockRedstoneRSNORLatch(getBlockOrItemId("redstoneRSNORLatch", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRSNORLatch");
         ModLoader.RegisterBlock(blockRedstoneRSNORLatch);
 
-        itemRedstoneRSNORLatch = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneRSNORLatch)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/RSNORLatch/icon.png")).setItemName("redstoneRSNORLatch");
+        itemRedstoneRSNORLatch = (new ItemReed(getBlockOrItemId("redstoneRSNORLatch", true), blockRedstoneRSNORLatch)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/RSNORLatch/icon.png")).setItemName("redstoneRSNORLatch");
         ModLoader.AddName(itemRedstoneRSNORLatch, "RS NOR Latch");
 
         renderBlockRedstoneFlipFlop = ModLoader.getUniqueBlockModelID(this, false);
 
 
-        blockRedstoneLightBulbOn = (new BlockRedstoneLightBulb(getFirstFreeBlock(), true)).setHardness(0.0F).setLightValue(0.9375F).setStepSound(Block.soundWoodFootstep).setBlockName("lightBulb");
+        blockRedstoneLightBulbOn = (new BlockRedstoneLightBulb(getBlockOrItemId("lightBulbOn", false), true)).setHardness(0.0F).setLightValue(0.9375F).setStepSound(Block.soundWoodFootstep).setBlockName("lightBulbOn");
         ModLoader.RegisterBlock(blockRedstoneLightBulbOn);
 
-        blockRedstoneLightBulbOff = (new BlockRedstoneLightBulb(getFirstFreeBlock(), false)).setHardness(0.0F).setLightValue(0.0F).setStepSound(Block.soundWoodFootstep).setBlockName("lightBulb");
+        blockRedstoneLightBulbOff = (new BlockRedstoneLightBulb(getBlockOrItemId("lightBulbOff", false), false)).setHardness(0.0F).setLightValue(0.0F).setStepSound(Block.soundWoodFootstep).setBlockName("lightBulbOff");
         ModLoader.AddName(blockRedstoneLightBulbOff, "Light Bulb");
         ModLoader.RegisterBlock(blockRedstoneLightBulbOff);
 
         renderBlockRedstoneLightBulb = ModLoader.getUniqueBlockModelID(this, false);
 
 
-        blockRedstoneDFlipFlop = (new BlockRedstoneDFlipFlop(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneDFlipFlop");
+        blockRedstoneDFlipFlop = (new BlockRedstoneDFlipFlop(getBlockOrItemId("redstoneDFlipFlop", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneDFlipFlop");
         ModLoader.RegisterBlock(blockRedstoneDFlipFlop);
 
-        itemRedstoneDFlipFlop = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneDFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/DFlipFlop/icon.png")).setItemName("redstoneDFlipFlop");
+        itemRedstoneDFlipFlop = (new ItemReed(getBlockOrItemId("redstoneDFlipFlop", true), blockRedstoneDFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/DFlipFlop/icon.png")).setItemName("redstoneDFlipFlop");
         ModLoader.AddName(itemRedstoneDFlipFlop, "D flip-flop");
 
 
-        blockRedstoneTFlipFlop = (new BlockRedstoneTFlipFlop(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneTFlipFlop");
+        blockRedstoneTFlipFlop = (new BlockRedstoneTFlipFlop(getBlockOrItemId("redstoneTFlipFlop", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneTFlipFlop");
         ModLoader.RegisterBlock(blockRedstoneTFlipFlop);
 
-        itemRedstoneTFlipFlop = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneTFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/TFlipFlop/icon.png")).setItemName("redstoneTFlipFlop");
+        itemRedstoneTFlipFlop = (new ItemReed(getBlockOrItemId("redstoneTFlipFlop", true), blockRedstoneTFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/TFlipFlop/icon.png")).setItemName("redstoneTFlipFlop");
         ModLoader.AddName(itemRedstoneTFlipFlop, "T flip-flop");
 
 
-        blockRedstoneJKFlipFlop = (new BlockRedstoneJKFlipFlop(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneJKFlipFlop");
+        blockRedstoneJKFlipFlop = (new BlockRedstoneJKFlipFlop(getBlockOrItemId("redstoneJKFlipFlop", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneJKFlipFlop");
         ModLoader.RegisterBlock(blockRedstoneJKFlipFlop);
 
-        itemRedstoneJKFlipFlop = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneJKFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/JKFlipFlop/icon.png")).setItemName("redstoneJKFlipFlop");
+        itemRedstoneJKFlipFlop = (new ItemReed(getBlockOrItemId("redstoneJKFlipFlop", true), blockRedstoneJKFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/JKFlipFlop/icon.png")).setItemName("redstoneJKFlipFlop");
         ModLoader.AddName(itemRedstoneJKFlipFlop, "JK flip-flop");
 
 
-        blockRedstoneRandom = (new BlockRedstoneRandom(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRandom");
+        blockRedstoneRandom = (new BlockRedstoneRandom(getBlockOrItemId("redstoneRandom", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRandom");
         ModLoader.RegisterBlock(blockRedstoneRandom);
 
-        itemRedstoneRandom = (new ItemReed(ModLoader.getUniqueEntityId(), blockRedstoneRandom)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/Random/icon.png")).setItemName("redstoneRandom");
+        itemRedstoneRandom = (new ItemReed(getBlockOrItemId("redstoneRandom", true), blockRedstoneRandom)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/Random/icon.png")).setItemName("redstoneRandom");
         ModLoader.AddName(itemRedstoneRandom, "Random Number Generator");
 
 
-        blockCheat = (new BlockCheat(getFirstFreeBlock())).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
+        blockCheat = (new BlockCheat(getBlockOrItemId("cheatBlock", false))).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
         ModLoader.AddName(blockCheat, "Cheat Block");
         ModLoader.RegisterBlock(blockCheat);
 
@@ -214,56 +297,56 @@ public class mod_redstoneExtended extends BaseMod {
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateAND
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateOR, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateOR, 1), new Object[]{
                 " I ", "_O_", " _ ", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNOR, 1), new Object[] {
+        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNOR, 1), new Object[]{
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateOR
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateXOR, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateXOR, 1), new Object[]{
                 "O N", "_A_", " _ ", '_', Item.redstone, 'O', itemRedstoneLogicGateOR, 'N', itemRedstoneLogicGateNAND, 'A', itemRedstoneLogicGateAND
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateXNOR, 1), new Object[] {
+        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateXNOR, 1), new Object[]{
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateXOR
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[]{
                 "_OI", "I", "O", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[]{
                 " _ ", "_C_", " _ ", '_', Item.redstone, 'C', Item.pocketSundial
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[]{
                 "###", "_X_", "OOO", '_', Item.redstone, '#', Block.glass, 'X', new ItemStack(Item.dyePowder, 1, 4), 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
                 "__O", "I I", "O__", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
                 "_IO", "_ _", "OI_", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
                 "O__", "I I", "__O", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
                 "OI_", "_ _", "_IO", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(blockRedstoneLightBulbOff, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLightBulbOff, 1), new Object[]{
                 " # ", "#_#", " / ", '#', Block.glass, '_', Item.redstone, '/', Item.stick
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneDFlipFlop, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneDFlipFlop, 1), new Object[]{
                 " L ", "_R_", '_', Item.redstone, 'L', Block.lever, 'R', itemRedstoneRSNORLatch
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneTFlipFlop, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneTFlipFlop, 1), new Object[]{
                 " B ", "_R_", '_', Item.redstone, 'B', Block.button, 'R', itemRedstoneRSNORLatch
         });
 
@@ -271,7 +354,7 @@ public class mod_redstoneExtended extends BaseMod {
                 itemRedstoneTFlipFlop, itemRedstoneRSNORLatch
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRandom, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRandom, 1), new Object[]{
                 " I ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 
@@ -280,15 +363,6 @@ public class mod_redstoneExtended extends BaseMod {
                     "#", '#', Block.dirt
             });
         }
-    }
-
-    private int getFirstFreeBlock() {
-        for (int i = Block.blocksList.length - 1; i >= 0; --i) {
-            if (Block.blocksList[i] == null)
-                return i;
-        }
-
-        return -1;
     }
 
     @Override
