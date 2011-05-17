@@ -34,7 +34,7 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
         boolean state = getState(world, x, y, z);
 
         if ((new Random()).nextBoolean() != state)
-            setState(world, x, y, z, !state);
+            world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
 
         return true;
     }

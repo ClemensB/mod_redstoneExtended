@@ -100,7 +100,7 @@ public abstract class BlockRedstoneFlipFlop extends Block {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer activator) {
-        setState(world, x, y, z, !getState(world, x, y, z));
+        world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
 
         return true;
     }
