@@ -44,7 +44,7 @@ public abstract class BlockRedstoneLogicGateBase extends Block {
         return ((metadata & 0xC) | (orientation & 0x3));
     }
 
-    public static int setOperatingModeInMetadata(int metadata, int operatingMode) {
+    private static int setOperatingModeInMetadata(int metadata, int operatingMode) {
         return ((metadata & 0x3) | ((operatingMode << 2) & 0xC));
     }
 

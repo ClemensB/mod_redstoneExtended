@@ -63,7 +63,7 @@ public class BlockRedstoneTFlipFlop extends BlockRedstoneFlipFlop {
         return ((metadata & 0xB) | (((lastClockState ? 1 : 0) << 2) & 0x4));
     }
 
-    public static boolean getLastClockState(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static boolean getLastClockState(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getLastClockStateFromMetadata(metadata);
     }
