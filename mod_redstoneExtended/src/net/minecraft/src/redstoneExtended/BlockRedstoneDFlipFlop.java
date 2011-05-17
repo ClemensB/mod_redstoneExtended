@@ -28,11 +28,6 @@ public class BlockRedstoneDFlipFlop extends BlockRedstoneFlipFlop {
     }
 
     @Override
-    public void updateTick(World world, int x, int y, int z, Random random) {
-        setState(world, x, y, z, !getState(world, x, y, z));
-    }
-
-    @Override
     public int idDropped(int i, Random random) {
         return mod_redstoneExtended.getInstance().itemRedstoneDFlipFlop.shiftedIndex;
     }

@@ -30,11 +30,6 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
     }
 
     @Override
-    public void updateTick(World world, int x, int y, int z, Random random) {
-        setState(world, x, y, z, !getState(world, x, y, z));
-    }
-
-    @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer activator) {
         boolean state = getState(world, x, y, z);
 

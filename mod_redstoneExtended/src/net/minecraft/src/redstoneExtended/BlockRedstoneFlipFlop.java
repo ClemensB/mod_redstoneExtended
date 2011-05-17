@@ -94,7 +94,9 @@ public abstract class BlockRedstoneFlipFlop extends Block {
     }
 
     @Override
-    public abstract void updateTick(World world, int x, int y, int z, Random random);
+    public void updateTick(World world, int x, int y, int z, Random random) {
+        setState(world, x, y, z, !getState(world, x, y, z));
+    }
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer activator) {
