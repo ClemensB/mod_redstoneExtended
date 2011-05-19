@@ -89,7 +89,7 @@ public class mod_redstoneExtended extends BaseMod {
             }
 
             if (reservedIds == null) {
-                log("Initializing reserved Id list");
+                logDebug("Initializing reserved Id list");
                 reservedIds = new LinkedList<Integer>();
                 Pattern pattern = Pattern.compile("^Id\\.(item|block)\\.[a-zA-Z0-9]+$");
                 for (String propertyName : config.stringPropertyNames()) {
@@ -110,7 +110,7 @@ public class mod_redstoneExtended extends BaseMod {
                 Id = isItem ? getFirstFreeItem() : getFirstFreeBlock();
                 stringId = Integer.toString(Id);
                 config.setProperty(propertyName, stringId);
-                log("Assigned Id " + stringId + " to " + name);
+                logDebug("Assigned Id " + stringId + " to " + name);
 
                 try {
                     config.store(new FileOutputStream(configFile), null);
@@ -138,7 +138,7 @@ public class mod_redstoneExtended extends BaseMod {
                     }
                 }
 
-                log("Using Id " + stringId + " for " + name);
+                logDebug("Using Id " + stringId + " for " + name);
             }
 
             return Id;
@@ -165,8 +165,17 @@ public class mod_redstoneExtended extends BaseMod {
         return id;
     }
 
+    boolean isDebug() {
+        return System.getenv().containsKey("mcDebug");
+    }
+
     public void log(String message) {
         System.out.println("[redstoneExtended] " + message);
+    }
+
+    public void logDebug(String message) {
+        if (isDebug())
+            System.out.println("[redstoneExtended][Debug] " + message);
     }
 
     public mod_redstoneExtended() {
@@ -391,7 +400,7 @@ public class mod_redstoneExtended extends BaseMod {
                 " I ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 
-        if (System.getenv().containsKey("mcDebug")) {
+        if (isDebug()) {
             ModLoader.AddRecipe(new ItemStack(blockCheat, 1), new Object[]{
                     "#", '#', Block.dirt
             });
