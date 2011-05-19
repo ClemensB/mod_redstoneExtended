@@ -4,7 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.redstoneExtended.*;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class mod_redstoneExtended extends BaseMod {
     private static mod_redstoneExtended instance;
@@ -57,6 +60,8 @@ public class mod_redstoneExtended extends BaseMod {
     public final int renderBlockRedstoneFlipFlop;
     public final int renderBlockRedstoneLightBulb;
 
+    private LinkedList<Integer> reservedIds;
+
     private int getBlockOrItemId(String name, boolean isItem) {
         File configDir = new File(Minecraft.getMinecraftDir(), "/mods/mod_redstoneExtended/");
         if (configDir.exists() || configDir.mkdir()) {
@@ -83,12 +88,26 @@ public class mod_redstoneExtended extends BaseMod {
                 return getFirstFreeBlock();
             }
 
+            if (reservedIds == null) {
+                log("Initializing reserved Id list");
+                reservedIds = new LinkedList<Integer>();
+                Pattern pattern = Pattern.compile("^Id\\.(item|block)\\.[a-zA-Z0-9]+$");
+                for (String propertyName : config.stringPropertyNames()) {
+                    Matcher matcher = pattern.matcher(propertyName);
+                    if (matcher.matches()) {
+                        String stringReservedId = config.getProperty(propertyName);
+                        int reservedId = Integer.parseInt(stringReservedId);
+                        reservedIds.add(reservedId);
+                    }
+                }
+            }
+
             String propertyName = "Id." + (isItem ? "item" : "block") + "." + name;
             String stringId = config.getProperty(propertyName);
             int Id;
 
             if (stringId == null) {
-                Id = isItem ? ModLoader.getUniqueEntityId() : getFirstFreeBlock();
+                Id = isItem ? getFirstFreeItem() : getFirstFreeBlock();
                 stringId = Integer.toString(Id);
                 config.setProperty(propertyName, stringId);
                 log("Assigned Id " + stringId + " to " + name);
@@ -119,9 +138,6 @@ public class mod_redstoneExtended extends BaseMod {
                     }
                 }
 
-                if (isItem)
-                    ModLoader.getUniqueEntityId();
-
                 log("Using Id " + stringId + " for " + name);
             }
 
@@ -134,11 +150,19 @@ public class mod_redstoneExtended extends BaseMod {
 
     private int getFirstFreeBlock() {
         for (int i = Block.blocksList.length - 1; i >= 0; --i) {
-            if (Block.blocksList[i] == null)
+            if ((Block.blocksList[i] == null) && !reservedIds.contains(i))
                 return i;
         }
 
         return -1;
+    }
+
+    private int getFirstFreeItem() {
+        int id = ModLoader.getUniqueEntityId();
+        while (reservedIds.contains(id)) {
+            id = ModLoader.getUniqueEntityId();
+        }
+        return id;
     }
 
     public void log(String message) {
