@@ -90,32 +90,25 @@ public class BlockRedstoneHardenedTorch extends BlockTorch {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int direction) {
-        if(dropTorchIfCantStay(world, x, y, z))
-        {
+        if (dropTorchIfCantStay(world, x, y, z)) {
             int orientation = getOrientation(world, x, y, z);
             boolean toBeRemoved = false;
-            if(!world.isBlockOpaqueCube(x - 1, y, z) && orientation == 1)
-            {
+            if (!world.isBlockOpaqueCube(x - 1, y, z) && orientation == 1) {
                 toBeRemoved = true;
             }
-            if(!world.isBlockOpaqueCube(x + 1, y, z) && orientation == 2)
-            {
+            if (!world.isBlockOpaqueCube(x + 1, y, z) && orientation == 2) {
                 toBeRemoved = true;
             }
-            if(!world.isBlockOpaqueCube(x, y, z - 1) && orientation == 3)
-            {
+            if (!world.isBlockOpaqueCube(x, y, z - 1) && orientation == 3) {
                 toBeRemoved = true;
             }
-            if(!world.isBlockOpaqueCube(x, y, z + 1) && orientation == 4)
-            {
+            if (!world.isBlockOpaqueCube(x, y, z + 1) && orientation == 4) {
                 toBeRemoved = true;
             }
-            if(!world.isBlockOpaqueCube(x, y - 1, z) && orientation == 5)
-            {
+            if (!world.isBlockOpaqueCube(x, y - 1, z) && orientation == 5) {
                 toBeRemoved = true;
             }
-            if(toBeRemoved)
-            {
+            if (toBeRemoved) {
                 dropBlockAsItem(world, x, y, z, getType(world, x, y, z) ? 1 : 0);
                 world.setBlockWithNotify(x, y, z, 0);
             }
@@ -134,14 +127,12 @@ public class BlockRedstoneHardenedTorch extends BlockTorch {
     }
 
     @Override
-    protected int damageDropped(int i)
-    {
+    protected int damageDropped(int i) {
         return ((i & 0x8) >> 3);
     }
 
     @Override
-    public int getRenderType()
-    {
+    public int getRenderType() {
         return mod_redstoneExtended.getInstance().renderBlockTorchExtended;
     }
 
@@ -191,27 +182,18 @@ public class BlockRedstoneHardenedTorch extends BlockTorch {
     }
 
     @Override
-    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3D vec3d, Vec3D vec3d1)
-    {
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3D vec3d, Vec3D vec3d1) {
         int orientation = getOrientation(world, x, y, z);
         float f = 0.15F;
-        if(orientation == 1)
-        {
+        if (orientation == 1) {
             setBlockBounds(0.0F, 0.2F, 0.5F - f, f * 2.0F, 0.8F, 0.5F + f);
-        } else
-        if(orientation == 2)
-        {
+        } else if (orientation == 2) {
             setBlockBounds(1.0F - f * 2.0F, 0.2F, 0.5F - f, 1.0F, 0.8F, 0.5F + f);
-        } else
-        if(orientation == 3)
-        {
+        } else if (orientation == 3) {
             setBlockBounds(0.5F - f, 0.2F, 0.0F, 0.5F + f, 0.8F, f * 2.0F);
-        } else
-        if(orientation == 4)
-        {
+        } else if (orientation == 4) {
             setBlockBounds(0.5F - f, 0.2F, 1.0F - f * 2.0F, 0.5F + f, 0.8F, 1.0F);
-        } else
-        {
+        } else {
             float f1 = 0.1F;
             setBlockBounds(0.5F - f1, 0.0F, 0.5F - f1, 0.5F + f1, 0.6F, 0.5F + f1);
         }
