@@ -45,7 +45,7 @@ public class BlockRedstoneLightBulb extends Block {
 
     @Override
     public int getRenderType() {
-        return mod_redstoneExtended.getInstance().renderBlockRedstoneLightBulb;
+        return mod_redstoneExtended.getInstance().renderBlockTorchExtended;
     }
 
     @Override

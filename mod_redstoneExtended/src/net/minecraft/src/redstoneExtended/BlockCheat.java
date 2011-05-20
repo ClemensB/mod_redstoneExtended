@@ -30,6 +30,7 @@ public class BlockCheat extends Block {
         shop.setInventorySlotContents(28, new ItemStack(Item.shovelDiamond, -1));
         shop.setInventorySlotContents(29, new ItemStack(Item.swordDiamond, -1));
         shop.setInventorySlotContents(36, new ItemStack(Item.dyePowder, -1, 4));
+        shop.setInventorySlotContents(37, new ItemStack(Item.ingotIron, -1));
 
         entityPlayer.displayGUIChest(shop);
 

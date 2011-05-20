@@ -35,6 +35,8 @@ public class mod_redstoneExtended extends BaseMod {
     public final Block blockRedstoneTFlipFlop;
     public final Block blockRedstoneJKFlipFlop;
     public final Block blockRedstoneRandom;
+    public final Block blockRedstoneHardenedTorchActive;
+    public final Block blockRedstoneHardenedTorchIdle;
     public final Block blockCheat;
 
 
@@ -58,7 +60,7 @@ public class mod_redstoneExtended extends BaseMod {
     public final int renderBlockRedstoneClock;
     public final int renderBlockRedstoneLightSensor;
     public final int renderBlockRedstoneFlipFlop;
-    public final int renderBlockRedstoneLightBulb;
+    public final int renderBlockTorchExtended;
 
     private LinkedList<Integer> reservedIds;
 
@@ -158,11 +160,12 @@ public class mod_redstoneExtended extends BaseMod {
     }
 
     private int getFirstFreeItem() {
-        int id = ModLoader.getUniqueEntityId();
-        while (reservedIds.contains(id)) {
-            id = ModLoader.getUniqueEntityId();
+        for (int i = Item.itemsList.length - 1; i >= 0; --i) {
+            if ((Item.itemsList[i] == null) && !reservedIds.contains(i))
+                return i - 256;
         }
-        return id;
+
+        return -1;
     }
 
     boolean isDebug() {
@@ -291,7 +294,7 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.AddName(blockRedstoneLightBulbOff, "Light Bulb");
         ModLoader.RegisterBlock(blockRedstoneLightBulbOff);
 
-        renderBlockRedstoneLightBulb = ModLoader.getUniqueBlockModelID(this, false);
+        renderBlockTorchExtended = ModLoader.getUniqueBlockModelID(this, false);
 
 
         blockRedstoneDFlipFlop = (new BlockRedstoneDFlipFlop(getBlockOrItemId("redstoneDFlipFlop", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneDFlipFlop");
@@ -321,6 +324,13 @@ public class mod_redstoneExtended extends BaseMod {
         itemRedstoneRandom = (new ItemReed(getBlockOrItemId("redstoneRandom", true), blockRedstoneRandom)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/Random/icon.png")).setItemName("redstoneRandom");
         ModLoader.AddName(itemRedstoneRandom, "Random Number Generator");
 
+        blockRedstoneHardenedTorchIdle = (new BlockRedstoneHardenedTorch(getBlockOrItemId("redstoneHardenedTorchIdle", false), ModLoader.addOverride("/terrain.png", "/redstoneExtended/hardenedTorch/idle.png"), false)).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
+        ModLoader.RegisterBlock(blockRedstoneHardenedTorchIdle);
+
+        blockRedstoneHardenedTorchActive = (new BlockRedstoneHardenedTorch(getBlockOrItemId("redstoneHardenedTorchActive", false), ModLoader.addOverride("/terrain.png", "/redstoneExtended/hardenedTorch/active.png"), true)).setHardness(0.0F).setLightValue(0.5F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
+        ModLoader.RegisterBlock(blockRedstoneHardenedTorchActive, ItemRedstoneHardenedTorch.class);
+        ModLoader.AddLocalization(blockRedstoneHardenedTorchActive.getBlockName() + ".hardened.name", "Hardened Redstone Torch");
+        ModLoader.AddLocalization(blockRedstoneHardenedTorchActive.getBlockName() + ".highSpeed.name", "High Speed Redstone Torch");
 
         blockCheat = (new BlockCheat(getBlockOrItemId("cheatBlock", false))).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
         ModLoader.AddName(blockCheat, "Cheat Block");
@@ -400,6 +410,14 @@ public class mod_redstoneExtended extends BaseMod {
                 " I ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneHardenedTorchActive, 1, 0), new Object[] {
+                "_", "/", '_', Item.redstone, '/', Item.ingotIron
+        });
+
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneHardenedTorchActive, 1, 1), new Object[] {
+                " _ ", "_I_", '_', Item.redstone, 'I', new ItemStack(blockRedstoneHardenedTorchActive, 1, 0)
+        });
+
         if (isDebug()) {
             ModLoader.AddRecipe(new ItemStack(blockCheat, 1), new Object[]{
                     "#", '#', Block.dirt
@@ -423,7 +441,7 @@ public class mod_redstoneExtended extends BaseMod {
         else if (modelID == renderBlockRedstoneFlipFlop)
             return MyRenderBlocks.renderBlockRedstoneFlipFlop(renderBlocks, iBlockAccess, block, x, y, z);
         else
-            return modelID == renderBlockRedstoneLightBulb && MyRenderBlocks.renderBlockRedstoneLightBulb(renderBlocks, iBlockAccess, block, x, y, z);
+            return modelID == renderBlockTorchExtended && MyRenderBlocks.renderBlockTorch(renderBlocks, iBlockAccess, block, x, y, z);
     }
 
     public static mod_redstoneExtended getInstance() {

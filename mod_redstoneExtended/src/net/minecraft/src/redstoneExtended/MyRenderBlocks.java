@@ -62,8 +62,8 @@ public class MyRenderBlocks {
         return true;
     }
 
-    public static boolean renderBlockRedstoneLightBulb(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
-        int orientation = iBlockAccess.getBlockMetadata(x, y, z);
+    public static boolean renderBlockTorch(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
+        int orientation = iBlockAccess.getBlockMetadata(x, y, z) & 0x7;
         Tessellator tessellator = Tessellator.instance;
         float brightness = block.getBlockBrightness(iBlockAccess, x, y, z);
         if (Block.lightValue[block.blockID] > 0) {

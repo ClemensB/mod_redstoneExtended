@@ -184,9 +184,11 @@
     </group>
   </component>
   <component name="ProjectDictionaryState">
+    <dictionary name="Cle" />
     <dictionary name="mod_redstoneAdvanced">
       <words>
         <w>nand</w>
+        <w>reddust</w>
         <w>redstone</w>
         <w>xnor</w>
       </words>
