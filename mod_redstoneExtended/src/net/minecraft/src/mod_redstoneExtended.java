@@ -243,7 +243,7 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.AddName(itemRedstoneLogicGateXNOR, "XNOR Gate");
 
 
-        blockRedstoneLogicGateNOTIdle = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTIdle");
+        blockRedstoneLogicGateNOTIdle = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateNOTIdle);
 
         blockRedstoneLogicGateNOTActive = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTActive");
