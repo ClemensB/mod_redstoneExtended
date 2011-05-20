@@ -89,7 +89,7 @@ public class mod_redstoneExtended extends BaseMod {
             }
 
             if (reservedIds == null) {
-                logDebug("Initializing reserved Id list");
+                logDebug("Initializing reserved id list");
                 reservedIds = new LinkedList<Integer>();
                 Pattern pattern = Pattern.compile("^Id\\.(item|block)\\.[a-zA-Z0-9]+$");
                 for (String propertyName : config.stringPropertyNames()) {
@@ -360,7 +360,7 @@ public class mod_redstoneExtended extends BaseMod {
         });
 
         ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[]{
-                " _ ", "_C_", " _ ", '_', Item.redstone, 'C', Item.pocketSundial
+                " Ì ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 
         ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[]{
