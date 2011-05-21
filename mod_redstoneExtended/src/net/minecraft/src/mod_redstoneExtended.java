@@ -266,16 +266,12 @@ public class mod_redstoneExtended extends BaseMod {
         blockRedstoneClock = (new BlockRedstoneClock(getBlockOrItemId("redstoneClock", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneClock");
         ModLoader.RegisterBlock(blockRedstoneClock);
 
-        ModLoader.RegisterTileEntity(TileEntityRedstoneClock.class, "RedstoneClock");
-
         itemRedstoneClock = (new ItemReed(getBlockOrItemId("redstoneClock", true), blockRedstoneClock)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/clock/icon.png")).setItemName("redstoneClock");
         ModLoader.AddName(itemRedstoneClock, "Redstone Clock");
 
 
         blockRedstoneLightSensor = (new BlockRedstoneLightSensor(getBlockOrItemId("redstoneLightSensor", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneLightSensor");
         ModLoader.RegisterBlock(blockRedstoneLightSensor);
-
-        ModLoader.RegisterTileEntity(TileEntityLightSensor.class, "RedstoneLightSensor");
 
         itemRedstoneLightSensor = (new ItemReed(getBlockOrItemId("redstoneLightSensor", true), blockRedstoneLightSensor)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/lightSensor/icon.png")).setItemName("redstoneLightSensor");
         ModLoader.AddName(itemRedstoneLightSensor, "Light Sensor");
@@ -335,6 +331,8 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.AddName(blockCheat, "Cheat Block");
         ModLoader.RegisterBlock(blockCheat);
 
+        ModLoader.RegisterTileEntity(TileEntityRedstoneClock.class, "RedstoneClock");
+        ModLoader.RegisterTileEntity(TileEntityLightSensor.class, "RedstoneLightSensor");
 
         registerRecipes();
     }
