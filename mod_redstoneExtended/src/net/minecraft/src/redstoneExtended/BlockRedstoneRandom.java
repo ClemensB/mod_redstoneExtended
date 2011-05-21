@@ -8,6 +8,8 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
     private static final int textureInputs = ModLoader.addOverride("/terrain.png", "/redstoneExtended/flipFlops/Random/inputs.png");
     private static final int textureOutput = ModLoader.addOverride("/terrain.png", "/redstoneExtended/flipFlops/Random/output.png");
 
+    private static final Random random = new Random();
+
     public BlockRedstoneRandom(int id) {
         super(id);
     }
@@ -22,7 +24,7 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
         boolean inputClockBeingPowered = isInputLeftBeingPowered(world, x, y, z);
 
         if (inputClockBeingPowered && !getLastClockState(world, x, y, z)) {
-            if ((new Random()).nextBoolean() != getState(world, x, y, z))
+            if (random.nextBoolean() != getState(world, x, y, z))
                 world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
         }
 
@@ -31,9 +33,7 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer activator) {
-        boolean state = getState(world, x, y, z);
-
-        if ((new Random()).nextBoolean() != state)
+        if (random.nextBoolean() != getState(world, x, y, z))
             world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
 
         return true;
