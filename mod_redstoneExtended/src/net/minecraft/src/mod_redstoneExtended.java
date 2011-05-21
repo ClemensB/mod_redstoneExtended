@@ -185,6 +185,10 @@ public class mod_redstoneExtended extends BaseMod {
         instance = this;
 
         renderBlockRedstoneLogicGate = ModLoader.getUniqueBlockModelID(this, false);
+        renderBlockRedstoneClock = ModLoader.getUniqueBlockModelID(this, false);
+        renderBlockRedstoneLightSensor = ModLoader.getUniqueBlockModelID(this, false);
+        renderBlockRedstoneFlipFlop = ModLoader.getUniqueBlockModelID(this, false);
+        renderBlockTorchExtended = ModLoader.getUniqueBlockModelID(this, false);
 
         blockRedstoneLogicGateANDIdle = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateANDIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateANDIdle);
@@ -264,8 +268,6 @@ public class mod_redstoneExtended extends BaseMod {
         itemRedstoneClock = (new ItemReed(getBlockOrItemId("redstoneClock", true), blockRedstoneClock)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/clock/icon.png")).setItemName("redstoneClock");
         ModLoader.AddName(itemRedstoneClock, "Redstone Clock");
 
-        renderBlockRedstoneClock = ModLoader.getUniqueBlockModelID(this, false);
-
 
         blockRedstoneLightSensor = (new BlockRedstoneLightSensor(getBlockOrItemId("redstoneLightSensor", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneLightSensor");
         ModLoader.RegisterBlock(blockRedstoneLightSensor);
@@ -275,16 +277,12 @@ public class mod_redstoneExtended extends BaseMod {
         itemRedstoneLightSensor = (new ItemReed(getBlockOrItemId("redstoneLightSensor", true), blockRedstoneLightSensor)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/lightSensor/icon.png")).setItemName("redstoneLightSensor");
         ModLoader.AddName(itemRedstoneLightSensor, "Light Sensor");
 
-        renderBlockRedstoneLightSensor = ModLoader.getUniqueBlockModelID(this, false);
-
 
         blockRedstoneRSNORLatch = (new BlockRedstoneRSNORLatch(getBlockOrItemId("redstoneRSNORLatch", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRSNORLatch");
         ModLoader.RegisterBlock(blockRedstoneRSNORLatch);
 
         itemRedstoneRSNORLatch = (new ItemReed(getBlockOrItemId("redstoneRSNORLatch", true), blockRedstoneRSNORLatch)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/RSNORLatch/icon.png")).setItemName("redstoneRSNORLatch");
         ModLoader.AddName(itemRedstoneRSNORLatch, "RS NOR Latch");
-
-        renderBlockRedstoneFlipFlop = ModLoader.getUniqueBlockModelID(this, false);
 
 
         blockRedstoneLightBulbOn = (new BlockRedstoneLightBulb(getBlockOrItemId("lightBulbOn", false), true)).setHardness(0.0F).setLightValue(0.9375F).setStepSound(Block.soundWoodFootstep).setBlockName("lightBulbOn");
@@ -293,8 +291,6 @@ public class mod_redstoneExtended extends BaseMod {
         blockRedstoneLightBulbOff = (new BlockRedstoneLightBulb(getBlockOrItemId("lightBulbOff", false), false)).setHardness(0.0F).setLightValue(0.0F).setStepSound(Block.soundWoodFootstep).setBlockName("lightBulbOff");
         ModLoader.AddName(blockRedstoneLightBulbOff, "Light Bulb");
         ModLoader.RegisterBlock(blockRedstoneLightBulbOff);
-
-        renderBlockTorchExtended = ModLoader.getUniqueBlockModelID(this, false);
 
 
         blockRedstoneDFlipFlop = (new BlockRedstoneDFlipFlop(getBlockOrItemId("redstoneDFlipFlop", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneDFlipFlop");
