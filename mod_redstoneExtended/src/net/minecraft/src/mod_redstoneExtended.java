@@ -369,7 +369,7 @@ public class mod_redstoneExtended extends BaseMod {
         });
 
         ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[] {
-                " Ì ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
+                " I ", "IOI", " I ", 'O', Block.stone, 'I', Block.torchRedstoneActive
         });
 
         ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[] {
