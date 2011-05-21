@@ -62,6 +62,8 @@ public class mod_redstoneExtended extends BaseMod {
     public final int renderBlockRedstoneFlipFlop;
     public final int renderBlockTorchExtended;
 
+    public final int emptyTexture = ModLoader.addOverride("/terrain.png", "/redstoneExtended/empty.png");
+
     private LinkedList<Integer> reservedIds;
 
     private int getBlockOrItemId(String name, boolean isItem) {

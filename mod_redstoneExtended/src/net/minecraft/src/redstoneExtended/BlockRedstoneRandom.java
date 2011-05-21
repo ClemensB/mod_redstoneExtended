@@ -59,7 +59,7 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
             case 7:
                 return textureOutput;
             case 8:
-                return BlockRedstoneLogicGateBase.emptyTexture;
+                return mod_redstoneExtended.getInstance().emptyTexture;
             default:
                 return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
         }

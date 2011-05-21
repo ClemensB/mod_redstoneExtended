@@ -7,8 +7,6 @@ import java.util.Random;
 public abstract class BlockRedstoneLogicGateBase extends Block {
     private final boolean active;
 
-    static final int emptyTexture = ModLoader.addOverride("/terrain.png", "/redstoneExtended/empty.png");
-
     BlockRedstoneLogicGateBase(int id, boolean isActive) {
         super(id, Block.stairSingle.getBlockTextureFromSideAndMetadata(1, 0), Material.circuits);
         active = isActive;

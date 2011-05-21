@@ -39,13 +39,13 @@ public class BlockRedstoneLogicGateOR extends BlockRedstoneLogicGateBase {
             case 0:
                 return textureBase;
             case 1:
-                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 2) ? textureInputA : emptyTexture;
+                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 2) ? textureInputA : mod_redstoneExtended.getInstance().emptyTexture;
             case 2:
-                return (operatingMode == 0 || operatingMode == 2 || operatingMode == 3) ? textureInputB : emptyTexture;
+                return (operatingMode == 0 || operatingMode == 2 || operatingMode == 3) ? textureInputB : mod_redstoneExtended.getInstance().emptyTexture;
             case 3:
-                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 3) ? textureInputC : emptyTexture;
+                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 3) ? textureInputC : mod_redstoneExtended.getInstance().emptyTexture;
             default:
-                return emptyTexture;
+                return mod_redstoneExtended.getInstance().emptyTexture;
         }
     }
 
