@@ -190,6 +190,7 @@ public class mod_redstoneExtended extends BaseMod {
         renderBlockRedstoneFlipFlop = ModLoader.getUniqueBlockModelID(this, false);
         renderBlockTorchExtended = ModLoader.getUniqueBlockModelID(this, false);
 
+
         blockRedstoneLogicGateANDIdle = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateANDIdle");
         ModLoader.RegisterBlock(blockRedstoneLogicGateANDIdle);
 
