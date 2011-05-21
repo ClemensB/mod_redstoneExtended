@@ -246,7 +246,7 @@
   <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="Start (Debug)" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Start" />
-      <option name="VM_PARAMETERS" value="-Djava.library.path=&quot;$PROJECT_DIR$/../../MCP\jars\bin\natives&quot;" />
+      <option name="VM_PARAMETERS" value="-Djava.library.path=&quot;$MCP_DIR$/jars/bin/natives&quot;" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$MCP_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -270,7 +270,7 @@
     </configuration>
     <configuration default="false" name="Start (Release)" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Start" />
-      <option name="VM_PARAMETERS" value="-Djava.library.path=&quot;$PROJECT_DIR$/../../MCP\jars\bin\natives&quot;" />
+      <option name="VM_PARAMETERS" value="-Djava.library.path=&quot;$MCP_DIR$/jars/bin/natives&quot;" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$MCP_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
