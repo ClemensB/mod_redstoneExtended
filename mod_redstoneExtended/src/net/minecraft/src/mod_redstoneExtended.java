@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 public class mod_redstoneExtended extends BaseMod {
     private static mod_redstoneExtended instance;
 
+    public final Block blockRedstoneLogicGateNOTIdle;
+    public final Block blockRedstoneLogicGateNOTActive;
     public final Block blockRedstoneLogicGateANDIdle;
     public final Block blockRedstoneLogicGateANDActive;
     public final Block blockRedstoneLogicGateNANDIdle;
@@ -24,8 +26,6 @@ public class mod_redstoneExtended extends BaseMod {
     public final Block blockRedstoneLogicGateXORActive;
     public final Block blockRedstoneLogicGateXNORIdle;
     public final Block blockRedstoneLogicGateXNORActive;
-    public final Block blockRedstoneLogicGateNOTIdle;
-    public final Block blockRedstoneLogicGateNOTActive;
     public final Block blockRedstoneClock;
     public final Block blockRedstoneLightSensor;
     public final Block blockRedstoneRSNORLatch;
@@ -40,13 +40,13 @@ public class mod_redstoneExtended extends BaseMod {
     public final Block blockCheat;
 
 
+    public final Item itemRedstoneLogicGateNOT;
     public final Item itemRedstoneLogicGateAND;
     public final Item itemRedstoneLogicGateNAND;
     public final Item itemRedstoneLogicGateOR;
     public final Item itemRedstoneLogicGateNOR;
     public final Item itemRedstoneLogicGateXOR;
     public final Item itemRedstoneLogicGateXNOR;
-    public final Item itemRedstoneLogicGateNOT;
     public final Item itemRedstoneClock;
     public final Item itemRedstoneLightSensor;
     public final Item itemRedstoneRSNORLatch;
@@ -193,20 +193,20 @@ public class mod_redstoneExtended extends BaseMod {
         renderBlockTorchExtended = ModLoader.getUniqueBlockModelID(this, false);
 
 
-        blockRedstoneLogicGateANDIdle = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateANDIdle");
-        blockRedstoneLogicGateANDActive = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateANDActive");
-        blockRedstoneLogicGateNANDIdle = (new BlockRedstoneLogicGateNAND(getBlockOrItemId("logicGateNANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNANDIdle");
-        blockRedstoneLogicGateNANDActive = (new BlockRedstoneLogicGateNAND(getBlockOrItemId("logicGateNANDActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNANDActive");
-        blockRedstoneLogicGateORIdle = (new BlockRedstoneLogicGateOR(getBlockOrItemId("logicGateORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateORIdle");
-        blockRedstoneLogicGateORActive = (new BlockRedstoneLogicGateOR(getBlockOrItemId("logicGateORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateORActive");
-        blockRedstoneLogicGateNORIdle = (new BlockRedstoneLogicGateNOR(getBlockOrItemId("logicGateNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNORIdle");
-        blockRedstoneLogicGateNORActive = (new BlockRedstoneLogicGateNOR(getBlockOrItemId("logicGateNORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNORActive");
-        blockRedstoneLogicGateXORIdle = (new BlockRedstoneLogicGateXOR(getBlockOrItemId("logicGateXORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXORIdle");
-        blockRedstoneLogicGateXORActive = (new BlockRedstoneLogicGateXOR(getBlockOrItemId("logicGateXORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXORActive");
-        blockRedstoneLogicGateXNORIdle = (new BlockRedstoneLogicGateXNOR(getBlockOrItemId("logicGateXNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNORIdle");
-        blockRedstoneLogicGateXNORActive = (new BlockRedstoneLogicGateXNOR(getBlockOrItemId("logicGateXNORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNORActive");
-        blockRedstoneLogicGateNOTIdle = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTIdle");
-        blockRedstoneLogicGateNOTActive = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOTActive");
+        blockRedstoneLogicGateNOTIdle = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOT");
+        blockRedstoneLogicGateNOTActive = (new BlockRedstoneLogicGateNOT(getBlockOrItemId("logicGateNOTActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOT");
+        blockRedstoneLogicGateANDIdle = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateAND");
+        blockRedstoneLogicGateANDActive = (new BlockRedstoneLogicGateAND(getBlockOrItemId("logicGateANDActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateAND");
+        blockRedstoneLogicGateNANDIdle = (new BlockRedstoneLogicGateNAND(getBlockOrItemId("logicGateNANDIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNAND");
+        blockRedstoneLogicGateNANDActive = (new BlockRedstoneLogicGateNAND(getBlockOrItemId("logicGateNANDActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNAND");
+        blockRedstoneLogicGateORIdle = (new BlockRedstoneLogicGateOR(getBlockOrItemId("logicGateORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateOR");
+        blockRedstoneLogicGateORActive = (new BlockRedstoneLogicGateOR(getBlockOrItemId("logicGateORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateOR");
+        blockRedstoneLogicGateNORIdle = (new BlockRedstoneLogicGateNOR(getBlockOrItemId("logicGateNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOR");
+        blockRedstoneLogicGateNORActive = (new BlockRedstoneLogicGateNOR(getBlockOrItemId("logicGateNORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateNOR");
+        blockRedstoneLogicGateXORIdle = (new BlockRedstoneLogicGateXOR(getBlockOrItemId("logicGateXORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXOR");
+        blockRedstoneLogicGateXORActive = (new BlockRedstoneLogicGateXOR(getBlockOrItemId("logicGateXORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXOR");
+        blockRedstoneLogicGateXNORIdle = (new BlockRedstoneLogicGateXNOR(getBlockOrItemId("logicGateXNORIdle", false), false)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNOR");
+        blockRedstoneLogicGateXNORActive = (new BlockRedstoneLogicGateXNOR(getBlockOrItemId("logicGateXNORActive", false), true)).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("logicGateXNOR");
         blockRedstoneClock = (new BlockRedstoneClock(getBlockOrItemId("redstoneClock", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneClock");
         blockRedstoneLightSensor = (new BlockRedstoneLightSensor(getBlockOrItemId("redstoneLightSensor", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneLightSensor");
         blockRedstoneRSNORLatch = (new BlockRedstoneRSNORLatch(getBlockOrItemId("redstoneRSNORLatch", false))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRSNORLatch");
@@ -221,13 +221,13 @@ public class mod_redstoneExtended extends BaseMod {
         blockCheat = (new BlockCheat(getBlockOrItemId("cheatBlock", false))).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
 
 
+        itemRedstoneLogicGateNOT = (new ItemReed(getBlockOrItemId("logicGateNOT", true), blockRedstoneLogicGateNOTIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOT/icon.png")).setItemName("logicGateNOT");
         itemRedstoneLogicGateAND = (new ItemReed(getBlockOrItemId("logicGateAND", true), blockRedstoneLogicGateANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/AND/icon.png")).setItemName("logicGateAND");
         itemRedstoneLogicGateNAND = (new ItemReed(getBlockOrItemId("logicGateNAND", true), blockRedstoneLogicGateNANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NAND/icon.png")).setItemName("logicGateNAND");
         itemRedstoneLogicGateOR = (new ItemReed(getBlockOrItemId("logicGateOR", true), blockRedstoneLogicGateORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/OR/icon.png")).setItemName("logicGateOR");
         itemRedstoneLogicGateNOR = (new ItemReed(getBlockOrItemId("logicGateNOR", true), blockRedstoneLogicGateNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOR/icon.png")).setItemName("logicGateNOR");
         itemRedstoneLogicGateXOR = (new ItemReed(getBlockOrItemId("logicGateXOR", true), blockRedstoneLogicGateXORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XOR/icon.png")).setItemName("logicGateXOR");
         itemRedstoneLogicGateXNOR = (new ItemReed(getBlockOrItemId("logicGateXNOR", true), blockRedstoneLogicGateXNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XNOR/icon.png")).setItemName("logicGateXNOR");
-        itemRedstoneLogicGateNOT = (new ItemReed(getBlockOrItemId("logicGateNOT", true), blockRedstoneLogicGateNOTIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOT/icon.png")).setItemName("logicGateNOT");
         itemRedstoneClock = (new ItemReed(getBlockOrItemId("redstoneClock", true), blockRedstoneClock)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/clock/icon.png")).setItemName("redstoneClock");
         itemRedstoneLightSensor = (new ItemReed(getBlockOrItemId("redstoneLightSensor", true), blockRedstoneLightSensor)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/lightSensor/icon.png")).setItemName("redstoneLightSensor");
         itemRedstoneRSNORLatch = (new ItemReed(getBlockOrItemId("redstoneRSNORLatch", true), blockRedstoneRSNORLatch)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/RSNORLatch/icon.png")).setItemName("redstoneRSNORLatch");
@@ -237,6 +237,8 @@ public class mod_redstoneExtended extends BaseMod {
         itemRedstoneRandom = (new ItemReed(getBlockOrItemId("redstoneRandom", true), blockRedstoneRandom)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/Random/icon.png")).setItemName("redstoneRandom");
 
 
+        ModLoader.RegisterBlock(blockRedstoneLogicGateNOTIdle);
+        ModLoader.RegisterBlock(blockRedstoneLogicGateNOTActive);
         ModLoader.RegisterBlock(blockRedstoneLogicGateANDIdle);
         ModLoader.RegisterBlock(blockRedstoneLogicGateANDActive);
         ModLoader.RegisterBlock(blockRedstoneLogicGateNANDIdle);
@@ -249,8 +251,6 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.RegisterBlock(blockRedstoneLogicGateXORActive);
         ModLoader.RegisterBlock(blockRedstoneLogicGateXNORIdle);
         ModLoader.RegisterBlock(blockRedstoneLogicGateXNORActive);
-        ModLoader.RegisterBlock(blockRedstoneLogicGateNOTIdle);
-        ModLoader.RegisterBlock(blockRedstoneLogicGateNOTActive);
         ModLoader.RegisterBlock(blockRedstoneClock);
         ModLoader.RegisterBlock(blockRedstoneLightSensor);
         ModLoader.RegisterBlock(blockRedstoneRSNORLatch);
@@ -265,13 +265,13 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.RegisterBlock(blockCheat);
 
 
+        ModLoader.AddName(itemRedstoneLogicGateNOT, "NOT Gate");
         ModLoader.AddName(itemRedstoneLogicGateAND, "AND Gate");
         ModLoader.AddName(itemRedstoneLogicGateNAND, "NAND Gate");
         ModLoader.AddName(itemRedstoneLogicGateOR, "OR Gate");
         ModLoader.AddName(itemRedstoneLogicGateNOR, "NOR Gate");
         ModLoader.AddName(itemRedstoneLogicGateXOR, "XOR Gate");
         ModLoader.AddName(itemRedstoneLogicGateXNOR, "XNOR Gate");
-        ModLoader.AddName(itemRedstoneLogicGateNOT, "NOT Gate");
         ModLoader.AddName(itemRedstoneClock, "Redstone Clock");
         ModLoader.AddName(itemRedstoneLightSensor, "Light Sensor");
         ModLoader.AddName(itemRedstoneRSNORLatch, "RS NOR Latch");
@@ -292,6 +292,10 @@ public class mod_redstoneExtended extends BaseMod {
     }
 
     private void registerRecipes() {
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[] {
+                "_OI", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
+        });
+
         ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateAND, 1), new Object[] {
                 "I_I", "OOO", " I ", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
@@ -314,10 +318,6 @@ public class mod_redstoneExtended extends BaseMod {
 
         ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateXNOR, 1), new Object[] {
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateXOR
-        });
-
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[] {
-                "_OI", "I", "O", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
         ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[] {
