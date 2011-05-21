@@ -341,72 +341,72 @@ public class mod_redstoneExtended extends BaseMod {
     }
 
     private void registerRecipes() {
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateAND, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateAND, 1), new Object[] {
                 "I_I", "OOO", " I ", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNAND, 1), new Object[]{
+        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNAND, 1), new Object[] {
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateAND
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateOR, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateOR, 1), new Object[] {
                 " I ", "_O_", " _ ", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNOR, 1), new Object[]{
+        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNOR, 1), new Object[] {
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateOR
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateXOR, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateXOR, 1), new Object[] {
                 "O N", "_A_", " _ ", '_', Item.redstone, 'O', itemRedstoneLogicGateOR, 'N', itemRedstoneLogicGateNAND, 'A', itemRedstoneLogicGateAND
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateXNOR, 1), new Object[]{
+        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateXNOR, 1), new Object[] {
                 itemRedstoneLogicGateNOT, itemRedstoneLogicGateXOR
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[] {
                 "_OI", "I", "O", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[] {
                 " Ì ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[] {
                 "###", "_X_", "OOO", '_', Item.redstone, '#', Block.glass, 'X', new ItemStack(Item.dyePowder, 1, 4), 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
                 "__O", "I I", "O__", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
                 "_IO", "_ _", "OI_", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
                 "O__", "I I", "__O", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
                 "OI_", "_ _", "_IO", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(blockRedstoneLightBulbOff, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLightBulbOff, 1), new Object[] {
                 " # ", "#_#", " / ", '#', Block.glass, '_', Item.redstone, '/', Item.stick
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneDFlipFlop, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneDFlipFlop, 1), new Object[] {
                 " L ", "_R_", '_', Item.redstone, 'L', Block.lever, 'R', itemRedstoneRSNORLatch
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneTFlipFlop, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneTFlipFlop, 1), new Object[] {
                 " B ", "_R_", '_', Item.redstone, 'B', Block.button, 'R', itemRedstoneRSNORLatch
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneJKFlipFlop, 1), new Object[]{
+        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneJKFlipFlop, 1), new Object[] {
                 itemRedstoneTFlipFlop, itemRedstoneRSNORLatch
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRandom, 1), new Object[]{
+        ModLoader.AddRecipe(new ItemStack(itemRedstoneRandom, 1), new Object[] {
                 " I ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 
@@ -419,7 +419,7 @@ public class mod_redstoneExtended extends BaseMod {
         });
 
         if (isDebug()) {
-            ModLoader.AddRecipe(new ItemStack(blockCheat, 1), new Object[]{
+            ModLoader.AddRecipe(new ItemStack(blockCheat, 1), new Object[] {
                     "#", '#', Block.dirt
             });
         }

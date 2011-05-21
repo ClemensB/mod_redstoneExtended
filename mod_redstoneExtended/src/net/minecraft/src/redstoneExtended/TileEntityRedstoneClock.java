@@ -11,7 +11,7 @@ public class TileEntityRedstoneClock extends TileEntity {
     private static final short[] delays;
 
     static {
-        delays = new short[]{1, 2, 4, 8, 16, 32};
+        delays = new short[] {1, 2, 4, 8, 16, 32};
     }
 
     public TileEntityRedstoneClock() {
