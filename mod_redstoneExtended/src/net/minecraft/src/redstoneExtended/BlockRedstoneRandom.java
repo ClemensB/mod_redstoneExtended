@@ -41,7 +41,7 @@ public class BlockRedstoneRandom extends BlockRedstoneFlipFlop {
 
     @Override
     public int idDropped(int i, Random random) {
-        return mod_redstoneExtended.getInstance().itemRedstoneJKFlipFlop.shiftedIndex;
+        return mod_redstoneExtended.getInstance().itemRedstoneRandom.shiftedIndex;
     }
 
     @Override
