@@ -378,7 +378,7 @@ public class mod_redstoneExtended extends BaseMod {
 
     @Override
     public String Version() {
-        return "1.5_01_Dev";
+        return "1.6.5_01";
     }
 
     @Override
