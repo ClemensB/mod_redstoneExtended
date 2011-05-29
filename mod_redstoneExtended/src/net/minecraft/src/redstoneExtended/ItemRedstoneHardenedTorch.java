@@ -12,7 +12,7 @@ public class ItemRedstoneHardenedTorch extends ItemBlock {
     }
 
     @Override
-    public int func_21012_a(int itemDamage) {
+    public int getPlacedBlockMetadata(int itemDamage) {
         return ((itemDamage << 3) & 0x8);
     }
 
