@@ -109,7 +109,7 @@ public class BlockRedstoneHardenedTorch extends BlockTorch {
                 toBeRemoved = true;
             }
             if (toBeRemoved) {
-                dropBlockAsItem(world, x, y, z, getType(world, x, y, z) ? 1 : 0);
+                dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z));
                 world.setBlockWithNotify(x, y, z, 0);
             }
         }
