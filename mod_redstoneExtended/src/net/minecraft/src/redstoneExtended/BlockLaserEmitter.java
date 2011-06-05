@@ -12,9 +12,11 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
     public final static LaserMode[] operatingModes;
 
     static {
-        operatingModes = new LaserMode[] {new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0),
-                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)0, (byte)255, (byte)0),
-                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)0, (byte)0, (byte)255)};
+        operatingModes = new LaserMode[] {
+                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, new Color((byte)255, (byte)0, (byte)0)),
+                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, new Color((byte)0, (byte)255, (byte)0)),
+                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, new Color((byte)0, (byte)0, (byte)255))
+        };
     }
 
     @Override

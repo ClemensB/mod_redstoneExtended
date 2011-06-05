@@ -48,8 +48,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public int colorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z) {
-        TileEntityLaser tileEntityLaser = (TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z);
-        return ((tileEntityLaser.mode.colorR & 0xff) << 16) | ((tileEntityLaser.mode.colorG & 0xff) << 8) | (tileEntityLaser.mode.colorB & 0xff);
+        return getLaserMode(iBlockAccess, x, y, z).color.toRGBInt();
     }
 
     @Override
