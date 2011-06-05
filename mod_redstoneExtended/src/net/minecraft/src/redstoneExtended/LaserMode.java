@@ -26,7 +26,7 @@ public class LaserMode implements Cloneable {
         colorB = (byte)255;
     }
 
-    public LaserMode(float width, boolean collision, short damage, byte texture, byte colorR, byte colorB, byte colorG) {
+    public LaserMode(float width, boolean collision, short damage, byte texture, byte colorR, byte colorG, byte colorB) {
         this.width = width;
         this.collision = collision;
         this.damage = damage;
