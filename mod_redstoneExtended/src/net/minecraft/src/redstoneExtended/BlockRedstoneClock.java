@@ -92,9 +92,9 @@ public class BlockRedstoneClock extends BlockContainer {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         byte oldDelaySetting = getDelaySetting(world, x, y, z);
-        byte newDelaySetting = (byte) ((oldDelaySetting >= 5) ? 0 : oldDelaySetting + 1);
+        byte newDelaySetting = (byte)((oldDelaySetting >= 5) ? 0 : oldDelaySetting + 1);
         setDelaySetting(world, x, y, z, newDelaySetting);
-        ((TileEntityRedstoneClock) world.getBlockTileEntity(x, y, z)).delaySettingChanged();
+        ((TileEntityRedstoneClock)world.getBlockTileEntity(x, y, z)).delaySettingChanged();
 
         return true;
     }
@@ -109,7 +109,7 @@ public class BlockRedstoneClock extends BlockContainer {
     }
 
     private static byte getDelaySettingFromMetadata(int metadata) {
-        return (byte) (metadata & 0x7);
+        return (byte)(metadata & 0x7);
     }
 
     private static int setStateInMetadata(int metadata, boolean state) {
@@ -117,7 +117,7 @@ public class BlockRedstoneClock extends BlockContainer {
     }
 
     private static int setDelaySettingInMetadata(int metadata, byte delaySetting) {
-        return ((metadata & 0x8) | ((int) delaySetting & 0x7));
+        return ((metadata & 0x8) | ((int)delaySetting & 0x7));
     }
 
     public static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {

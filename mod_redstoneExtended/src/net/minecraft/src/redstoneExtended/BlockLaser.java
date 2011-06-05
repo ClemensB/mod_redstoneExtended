@@ -71,7 +71,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         Position parentPos = new Position(x, y, z).positionMoveInDirection(Util.invertDirection(orientation));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
         //return ((Block.blocksList[parentBlockId] instanceof ILaserPowerProvider) && ((ILaserPowerProvider)Block.blocksList[parentBlockId]).isProvidingLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
-        return ((Block.blocksList[parentBlockId] instanceof ILaserEmitter) && ((ILaserEmitter)Block.blocksList[parentBlockId]).canProvideLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
+        return ((Block.blocksList[parentBlockId] instanceof ILaserEmitter) && ((ILaserEmitter)Block.blocksList[parentBlockId]).isProvidingLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         if (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z)))
             return true;
 
-        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+        /*Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
         int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
         if (hasNotMaximumLength(world, x, y, z)) {
             if ((blockIdAtLaserPos == 0) || ((blockIdAtLaserPos != mod_redstoneExtended.getInstance().blockLaser.blockID) && (Block.blocksList[blockIdAtLaserPos].blockMaterial.func_27283_g())))
@@ -104,7 +104,9 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
                 (getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z)))
             return true;
 
-        return false;
+        return false;*/
+
+        return LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     private boolean hasNotMaximumLength(IBlockAccess iBlockAccess, int x, int y, int z) {
@@ -162,7 +164,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
             setLaserMode(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
         }
 
-        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+        /*Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
         int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
         boolean blockNeedsToBeUpdated = false;
 
@@ -199,7 +201,9 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         if (blockNeedsToBeUpdated) {
             world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
             world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, blockIdAtLaserPos);
-        }
+        }*/
+
+        LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -221,22 +225,27 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public boolean canProvideLaserPowerInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+        return (getOrientation(iBlockAccess, x, y, z) == direction);
+    }
+
+    @Override
+    public boolean isProvidingLaserPowerInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         return (getOrientation(iBlockAccess, x, y, z) == direction) && hasNotMaximumLength(iBlockAccess, x, y, z);
     }
 
     @Override
     public LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
-        if (!canProvideLaserPowerInDirection(iBlockAccess, x, y, z, direction))
+        if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 
         return getLaserMode(iBlockAccess, x, y, z);
     }
 
     @Override
-    public int getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
-        if (!canProvideLaserPowerInDirection(iBlockAccess, x, y, z, direction))
+    public short getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+        if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return 0;
 
-        return getDistance(iBlockAccess, x, y, z) + 1;
+        return (short)(getDistance(iBlockAccess, x, y, z) + 1);
     }
 }

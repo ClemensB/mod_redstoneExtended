@@ -6,6 +6,8 @@ import net.minecraft.src.TileEntity;
 public class TileEntityLaserFocusLens extends TileEntity {
     LaserMode mode = new LaserMode();
 
+    short distance = 0;
+
     byte operatingMode = 0;
 
     public TileEntityLaserFocusLens() {
@@ -15,6 +17,7 @@ public class TileEntityLaserFocusLens extends TileEntity {
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         mode = LaserMode.readFromNBT(nbtTagCompound.getCompoundTag("Mode"));
+        distance = nbtTagCompound.getShort("Distance");
         operatingMode = nbtTagCompound.getByte("OperatingMode");
     }
 
@@ -24,6 +27,7 @@ public class TileEntityLaserFocusLens extends TileEntity {
         NBTTagCompound modeTag = new NBTTagCompound();
         LaserMode.writeToNBT(modeTag, mode);
         nbtTagCompound.setCompoundTag("Mode", modeTag);
+        nbtTagCompound.setShort("Distance", distance);
         nbtTagCompound.setByte("OperatingMode", operatingMode);
     }
 }

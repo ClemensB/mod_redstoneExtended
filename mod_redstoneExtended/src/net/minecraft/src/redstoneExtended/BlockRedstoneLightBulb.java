@@ -192,7 +192,7 @@ public class BlockRedstoneLightBulb extends Block {
                 setBlockBounds(0.5F - f1, 0.0F, 0.5F - f1, 0.5F + f1, 0.6F, 0.5F + f1);
                 break;
             case 6:
-                setBlockBounds(0.5F - f1, 0.4F + (float) positionInCeilingY, 0.5F - f1, 0.5F + f1, 1.0F + (float) positionInCeilingY, 0.5F + f1);
+                setBlockBounds(0.5F - f1, 0.4F + (float)positionInCeilingY, 0.5F - f1, 0.5F + f1, 1.0F + (float)positionInCeilingY, 0.5F + f1);
                 break;
         }
         return super.collisionRayTrace(world, x, y, z, vec3D, vec3D1);

@@ -60,15 +60,15 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborBlockId) {
-        if (isBlockUpdateNeeded(world, x, y, z))
+        if (isBlockUpdateNecessary(world, x, y, z))
             world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
     }
 
-    private boolean isBlockUpdateNeeded(World world, int x, int y, int z) {
+    private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
         if (getState(world, x, y, z) != isBeingPowered(world, x, y, z))
             return true;
 
-        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+        /*Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
         int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
 
         if (getState(world, x, y, z)) {
@@ -84,7 +84,8 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
                 (getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z)))
             return true;
 
-        return false;
+        return false;*/
+        return LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -96,7 +97,7 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
             tryToPlaceLaser(world, x, y, z);
         }*/
 
-        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+        /*Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
         int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
         boolean blockNeedsToBeUpdated = false;
 
@@ -133,40 +134,9 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
         if (blockNeedsToBeUpdated) {
             world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
             world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, blockIdAtLaserPos);
-        }
-    }
+        }*/
 
-    protected void tryToPlaceLaser(World world, int x, int y, int z) {
-        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
-        if (world.getBlockMaterial(laserPos.X, laserPos.Y, laserPos.Z).func_27283_g() &&
-                ((world.getBlockMaterial(laserPos.X, laserPos.Y, laserPos.Z) != Materials.laser) ||
-                        ((world.getBlockMaterial(laserPos.X, laserPos.Y, laserPos.Z) == Materials.laser) &&
-                                (((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).orientation == getOrientation(world, x, y, z))))) {
-
-            if ((world.getBlockMaterial(laserPos.X, laserPos.Y, laserPos.Z) == Materials.laser)) {
-                if ((((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).distance == 1) &&
-                        (((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).mode.equals(new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0))))
-                    return;
-
-                ((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).distance = 1;
-                ((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).mode = new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0);
-
-                world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
-                world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, blockID);
-
-                return;
-            }
-
-            world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, 0);
-            if (world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, mod_redstoneExtended.getInstance().blockLaser.blockID)) {
-                ((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).orientation = getOrientation(world, x, y, z);
-                ((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).distance = 1;
-                ((TileEntityLaser)world.getBlockTileEntity(laserPos.X, laserPos.Y, laserPos.Z)).mode = new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0);
-
-                world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
-                world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, blockID);
-            }
-        }
+        LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     private boolean isBeingPowered(World world, int x, int y, int z) {
@@ -214,20 +184,25 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
 
     @Override
     public boolean canProvideLaserPowerInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+        return (getOrientation(iBlockAccess, x, y, z) == direction);
+    }
+
+    @Override
+    public boolean isProvidingLaserPowerInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         return (getOrientation(iBlockAccess, x, y, z) == direction) && getState(iBlockAccess, x, y, z);
     }
 
     @Override
     public LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
-        if (!canProvideLaserPowerInDirection(iBlockAccess, x, y, z, direction))
+        if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 
         return new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0);
     }
 
     @Override
-    public int getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
-        if (!canProvideLaserPowerInDirection(iBlockAccess, x, y, z, direction))
+    public short getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+        if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return 0;
 
         return 1;

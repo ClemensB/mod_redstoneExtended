@@ -10,7 +10,7 @@ public class MyRenderBlocks {
     public static boolean renderBlockRedstoneLogicGate(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
-        boolean isActive = block.blockID == ((BlockRedstoneLogicGateBase) block).blockId(true);
+        boolean isActive = block.blockID == ((BlockRedstoneLogicGateBase)block).blockId(true);
         float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         double rotation = BlockRedstoneLogicGateBase.getOrientationFromMetadata(metadata) * 90D;
@@ -75,16 +75,16 @@ public class MyRenderBlocks {
         double offsetY = 0.20000000298023224D;
         switch (orientation) {
             case 1:
-                renderBlocks.renderTorchAtAngle(block, (double) x - offsetSide, (double) y + offsetY, z, -angle, 0.0D);
+                renderBlocks.renderTorchAtAngle(block, (double)x - offsetSide, (double)y + offsetY, z, -angle, 0.0D);
                 break;
             case 2:
-                renderBlocks.renderTorchAtAngle(block, (double) x + offsetSide, (double) y + offsetY, z, angle, 0.0D);
+                renderBlocks.renderTorchAtAngle(block, (double)x + offsetSide, (double)y + offsetY, z, angle, 0.0D);
                 break;
             case 3:
-                renderBlocks.renderTorchAtAngle(block, x, (double) y + offsetY, (double) z - offsetSide, 0.0D, -angle);
+                renderBlocks.renderTorchAtAngle(block, x, (double)y + offsetY, (double)z - offsetSide, 0.0D, -angle);
                 break;
             case 4:
-                renderBlocks.renderTorchAtAngle(block, x, (double) y + offsetY, (double) z + offsetSide, 0.0D, angle);
+                renderBlocks.renderTorchAtAngle(block, x, (double)y + offsetY, (double)z + offsetSide, 0.0D, angle);
                 break;
             case 5:
                 renderBlocks.renderTorchAtAngle(block, x, y, z, 0.0D, 0.0D);

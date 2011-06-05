@@ -107,7 +107,7 @@ public abstract class BlockRedstoneFlipFlop extends Block {
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving creator) {
-        int orientation = ((MathHelper.floor_double((double) ((creator.rotationYaw * 4F) / 360F) + 0.5D) & 0x3) + 2) % 4;
+        int orientation = ((MathHelper.floor_double((double)((creator.rotationYaw * 4F) / 360F) + 0.5D) & 0x3) + 2) % 4;
         setOrientation(world, x, y, z, orientation);
     }
 

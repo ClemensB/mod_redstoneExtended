@@ -142,9 +142,9 @@ public class BlockRedstoneHardenedTorch extends BlockTorch {
             return;
         }
         int orientation = getOrientation(world, x, y, z);
-        double positionX = (double) ((float) x + 0.5F) + (double) (random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double positionY = (double) ((float) y + 0.7F) + (double) (random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double positionZ = (double) ((float) z + 0.5F) + (double) (random.nextFloat() - 0.5F) * 0.20000000000000001D;
+        double positionX = (double)((float)x + 0.5F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
+        double positionY = (double)((float)y + 0.7F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
+        double positionZ = (double)((float)z + 0.5F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
         double offsetYWhenOnBlockSide = 0.2199999988079071D;
         double offsetXZWhenOnBlockSide = 0.27000001072883606D;
         if (orientation == 1) {
