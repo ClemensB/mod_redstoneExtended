@@ -4,11 +4,11 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 
 public class TileEntityLaserFocusLens extends TileEntity {
-    LaserMode mode = new LaserMode();
+    public LaserMode mode = new LaserMode();
 
-    short distance = 0;
+    public short distance = 0;
 
-    byte operatingMode = 0;
+    public byte operatingMode = 0;
 
     public TileEntityLaserFocusLens() {
     }

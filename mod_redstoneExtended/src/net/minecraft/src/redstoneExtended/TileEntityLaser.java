@@ -4,8 +4,8 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 
 public class TileEntityLaser extends TileEntity {
-    public byte orientation;
-    public short distance;
+    public byte orientation = 0;
+    public short distance = 0;
 
     public LaserMode mode = new LaserMode();
 

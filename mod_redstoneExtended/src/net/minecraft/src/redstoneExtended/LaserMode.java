@@ -45,7 +45,7 @@ public class LaserMode implements Cloneable {
         byte colorR = colorTag.getByte("R");
         byte colorG = colorTag.getByte("G");
         byte colorB = colorTag.getByte("B");
-        return new LaserMode(width, collision, damage, texture, colorR, colorB, colorG);
+        return new LaserMode(width, collision, damage, texture, colorR, colorG, colorB);
     }
 
     public static void writeToNBT(NBTTagCompound nbtTagCompound, LaserMode laserMode) {

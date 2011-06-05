@@ -4,9 +4,22 @@ import net.minecraft.src.*;
 
 import java.util.Random;
 
-public class BlockLaserEmitter extends Block implements ILaserEmitter {
+public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
     public BlockLaserEmitter(int id) {
         super(id, Block.dispenser.blockIndexInTexture, Material.rock);
+    }
+
+    public final static LaserMode[] operatingModes;
+
+    static {
+        operatingModes = new LaserMode[] {new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0),
+                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)0, (byte)255, (byte)0),
+                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)0, (byte)0, (byte)255)};
+    }
+
+    @Override
+    public TileEntity getBlockEntity() {
+        return new TileEntityLaserEmitter();
     }
 
     @Override
@@ -77,24 +90,34 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
         LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
+    @Override
+    public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer) {
+        setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= (operatingModes.length - 1) ? (byte)0 : (byte)(getOperatingMode(world, x, y, z) + 1));
+
+        world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
+        world.notifyBlocksOfNeighborChange(x, y, z, blockID);
+
+        return true;
+    }
+
     private boolean isBeingPowered(World world, int x, int y, int z) {
         return world.isBlockIndirectlyGettingPowered(x, y, z) ||
                 world.isBlockIndirectlyGettingPowered(x, y + 1, z);
     }
 
-    private static boolean getStateFromMetadata(int metadata) {
+    public static boolean getStateFromMetadata(int metadata) {
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    private static byte getOrientationFromMetadata(int metadata) {
+    public static byte getOrientationFromMetadata(int metadata) {
         return (byte)(metadata & 0x7);
     }
 
-    private static int setStateInMetadata(int metadata, boolean state) {
+    public static int setStateInMetadata(int metadata, boolean state) {
         return ((metadata & 0x7) | ((state ? 1 : 0) << 3) & 0x8);
     }
 
-    private static int setOrientationInMetadata(int metadata, int orientation) {
+    public static int setOrientationInMetadata(int metadata, int orientation) {
         return ((metadata & 0x8) | (orientation & 0x7));
     }
 
@@ -108,16 +131,24 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
         return getOrientationFromMetadata(metadata);
     }
 
-    protected static void setState(World world, int x, int y, int z, boolean state) {
+    public static void setState(World world, int x, int y, int z, boolean state) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setStateInMetadata(oldMetadata, state);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    private static void setOrientation(World world, int x, int y, int z, int orientation) {
+    public static void setOrientation(World world, int x, int y, int z, int orientation) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setOrientationInMetadata(oldMetadata, orientation);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
+    }
+
+    public static byte getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
+    }
+
+    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, byte operatingMode) {
+        ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
     }
 
     @Override
@@ -135,7 +166,7 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 
-        return new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, (byte)255, (byte)0, (byte)0);
+        return operatingModes[getOperatingMode(iBlockAccess, x, y, z)];
     }
 
     @Override

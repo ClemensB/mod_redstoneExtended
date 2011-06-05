@@ -83,11 +83,10 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        ((TileEntityLaserFocusLens)world.getBlockTileEntity(x, y, z)).operatingMode =
-                ((TileEntityLaserFocusLens)world.getBlockTileEntity(x, y, z)).operatingMode >= 2 ? 0 :
-                        (byte)(((TileEntityLaserFocusLens)world.getBlockTileEntity(x, y, z)).operatingMode + 1);
+        setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= 2 ? (byte)0 : (byte)(getOperatingMode(world, x, y, z) + 1));
 
         world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
+        world.notifyBlocksOfNeighborChange(x, y, z, blockID);
 
         return true;
     }
@@ -98,7 +97,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         int sourceBlockId = iBlockAccess.getBlockId(sourcePos.X, sourcePos.Y, sourcePos.Z);
         if ((Block.blocksList[sourceBlockId] instanceof ILaserEmitter) && (((ILaserEmitter)Block.blocksList[sourceBlockId]).isProvidingLaserPowerInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation))) {
             setLaserMode(iBlockAccess, x, y, z, (LaserMode)((ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation).copy());
-            switch (((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode) {
+            switch (getOperatingMode(iBlockAccess, x, y, z)) {
                 case 0:
                     ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.width = 0.33f;
                     ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.collision = false;
@@ -122,6 +121,14 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
             return true;
         }
         return false;
+    }
+
+    public static byte getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
+    }
+
+    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, byte operatingMode) {
+        ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
     }
 
     public static boolean getStateFromMetadata(int metadata) {

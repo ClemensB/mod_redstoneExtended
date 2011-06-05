@@ -299,6 +299,7 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.RegisterTileEntity(TileEntityRedstoneClock.class, "RedstoneClock");
         ModLoader.RegisterTileEntity(TileEntityLightSensor.class, "RedstoneLightSensor");
         ModLoader.RegisterTileEntity(TileEntityLaser.class, "Laser");
+        ModLoader.RegisterTileEntity(TileEntityLaserEmitter.class, "LaserEmitter");
         ModLoader.RegisterTileEntity(TileEntityLaserFocusLens.class, "LaserFocusLens");
 
         registerRecipes();
