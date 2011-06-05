@@ -60,7 +60,31 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborBlockId) {
-        world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
+        if (isBlockUpdateNeeded(world, x, y, z))
+            world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
+    }
+
+    private boolean isBlockUpdateNeeded(World world, int x, int y, int z) {
+        if (getState(world, x, y, z) != isBeingPowered(world, x, y, z))
+            return true;
+
+        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+        int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
+
+        if (getState(world, x, y, z)) {
+            if ((blockIdAtLaserPos == 0) || ((blockIdAtLaserPos != mod_redstoneExtended.getInstance().blockLaser.blockID) && (Block.blocksList[blockIdAtLaserPos].blockMaterial.func_27283_g())))
+                return true;
+
+            if ((blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
+                    (BlockLaser.getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z)) &&
+                    ((!BlockLaser.getLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z).equals(getLaserModeProvidedInDirection(world, x, y, z, getOrientation(world, x, y, z)))) ||
+                            (BlockLaser.getDistance(world, laserPos.X, laserPos.Y, laserPos.Z) != 1)))
+                return true;
+        } else if ((blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
+                (getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z)))
+            return true;
+
+        return false;
     }
 
     @Override
@@ -68,8 +92,47 @@ public class BlockLaserEmitter extends Block implements ILaserEmitter {
         if (getState(world, x, y, z) != isBeingPowered(world, x, y, z))
             setState(world, x, y, z, !getState(world, x, y, z));
 
-        if (getState(world, x, y, z)) {
+        /*if (getState(world, x, y, z)) {
             tryToPlaceLaser(world, x, y, z);
+        }*/
+
+        Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+        int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
+        boolean blockNeedsToBeUpdated = false;
+
+        if (getState(world, x, y, z)) {
+            if ((blockIdAtLaserPos != mod_redstoneExtended.getInstance().blockLaser.blockID) &&
+                    ((blockIdAtLaserPos == 0) || (Block.blocksList[blockIdAtLaserPos].blockMaterial.func_27283_g()))) {
+                world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, mod_redstoneExtended.getInstance().blockLaser.blockID);
+
+                blockNeedsToBeUpdated = true;
+                blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
+
+                BlockLaser.setOrientation(world, laserPos.X, laserPos.Y, laserPos.Z, getOrientation(world, x, y, z));
+            }
+
+            if ((blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
+                    (BlockLaser.getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z))) {
+                if (BlockLaser.getDistance(world, laserPos.X, laserPos.Y, laserPos.Z) != 1) {
+                    BlockLaser.setDistance(world, laserPos.X, laserPos.Y, laserPos.Z, (short)1);
+                    blockNeedsToBeUpdated = true;
+                }
+
+                if (!BlockLaser.getLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z).equals(getLaserModeProvidedInDirection(world, x, y, z, getOrientation(world, x, y, z)))) {
+                    BlockLaser.setLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z, getLaserModeProvidedInDirection(world, x, y, z, getOrientation(world, x, y, z)));
+                    blockNeedsToBeUpdated = true;
+                }
+            }
+        } else if (blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) {
+            world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, 0);
+
+            blockNeedsToBeUpdated = true;
+            blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
+        }
+
+        if (blockNeedsToBeUpdated) {
+            world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
+            world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, blockIdAtLaserPos);
         }
     }
 

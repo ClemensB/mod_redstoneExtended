@@ -72,4 +72,14 @@ public class LaserMode implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+
+    public boolean equals(LaserMode laserMode) {
+        return ((width == laserMode.width) &&
+                (collision == laserMode.collision) &&
+                (damage == laserMode.damage) &&
+                (texture == laserMode.texture) &&
+                (colorR == laserMode.colorR) &&
+                (colorG == laserMode.colorG) &&
+                (colorB == laserMode.colorB));
+    }
 }
