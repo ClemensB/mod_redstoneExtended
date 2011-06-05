@@ -6,6 +6,7 @@
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
+        <option name="SPACE_AFTER_TYPE_CAST" value="false" />
         <option name="SPACE_BEFORE_ARRAY_INITIALIZER_LBRACE" value="true" />
         <ADDITIONAL_INDENT_OPTIONS fileType="groovy">
           <option name="INDENT_SIZE" value="4" />
