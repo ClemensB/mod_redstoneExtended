@@ -70,7 +70,6 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         int orientation = ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).orientation;
         Position parentPos = new Position(x, y, z).positionMoveInDirection(Util.invertDirection(orientation));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
-        //return ((Block.blocksList[parentBlockId] instanceof ILaserPowerProvider) && ((ILaserPowerProvider)Block.blocksList[parentBlockId]).isProvidingLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
         return ((Block.blocksList[parentBlockId] instanceof ILaserEmitter) && ((ILaserEmitter)Block.blocksList[parentBlockId]).isProvidingLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
     }
 
@@ -86,27 +85,9 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
         Position parentPos = new Position(x, y, z).positionMoveInDirection(Util.invertDirection(getOrientation(world, x, y, z)));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
-        if (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z)))
-            return true;
 
-        /*Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
-        int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
-        if (hasNotMaximumLength(world, x, y, z)) {
-            if ((blockIdAtLaserPos == 0) || ((blockIdAtLaserPos != mod_redstoneExtended.getInstance().blockLaser.blockID) && (Block.blocksList[blockIdAtLaserPos].blockMaterial.func_27283_g())))
-                return true;
-
-            if ((blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
-                    (getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z)) &&
-                    ((!getLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z).equals(getLaserMode(world, x, y, z))) ||
-                            (getDistance(world, laserPos.X, laserPos.Y, laserPos.Z) != (getDistance(world, x, y, z) + 1))))
-                return true;
-        } else if ((blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
-                (getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z)))
-            return true;
-
-        return false;*/
-
-        return LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+        return (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) ||
+                LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     private boolean hasNotMaximumLength(IBlockAccess iBlockAccess, int x, int y, int z) {
@@ -163,45 +144,6 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         if (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) {
             setLaserMode(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
         }
-
-        /*Position laserPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
-        int blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
-        boolean blockNeedsToBeUpdated = false;
-
-        if (hasNotMaximumLength(world, x, y, z)) {
-            if ((blockIdAtLaserPos != mod_redstoneExtended.getInstance().blockLaser.blockID) &&
-                    ((blockIdAtLaserPos == 0) || (Block.blocksList[blockIdAtLaserPos].blockMaterial.func_27283_g()))) {
-                world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, mod_redstoneExtended.getInstance().blockLaser.blockID);
-
-                blockNeedsToBeUpdated = true;
-                blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
-
-                setOrientation(world, laserPos.X, laserPos.Y, laserPos.Z, getOrientation(world, x, y, z));
-            }
-
-            if ((blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
-                    (getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == getOrientation(world, x, y, z))) {
-                if (getDistance(world, laserPos.X, laserPos.Y, laserPos.Z) != getDistance(world, x, y, z) + 1) {
-                    setDistance(world, laserPos.X, laserPos.Y, laserPos.Z, (short)(getDistance(world, x, y, z) + 1));
-                    blockNeedsToBeUpdated = true;
-                }
-
-                if (!getLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z).equals(getLaserMode(world, x, y, z))) {
-                    setLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z, getLaserMode(world, x, y, z));
-                    blockNeedsToBeUpdated = true;
-                }
-            }
-        } else if (blockIdAtLaserPos == mod_redstoneExtended.getInstance().blockLaser.blockID) {
-            world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, 0);
-
-            blockNeedsToBeUpdated = true;
-            blockIdAtLaserPos = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
-        }
-
-        if (blockNeedsToBeUpdated) {
-            world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
-            world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, blockIdAtLaserPos);
-        }*/
 
         LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
