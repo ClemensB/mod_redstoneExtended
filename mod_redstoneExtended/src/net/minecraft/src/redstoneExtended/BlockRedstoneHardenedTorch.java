@@ -5,7 +5,7 @@ import net.minecraft.src.*;
 import java.util.Random;
 
 public class BlockRedstoneHardenedTorch extends BlockTorch {
-    private boolean torchActive;
+    private final boolean torchActive;
 
     public BlockRedstoneHardenedTorch(int id, int textureIndex, boolean isActive) {
         super(id, textureIndex);

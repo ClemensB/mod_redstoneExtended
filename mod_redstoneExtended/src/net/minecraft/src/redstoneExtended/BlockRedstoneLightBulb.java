@@ -5,7 +5,7 @@ import net.minecraft.src.*;
 import java.util.Random;
 
 public class BlockRedstoneLightBulb extends Block {
-    private boolean active;
+    private final boolean active;
 
     private static final int textureOff = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightBulb/off.png");
     private static final int textureOn = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightBulb/on.png");
