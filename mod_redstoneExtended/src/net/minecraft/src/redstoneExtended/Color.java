@@ -2,10 +2,13 @@ package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.NBTTagCompound;
 
-public class Color {
+public class Color implements Cloneable {
     public byte R = (byte)0;
     public byte G = (byte)0;
     public byte B = (byte)0;
+
+    public Color() {
+    }
 
     public Color(byte r, byte g, byte b) {
         R = r;
@@ -28,6 +31,19 @@ public class Color {
 
     public int toRGBInt() {
         return ((R & 0xff) << 16) | ((G & 0xff) << 8) | (B & 0xff);
+    }
+
+    public Color getClone() {
+        try {
+            return clone();
+        } catch (CloneNotSupportedException e) {
+            return new Color();
+        }
+    }
+
+    @Override
+    protected Color clone() throws CloneNotSupportedException {
+        return (Color)super.clone();
     }
 
     public boolean equals(Color color) {

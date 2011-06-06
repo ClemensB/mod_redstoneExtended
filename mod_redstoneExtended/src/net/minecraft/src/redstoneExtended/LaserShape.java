@@ -3,7 +3,7 @@ package net.minecraft.src.redstoneExtended;
 import net.minecraft.src.Block;
 import net.minecraft.src.NBTTagCompound;
 
-public class LaserShape {
+public class LaserShape implements Cloneable {
     public float width = 1.0f;
 
     public boolean collision = false;
@@ -35,5 +35,25 @@ public class LaserShape {
         nbtTagCompound.setBoolean("Collision", laserShape.collision);
         nbtTagCompound.setShort("Damage", laserShape.damage);
         nbtTagCompound.setByte("Texture", laserShape.texture);
+    }
+
+    public LaserShape getClone() {
+        try {
+            return clone();
+        } catch (CloneNotSupportedException e) {
+            return new LaserShape();
+        }
+    }
+
+    @Override
+    protected LaserShape clone() throws CloneNotSupportedException {
+        return (LaserShape)super.clone();
+    }
+
+    public boolean equals(LaserShape laserShape) {
+        return ((width == laserShape.width) &&
+                (collision == laserShape.collision) &&
+                (damage == laserShape.damage) &&
+                (texture == laserShape.texture));
     }
 }

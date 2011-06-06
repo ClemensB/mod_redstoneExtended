@@ -66,7 +66,7 @@ public class LaserUtils {
                 }
 
                 if (!laserEmitter.getLaserModeProvidedInDirection(world, x, y, z, direction).equals(BlockLaser.getLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z))) {
-                    BlockLaser.setLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z, laserEmitter.getLaserModeProvidedInDirection(world, x, y, z, direction));
+                    BlockLaser.setLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z, laserEmitter.getLaserModeProvidedInDirection(world, x, y, z, direction).getClone());
                     blockUpdateNecessary = true;
                 }
             } else if (laserBlockId == mod_redstoneExtended.getInstance().blockLaser.blockID) {

@@ -27,7 +27,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess iBlockAccess, int x, int y, int z) {
         byte orientation = ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).orientation;
-        float width = ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.width;
+        float width = ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width;
         float min = 0.5F - (width / 2F);
         float max = 0.5F + (width / 2F);
         switch (orientation) {
@@ -53,12 +53,12 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
-        return ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.texture;
+        return ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture;
     }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        if (((TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.collision)
+        if (((TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.shape.collision)
             return super.getCollisionBoundingBoxFromPool(world, x, y, z);
         else
             return null;
@@ -159,7 +159,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-        short damage = ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.damage;
+        short damage = ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.shape.damage;
         if (damage > 0)
             entity.attackEntityFrom(null, damage);
     }

@@ -13,9 +13,9 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     static {
         operatingModes = new LaserMode[] {
-                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, new Color((byte)255, (byte)0, (byte)0)),
-                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, new Color((byte)0, (byte)255, (byte)0)),
-                new LaserMode(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture, new Color((byte)0, (byte)0, (byte)255))
+                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new Color((byte)255, (byte)0, (byte)0)),
+                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new Color((byte)0, (byte)255, (byte)0)),
+                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new Color((byte)0, (byte)0, (byte)255))
         };
     }
 
@@ -168,7 +168,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 
-        return operatingModes[getOperatingMode(iBlockAccess, x, y, z)];
+        return operatingModes[getOperatingMode(iBlockAccess, x, y, z)].getClone();
     }
 
     @Override

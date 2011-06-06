@@ -1,51 +1,38 @@
 package net.minecraft.src.redstoneExtended;
 
-import net.minecraft.src.Block;
 import net.minecraft.src.NBTTagCompound;
 
 public class LaserMode implements Cloneable {
-    public float width = 1f;
-
-    public boolean collision = false;
-
-    public short damage = (short)0;
-
-    public byte texture = (byte)Block.blockSnow.blockIndexInTexture;
+    public LaserShape shape = new LaserShape();
 
     public Color color = new Color((byte)255, (byte)255, (byte)255);
 
     public LaserMode() {
     }
 
-    public LaserMode(float width, boolean collision, short damage, byte texture, /*byte colorR, byte colorG, byte colorB*/Color color) {
-        this.width = width;
-        this.collision = collision;
-        this.damage = damage;
-        this.texture = texture;
+    public LaserMode(LaserShape laserShape, Color color) {
+        this.shape = laserShape;
         this.color = color;
     }
 
     public static LaserMode readFromNBT(NBTTagCompound nbtTagCompound) {
-        float width = nbtTagCompound.getFloat("Width");
-        boolean collision = nbtTagCompound.getBoolean("Collision");
-        short damage = nbtTagCompound.getShort("Damage");
-        byte texture = nbtTagCompound.getByte("Texture");
+        NBTTagCompound shapeTag = nbtTagCompound.getCompoundTag("Shape");
+        LaserShape laserShape = LaserShape.readFromNBT(shapeTag);
         NBTTagCompound colorTag = nbtTagCompound.getCompoundTag("Color");
         Color color = Color.readFromNBT(colorTag);
-        return new LaserMode(width, collision, damage, texture, color);
+        return new LaserMode(laserShape, color);
     }
 
     public static void writeToNBT(NBTTagCompound nbtTagCompound, LaserMode laserMode) {
-        nbtTagCompound.setFloat("Width", laserMode.width);
-        nbtTagCompound.setBoolean("Collision", laserMode.collision);
-        nbtTagCompound.setShort("Damage", laserMode.damage);
-        nbtTagCompound.setByte("Texture", laserMode.texture);
+        NBTTagCompound shapeTag = new NBTTagCompound();
+        LaserShape.writeToNBT(shapeTag, laserMode.shape);
+        nbtTagCompound.setCompoundTag("Shape", shapeTag);
         NBTTagCompound colorTag = new NBTTagCompound();
         Color.writeToNBT(colorTag, laserMode.color);
         nbtTagCompound.setCompoundTag("Color", colorTag);
     }
 
-    public Object copy() {
+    public LaserMode getClone() {
         try {
             return clone();
         } catch (CloneNotSupportedException e) {
@@ -54,15 +41,15 @@ public class LaserMode implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    protected LaserMode clone() throws CloneNotSupportedException {
+        LaserMode clone = (LaserMode)super.clone();
+        clone.shape = shape.clone();
+        clone.color = color.clone();
+        return clone;
     }
 
     public boolean equals(LaserMode laserMode) {
-        return ((width == laserMode.width) &&
-                (collision == laserMode.collision) &&
-                (damage == laserMode.damage) &&
-                (texture == laserMode.texture) &&
+        return ((shape.equals(laserMode.shape)) &&
                 (color.equals(laserMode.color)));
     }
 }

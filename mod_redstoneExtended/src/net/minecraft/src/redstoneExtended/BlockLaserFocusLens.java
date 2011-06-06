@@ -9,6 +9,16 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         super(id, Block.stone.blockIndexInTexture, Material.rock);
     }
 
+    public final static LaserShape[] operatingModes;
+
+    static {
+        operatingModes = new LaserShape[] {
+                new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture),
+                new LaserShape(0.166f, false, (short)4, (byte)Block.blockSnow.blockIndexInTexture),
+                new LaserShape(1.0f, true, (short)0, (byte)Block.glass.blockIndexInTexture)
+        };
+    }
+
     @Override
     public TileEntity getBlockEntity() {
         return new TileEntityLaserFocusLens();
@@ -96,27 +106,28 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         Position sourcePos = new Position(x, y, z).positionMoveInDirection(Util.invertDirection(orientation));
         int sourceBlockId = iBlockAccess.getBlockId(sourcePos.X, sourcePos.Y, sourcePos.Z);
         if ((Block.blocksList[sourceBlockId] instanceof ILaserEmitter) && (((ILaserEmitter)Block.blocksList[sourceBlockId]).isProvidingLaserPowerInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation))) {
-            setLaserMode(iBlockAccess, x, y, z, (LaserMode)((ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation).copy());
-            switch (getOperatingMode(iBlockAccess, x, y, z)) {
+            setLaserMode(iBlockAccess, x, y, z, ((ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation).getClone());
+            /*switch (getOperatingMode(iBlockAccess, x, y, z)) {
                 case 0:
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.width = 0.33f;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.collision = false;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.damage = 0;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.texture = (byte)Block.blockSnow.blockIndexInTexture;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width = 0.33f;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.collision = false;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.damage = 0;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture = (byte)Block.blockSnow.blockIndexInTexture;
                     break;
                 case 1:
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.width = 0.166f;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.collision = false;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.damage = 4;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.texture = (byte)Block.blockSnow.blockIndexInTexture;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width = 0.166f;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.collision = false;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.damage = 4;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture = (byte)Block.blockSnow.blockIndexInTexture;
                     break;
                 case 2:
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.width = 1.0f;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.collision = true;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.damage = 0;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.texture = (byte)Block.glass.blockIndexInTexture;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width = 1.0f;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.collision = true;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.damage = 0;
+                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture = (byte)Block.glass.blockIndexInTexture;
                     break;
-            }
+            }*/
+            getLaserMode(iBlockAccess, x, y, z).shape = operatingModes[getOperatingMode(iBlockAccess, x, y, z)].getClone();
             setDistance(iBlockAccess, x, y, z, ((ILaserEmitter)Block.blocksList[sourceBlockId]).getInitialDistanceProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation));
             return true;
         }
