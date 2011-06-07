@@ -145,7 +145,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     @Override
     public boolean isProvidingLaserPowerInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
-        return (getOrientation(iBlockAccess, x, y, z) == direction) && getState(iBlockAccess, x, y, z);
+        return canProvideLaserPowerInDirection(iBlockAccess, x, y, z, direction) && getState(iBlockAccess, x, y, z);
     }
 
     @Override

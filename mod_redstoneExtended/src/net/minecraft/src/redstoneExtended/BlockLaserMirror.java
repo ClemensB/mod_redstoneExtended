@@ -113,17 +113,14 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter {
         if (inputLaserModes.size() == 0)
             return false;
 
-        float colorR = 0f, colorG = 0f, colorB = 0f;
+        int colorR = 0, colorG = 0, colorB = 0;
 
         LaserMode lastLaserMode = null;
         boolean areShapesEquals = true;
         for (LaserMode laserMode : inputLaserModes) {
-            /*colorR += ((float)(laserMode.colorRYB.R & 0xff) / (float)inputLaserModes.size());
-            colorY += ((float)(laserMode.colorRYB.Y & 0xff) / (float)inputLaserModes.size());
-            colorB += ((float)(laserMode.colorRYB.B & 0xff) / (float)inputLaserModes.size());*/
-            colorR += (float)(laserMode.color.R & 0xff);
-            colorG += (float)(laserMode.color.G & 0xff);
-            colorB += (float)(laserMode.color.B & 0xff);
+            colorR += (laserMode.color.R & 0xff);
+            colorG += (laserMode.color.G & 0xff);
+            colorB += (laserMode.color.B & 0xff);
 
             if (lastLaserMode == null) {
                 lastLaserMode = laserMode.getClone();
@@ -138,9 +135,9 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter {
         if (lastLaserMode == null)
             return false;
 
-        colorR = (float)MathUtil.clamp(0, 255, (int)colorR);
-        colorG = (float)MathUtil.clamp(0, 255, (int)colorG);
-        colorB = (float)MathUtil.clamp(0, 255, (int)colorB);
+        colorR = MathUtil.clamp(0, 255, colorR);
+        colorG = MathUtil.clamp(0, 255, colorG);
+        colorB = MathUtil.clamp(0, 255, colorB);
 
         ColorRGB color = new ColorRGB((byte)colorR, (byte)colorG, (byte)colorB);
         LaserShape shape = areShapesEquals ? lastLaserMode.shape.getClone() : new LaserShape();
