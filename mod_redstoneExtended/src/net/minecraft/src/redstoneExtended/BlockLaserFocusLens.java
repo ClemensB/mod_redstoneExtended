@@ -54,22 +54,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving creator) {
-        int orientation = MathHelper.floor_double((double)((creator.rotationYaw * 4F) / 360F) + 0.5D) & 0x3;
-        switch (orientation) {
-            case 0:
-                orientation = 2;
-                break;
-            case 1:
-                orientation = 5;
-                break;
-            case 2:
-                orientation = 3;
-                break;
-            case 3:
-                orientation = 4;
-                break;
-        }
-        setOrientation(world, x, y, z, orientation);
+        setOrientation(world, x, y, z, Util.getOrientationFromPlayer(creator));
     }
 
     @Override
@@ -79,16 +64,16 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
     }
 
     private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
-        return (getState(world, x, y, z) != isInputBeingLaserPowered(world, x, y, z)) ||
-                LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+        return (getState(world, x, y, z) != updateInputState(world, x, y, z)) ||
+                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
     public void updateTick(World world, int x, int y, int z, Random random) {
-        if (getState(world, x, y, z) != isInputBeingLaserPowered(world, x, y, z))
+        if (getState(world, x, y, z) != updateInputState(world, x, y, z))
             setState(world, x, y, z, !getState(world, x, y, z));
 
-        LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
+        LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -101,32 +86,12 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         return true;
     }
 
-    protected boolean isInputBeingLaserPowered(IBlockAccess iBlockAccess, int x, int y, int z) {
+    protected boolean updateInputState(IBlockAccess iBlockAccess, int x, int y, int z) {
         int orientation = getOrientation(iBlockAccess, x, y, z);
         Position sourcePos = new Position(x, y, z).positionMoveInDirection(Util.invertDirection(orientation));
         int sourceBlockId = iBlockAccess.getBlockId(sourcePos.X, sourcePos.Y, sourcePos.Z);
         if ((Block.blocksList[sourceBlockId] instanceof ILaserEmitter) && (((ILaserEmitter)Block.blocksList[sourceBlockId]).isProvidingLaserPowerInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation))) {
             setLaserMode(iBlockAccess, x, y, z, ((ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation).getClone());
-            /*switch (getOperatingMode(iBlockAccess, x, y, z)) {
-                case 0:
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width = 0.33f;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.collision = false;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.damage = 0;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture = (byte)Block.blockSnow.blockIndexInTexture;
-                    break;
-                case 1:
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width = 0.166f;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.collision = false;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.damage = 4;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture = (byte)Block.blockSnow.blockIndexInTexture;
-                    break;
-                case 2:
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width = 1.0f;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.collision = true;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.damage = 0;
-                    ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture = (byte)Block.glass.blockIndexInTexture;
-                    break;
-            }*/
             getLaserMode(iBlockAccess, x, y, z).shape = operatingModes[getOperatingMode(iBlockAccess, x, y, z)].getClone();
             setDistance(iBlockAccess, x, y, z, ((ILaserEmitter)Block.blocksList[sourceBlockId]).getInitialDistanceProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation));
             return true;

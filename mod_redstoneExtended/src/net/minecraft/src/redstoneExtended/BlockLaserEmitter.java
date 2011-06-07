@@ -13,9 +13,9 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     static {
         operatingModes = new LaserMode[] {
-                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new Color((byte)255, (byte)0, (byte)0)),
-                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new Color((byte)0, (byte)255, (byte)0)),
-                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new Color((byte)0, (byte)0, (byte)255))
+                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new ColorRGB((byte)255, (byte)0, (byte)0)),
+                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new ColorRGB((byte)0, (byte)255, (byte)0)),
+                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new ColorRGB((byte)0, (byte)0, (byte)255))
         };
     }
 
@@ -55,22 +55,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving creator) {
-        int orientation = MathHelper.floor_double((double)((creator.rotationYaw * 4F) / 360F) + 0.5D) & 0x3;
-        switch (orientation) {
-            case 0:
-                orientation = 2;
-                break;
-            case 1:
-                orientation = 5;
-                break;
-            case 2:
-                orientation = 3;
-                break;
-            case 3:
-                orientation = 4;
-                break;
-        }
-        setOrientation(world, x, y, z, orientation);
+        setOrientation(world, x, y, z, Util.getOrientationFromPlayer(creator));
     }
 
     @Override
@@ -81,7 +66,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
         return (getState(world, x, y, z) != isBeingPowered(world, x, y, z)) ||
-                LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -89,7 +74,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
         if (getState(world, x, y, z) != isBeingPowered(world, x, y, z))
             setState(world, x, y, z, !getState(world, x, y, z));
 
-        LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
+        LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override

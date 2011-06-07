@@ -2,28 +2,28 @@ package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.NBTTagCompound;
 
-public class Color implements Cloneable {
+public class ColorRGB implements Cloneable {
     public byte R = (byte)0;
     public byte G = (byte)0;
     public byte B = (byte)0;
 
-    public Color() {
+    public ColorRGB() {
     }
 
-    public Color(byte r, byte g, byte b) {
+    public ColorRGB(byte r, byte g, byte b) {
         R = r;
         G = g;
         B = b;
     }
 
-    public static Color readFromNBT(NBTTagCompound nbtTagCompound) {
+    public static ColorRGB readFromNBT(NBTTagCompound nbtTagCompound) {
         byte r = nbtTagCompound.getByte("R");
         byte g = nbtTagCompound.getByte("G");
         byte b = nbtTagCompound.getByte("B");
-        return new Color(r, g, b);
+        return new ColorRGB(r, g, b);
     }
 
-    public static void writeToNBT(NBTTagCompound nbtTagCompound, Color color) {
+    public static void writeToNBT(NBTTagCompound nbtTagCompound, ColorRGB color) {
         nbtTagCompound.setByte("R", color.R);
         nbtTagCompound.setByte("G", color.G);
         nbtTagCompound.setByte("B", color.B);
@@ -33,20 +33,20 @@ public class Color implements Cloneable {
         return ((R & 0xff) << 16) | ((G & 0xff) << 8) | (B & 0xff);
     }
 
-    public Color getClone() {
+    public ColorRGB getClone() {
         try {
             return clone();
         } catch (CloneNotSupportedException e) {
-            return new Color();
+            return new ColorRGB();
         }
     }
 
     @Override
-    protected Color clone() throws CloneNotSupportedException {
-        return (Color)super.clone();
+    protected ColorRGB clone() throws CloneNotSupportedException {
+        return (ColorRGB)super.clone();
     }
 
-    public boolean equals(Color color) {
+    public boolean equals(ColorRGB color) {
         return ((R == color.R) &&
                 (G == color.G) &&
                 (B == color.B));

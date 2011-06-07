@@ -5,12 +5,12 @@ import net.minecraft.src.NBTTagCompound;
 public class LaserMode implements Cloneable {
     public LaserShape shape = new LaserShape();
 
-    public Color color = new Color((byte)255, (byte)255, (byte)255);
+    public ColorRGB color = new ColorRGB((byte)255, (byte)255, (byte)255);
 
     public LaserMode() {
     }
 
-    public LaserMode(LaserShape laserShape, Color color) {
+    public LaserMode(LaserShape laserShape, ColorRGB color) {
         this.shape = laserShape;
         this.color = color;
     }
@@ -19,7 +19,7 @@ public class LaserMode implements Cloneable {
         NBTTagCompound shapeTag = nbtTagCompound.getCompoundTag("Shape");
         LaserShape laserShape = LaserShape.readFromNBT(shapeTag);
         NBTTagCompound colorTag = nbtTagCompound.getCompoundTag("Color");
-        Color color = Color.readFromNBT(colorTag);
+        ColorRGB color = ColorRGB.readFromNBT(colorTag);
         return new LaserMode(laserShape, color);
     }
 
@@ -28,7 +28,7 @@ public class LaserMode implements Cloneable {
         LaserShape.writeToNBT(shapeTag, laserMode.shape);
         nbtTagCompound.setCompoundTag("Shape", shapeTag);
         NBTTagCompound colorTag = new NBTTagCompound();
-        Color.writeToNBT(colorTag, laserMode.color);
+        ColorRGB.writeToNBT(colorTag, laserMode.color);
         nbtTagCompound.setCompoundTag("Color", colorTag);
     }
 

@@ -4,7 +4,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.NBTTagCompound;
 
 public class LaserShape implements Cloneable {
-    public float width = 1.0f;
+    public float width = 0.33f;
 
     public boolean collision = false;
 

@@ -4,7 +4,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import net.minecraft.src.mod_redstoneExtended;
 
-public class LaserUtils {
+public class LaserUtil {
     public static boolean isBlockUpdateForLaserInDirectionNecessary(World world, int x, int y, int z, byte direction) {
         int blockId = world.getBlockId(x, y, z);
         Block block = Block.blocksList[blockId];
@@ -28,7 +28,7 @@ public class LaserUtils {
                             (BlockLaser.getDistance(world, laserPos.X, laserPos.Y, laserPos.Z) != laserEmitter.getInitialDistanceProvidedInDirection(world, x, y, z, direction))))
                 return true;
         } else if ((laserBlockId == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
-                (laserEmitter.canProvideLaserPowerInDirection(world, x, y, z, direction)))
+                (BlockLaser.getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == direction))
             return true;
 
         return false;
@@ -69,17 +69,17 @@ public class LaserUtils {
                     BlockLaser.setLaserMode(world, laserPos.X, laserPos.Y, laserPos.Z, laserEmitter.getLaserModeProvidedInDirection(world, x, y, z, direction).getClone());
                     blockUpdateNecessary = true;
                 }
-            } else if (laserBlockId == mod_redstoneExtended.getInstance().blockLaser.blockID) {
-                world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, 0);
-
-                blockUpdateNecessary = true;
-                laserBlockId = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
             }
+        } else if ((laserBlockId == mod_redstoneExtended.getInstance().blockLaser.blockID) &&
+                (BlockLaser.getOrientation(world, laserPos.X, laserPos.Y, laserPos.Z) == direction)) {
 
-            if (blockUpdateNecessary) {
-                world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
-                world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, laserBlockId);
-            }
+            world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, 0);
+            blockUpdateNecessary = true;
+        }
+
+        if (blockUpdateNecessary) {
+            world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
+            world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, laserBlockId);
         }
     }
 }

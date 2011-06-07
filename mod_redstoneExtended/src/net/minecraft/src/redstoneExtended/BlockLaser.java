@@ -86,7 +86,8 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
 
         return (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) ||
-                LaserUtils.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+                !(((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z)) ||
+                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     private boolean hasNotMaximumLength(IBlockAccess iBlockAccess, int x, int y, int z) {
@@ -142,9 +143,14 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
         if (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) {
             setLaserMode(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
+            world.notifyBlocksOfNeighborChange(x, y, z, blockID);
+        }
+        if (!(((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z))) {
+            setDistance(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
+            world.notifyBlocksOfNeighborChange(x, y, z, blockID);
         }
 
-        LaserUtils.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
+        LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override

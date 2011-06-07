@@ -1,34 +1,9 @@
 package net.minecraft.src.redstoneExtended;
 
-import net.minecraft.src.Vec3D;
+import net.minecraft.src.EntityLiving;
+import net.minecraft.src.MathHelper;
 
 public class Util {
-    public static Vec3D positionMoveInDirection(Vec3D position, int direction) {
-        if (direction < 0 || direction > 5)
-            throw new IllegalArgumentException("Direction must be between 0 and 5");
-        switch (invertDirection(direction)) {
-            case 0:
-                position.yCoord--;
-                break;
-            case 1:
-                position.yCoord++;
-                break;
-            case 2:
-                position.zCoord++;
-                break;
-            case 3:
-                position.zCoord--;
-                break;
-            case 4:
-                position.xCoord++;
-                break;
-            case 5:
-                position.xCoord--;
-                break;
-        }
-        return position;
-    }
-
     public static int invertDirection(int direction) {
         if (direction < 0 || direction > 5)
             throw new IllegalArgumentException("Direction must be between 0 and 5");
@@ -48,5 +23,24 @@ public class Util {
             default:
                 return 0;
         }
+    }
+
+    public static int getOrientationFromPlayer(EntityLiving entityLiving) {
+        int orientation = MathHelper.floor_double((double)((entityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 0x3;
+        switch (orientation) {
+            case 0:
+                orientation = 2;
+                break;
+            case 1:
+                orientation = 5;
+                break;
+            case 2:
+                orientation = 3;
+                break;
+            case 3:
+                orientation = 4;
+                break;
+        }
+        return orientation;
     }
 }
