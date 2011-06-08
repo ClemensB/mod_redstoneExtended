@@ -1,9 +1,9 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Util;
 
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MathHelper;
 
-public class Util {
+public class DirectionUtil {
     public static int invertDirection(int direction) {
         if (direction < 0 || direction > 5)
             throw new IllegalArgumentException("Direction must be between 0 and 5");

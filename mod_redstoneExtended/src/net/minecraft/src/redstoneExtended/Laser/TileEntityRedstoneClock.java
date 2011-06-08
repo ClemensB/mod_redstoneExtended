@@ -1,7 +1,8 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
+import net.minecraft.src.redstoneExtended.BlockRedstoneClock;
 
 public class TileEntityRedstoneClock extends TileEntity {
     private boolean state = false;

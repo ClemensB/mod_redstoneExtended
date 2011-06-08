@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Util;
 
 import net.minecraft.src.NBTTagCompound;
 
@@ -42,7 +42,7 @@ public class ColorRGB implements Cloneable {
     }
 
     @Override
-    protected ColorRGB clone() throws CloneNotSupportedException {
+    public ColorRGB clone() throws CloneNotSupportedException {
         return (ColorRGB)super.clone();
     }
 

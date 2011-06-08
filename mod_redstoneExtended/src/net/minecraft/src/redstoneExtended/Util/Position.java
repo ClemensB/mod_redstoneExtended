@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Util;
 
 public class Position {
     public int X;
@@ -14,7 +14,7 @@ public class Position {
     public Position positionMoveInDirection(int direction) {
         if (direction < 0 || direction > 5)
             throw new IllegalArgumentException("Direction must be in range of 0 and 5");
-        switch (Util.invertDirection(direction)) {
+        switch (DirectionUtil.invertDirection(direction)) {
             case 0:
                 Y--;
                 break;

@@ -1,34 +1,34 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.NBTTagCompound;
 
 public class LaserMode implements Cloneable {
-    public LaserShape shape = new LaserShape();
+    public net.minecraft.src.redstoneExtended.Laser.LaserShape shape = new net.minecraft.src.redstoneExtended.Laser.LaserShape();
 
-    public ColorRGB color = new ColorRGB((byte)255, (byte)255, (byte)255);
+    public net.minecraft.src.redstoneExtended.Util.ColorRGB color = new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)255, (byte)255, (byte)255);
 
     public LaserMode() {
     }
 
-    public LaserMode(LaserShape laserShape, ColorRGB color) {
+    public LaserMode(net.minecraft.src.redstoneExtended.Laser.LaserShape laserShape, net.minecraft.src.redstoneExtended.Util.ColorRGB color) {
         this.shape = laserShape;
         this.color = color;
     }
 
     public static LaserMode readFromNBT(NBTTagCompound nbtTagCompound) {
         NBTTagCompound shapeTag = nbtTagCompound.getCompoundTag("Shape");
-        LaserShape laserShape = LaserShape.readFromNBT(shapeTag);
+        net.minecraft.src.redstoneExtended.Laser.LaserShape laserShape = net.minecraft.src.redstoneExtended.Laser.LaserShape.readFromNBT(shapeTag);
         NBTTagCompound colorTag = nbtTagCompound.getCompoundTag("Color");
-        ColorRGB color = ColorRGB.readFromNBT(colorTag);
+        net.minecraft.src.redstoneExtended.Util.ColorRGB color = net.minecraft.src.redstoneExtended.Util.ColorRGB.readFromNBT(colorTag);
         return new LaserMode(laserShape, color);
     }
 
     public static void writeToNBT(NBTTagCompound nbtTagCompound, LaserMode laserMode) {
         NBTTagCompound shapeTag = new NBTTagCompound();
-        LaserShape.writeToNBT(shapeTag, laserMode.shape);
+        net.minecraft.src.redstoneExtended.Laser.LaserShape.writeToNBT(shapeTag, laserMode.shape);
         nbtTagCompound.setCompoundTag("Shape", shapeTag);
         NBTTagCompound colorTag = new NBTTagCompound();
-        ColorRGB.writeToNBT(colorTag, laserMode.color);
+        net.minecraft.src.redstoneExtended.Util.ColorRGB.writeToNBT(colorTag, laserMode.color);
         nbtTagCompound.setCompoundTag("Color", colorTag);
     }
 

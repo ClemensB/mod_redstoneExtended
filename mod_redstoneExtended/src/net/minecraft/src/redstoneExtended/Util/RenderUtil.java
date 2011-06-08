@@ -1,11 +1,11 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Util;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Tessellator;
 
-class RenderHelper {
-    static void renderOverlay(Block block, double x, double y, double z, int textureIndex, int layer, double offsetX, double offsetZ, double scaleX, double scaleZ, double rotation, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
+public class RenderUtil {
+    public static void renderOverlay(Block block, double x, double y, double z, int textureIndex, int layer, double offsetX, double offsetZ, double scaleX, double scaleZ, double rotation, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
         Tessellator tessellator = Tessellator.instance;
         int texturePositionX = (textureIndex & 0xF) << 4;
         int texturePositionY = textureIndex & 0xF0;
@@ -55,7 +55,7 @@ class RenderHelper {
         tessellator.addVertexWithUV(quadRotatedBLX, absolutePosY, quadRotatedBLZ, textureUMin, textureVMax);
     }
 
-    static void renderBlockOverlay(IBlockAccess iBlockAccess, Block block, int x, int y, int z, int textureIndex, int level, double xOffset, double zOffset, double xScale, double zScale, double rotation, boolean ignoreLighting, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
+    public static void renderBlockOverlay(IBlockAccess iBlockAccess, Block block, int x, int y, int z, int textureIndex, int level, double xOffset, double zOffset, double xScale, double zScale, double rotation, boolean ignoreLighting, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
         int colorMultiplier = block.colorMultiplier(iBlockAccess, x, y, z);
         float colorMultiplierR = (float)(colorMultiplier >> 16 & 0xFF) / 255F;
         float colorMultiplierG = (float)(colorMultiplier >> 8 & 0xFF) / 255F;
@@ -64,7 +64,7 @@ class RenderHelper {
         renderBlockOverlay(iBlockAccess, block, x, y, z, textureIndex, level, xOffset, zOffset, xScale, zScale, rotation, colorMultiplierR, colorMultiplierG, colorMultiplierB, ignoreLighting, textureOffsetU, textureOffsetV, textureScaleU, textureScaleV);
     }
 
-    static void renderBlockOverlay(IBlockAccess iBlockAccess, Block block, int x, int y, int z, int textureIndex, int layer, double xOffset, double zOffset, double xScale, double zScale, double rotationDeg, float colorMultiplierR, float colorMultiplierG, float colorMultiplierB, boolean ignoreLighting, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
+    public static void renderBlockOverlay(IBlockAccess iBlockAccess, Block block, int x, int y, int z, int textureIndex, int layer, double xOffset, double zOffset, double xScale, double zScale, double rotationDeg, float colorMultiplierR, float colorMultiplierG, float colorMultiplierB, boolean ignoreLighting, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
         Tessellator tessellator = Tessellator.instance;
 
         float blockBrightness = block.getBlockBrightness(iBlockAccess, x, y, z);
@@ -79,7 +79,7 @@ class RenderHelper {
         renderOverlay(block, x, y, z, textureIndex, layer, xOffset, zOffset, xScale, zScale, rotationDeg, textureOffsetU, textureOffsetV, textureScaleU, textureScaleV);
     }
 
-    static void renderTorchOnCeiling(Block block, double x, double y, double z) {
+    public static void renderTorchOnCeiling(Block block, double x, double y, double z) {
         Tessellator tessellator = Tessellator.instance;
         int textureIndex = block.getBlockTextureFromSide(0);
         int texturePositionX = (textureIndex & 0xF) << 4;

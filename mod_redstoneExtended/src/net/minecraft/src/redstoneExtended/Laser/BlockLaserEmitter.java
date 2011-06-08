@@ -1,27 +1,28 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
 
 import java.util.Random;
 
-public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
+public class BlockLaserEmitter extends BlockContainer implements net.minecraft.src.redstoneExtended.Laser.ILaserEmitter {
     public BlockLaserEmitter(int id) {
         super(id, Block.dispenser.blockIndexInTexture, Material.rock);
     }
 
-    public final static LaserMode[] operatingModes;
+    public final static net.minecraft.src.redstoneExtended.Laser.LaserMode[] operatingModes;
 
     static {
-        operatingModes = new LaserMode[] {
-                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new ColorRGB((byte)255, (byte)0, (byte)0)),
-                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new ColorRGB((byte)0, (byte)255, (byte)0)),
-                new LaserMode(new LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new ColorRGB((byte)0, (byte)0, (byte)255))
+        operatingModes = new net.minecraft.src.redstoneExtended.Laser.LaserMode[] {
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)255, (byte)0, (byte)0)),
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)255, (byte)0)),
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)0, (byte)255))
         };
     }
 
     @Override
     public TileEntity getBlockEntity() {
-        return new TileEntityLaserEmitter();
+        return new net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving creator) {
-        setOrientation(world, x, y, z, Util.getOrientationFromPlayer(creator));
+        setOrientation(world, x, y, z, DirectionUtil.getOrientationFromPlayer(creator));
     }
 
     @Override
@@ -66,7 +67,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
 
     private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
         return (getState(world, x, y, z) != isBeingPowered(world, x, y, z)) ||
-                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+                net.minecraft.src.redstoneExtended.Laser.LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -74,7 +75,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
         if (getState(world, x, y, z) != isBeingPowered(world, x, y, z))
             setState(world, x, y, z, !getState(world, x, y, z));
 
-        LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
+        net.minecraft.src.redstoneExtended.Laser.LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -131,11 +132,11 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
     }
 
     public static byte getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
+        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
     }
 
     public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, byte operatingMode) {
-        ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
+        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
     }
 
     @Override
@@ -149,7 +150,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
     }
 
     @Override
-    public LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public net.minecraft.src.redstoneExtended.Laser.LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 

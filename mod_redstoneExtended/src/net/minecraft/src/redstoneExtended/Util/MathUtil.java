@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.redstoneExtended.Util;
 
 public class MathUtil {
     public static int clamp(int min, int max, int value) {
