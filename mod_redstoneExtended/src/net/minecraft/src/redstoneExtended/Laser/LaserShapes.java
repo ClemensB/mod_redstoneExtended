@@ -10,6 +10,6 @@ public class LaserShapes {
     static {
         Default = new LaserShape(4f / 16f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture);
         Deadly = new LaserShape(2f / 16f, false, (short)4, (byte)Block.blockSnow.blockIndexInTexture);
-        Bridge = new LaserShape(16f / 16f, true, (short)0, (byte)Block.glass.blockIndexInTexture);
+        Bridge = new LaserShape(14f / 16f, true, (short)0, (byte)Block.glass.blockIndexInTexture);
     }
 }
