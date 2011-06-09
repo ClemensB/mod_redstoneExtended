@@ -1,18 +1,21 @@
 package net.minecraft.src.redstoneExtended.Laser;
 
-import net.minecraft.src.Block;
 import net.minecraft.src.NBTTagCompound;
 
 public class LaserShape implements Cloneable {
-    public float width = 0.33f;
+    public float width;
 
-    public boolean collision = false;
+    public boolean collision;
 
-    public short damage = (short)0;
+    public short damage;
 
-    public byte texture = (byte)Block.blockSnow.blockIndexInTexture;
+    public byte texture;
 
     public LaserShape() {
+        width = LaserShapes.Default.width;
+        collision = LaserShapes.Default.collision;
+        damage = LaserShapes.Default.damage;
+        texture = LaserShapes.Default.texture;
     }
 
     public LaserShape(float width, boolean collision, short damage, byte texture) {

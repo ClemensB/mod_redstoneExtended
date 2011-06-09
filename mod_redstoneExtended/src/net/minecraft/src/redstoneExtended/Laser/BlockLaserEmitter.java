@@ -14,9 +14,9 @@ public class BlockLaserEmitter extends BlockContainer implements net.minecraft.s
 
     static {
         operatingModes = new net.minecraft.src.redstoneExtended.Laser.LaserMode[] {
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)255, (byte)0, (byte)0)),
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)255, (byte)0)),
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture), new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)0, (byte)255))
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)255, (byte)0, (byte)0)),
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)255, (byte)0)),
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)0, (byte)255))
         };
     }
 

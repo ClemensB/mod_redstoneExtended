@@ -14,9 +14,9 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
 
     static {
         operatingModes = new net.minecraft.src.redstoneExtended.Laser.LaserShape[] {
-                new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.33f, false, (short)0, (byte)Block.blockSnow.blockIndexInTexture),
-                new net.minecraft.src.redstoneExtended.Laser.LaserShape(0.166f, false, (short)4, (byte)Block.blockSnow.blockIndexInTexture),
-                new net.minecraft.src.redstoneExtended.Laser.LaserShape(1.0f, true, (short)0, (byte)Block.glass.blockIndexInTexture)
+                LaserShapes.Default,
+                LaserShapes.Deadly,
+                LaserShapes.Bridge
         };
     }
 
