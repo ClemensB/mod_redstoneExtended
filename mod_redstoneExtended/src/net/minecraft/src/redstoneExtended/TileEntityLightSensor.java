@@ -1,7 +1,6 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.redstoneExtended.BlockRedstoneLightSensor;
 
 public class TileEntityLightSensor extends TileEntity {
     public TileEntityLightSensor() {

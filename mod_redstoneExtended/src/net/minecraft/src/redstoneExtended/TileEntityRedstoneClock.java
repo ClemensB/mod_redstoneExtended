@@ -1,8 +1,7 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.redstoneExtended.BlockRedstoneClock;
 
 public class TileEntityRedstoneClock extends TileEntity {
     private boolean state = false;
@@ -25,6 +24,7 @@ public class TileEntityRedstoneClock extends TileEntity {
             time = 0;
             state = !state;
             BlockRedstoneClock.setState(worldObj, xCoord, yCoord, zCoord, state);
+            worldObj.markBlocksDirty(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
         }
     }
 

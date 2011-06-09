@@ -17,7 +17,7 @@ public class BlockRedstoneLightSensor extends BlockContainer {
 
     @Override
     public TileEntity getBlockEntity() {
-        return new net.minecraft.src.redstoneExtended.Laser.TileEntityLightSensor();
+        return new TileEntityLightSensor();
     }
 
     @Override

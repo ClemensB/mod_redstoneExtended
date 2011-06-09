@@ -14,7 +14,7 @@ public class BlockRedstoneClock extends BlockContainer {
 
     @Override
     public TileEntity getBlockEntity() {
-        return new net.minecraft.src.redstoneExtended.Laser.TileEntityRedstoneClock();
+        return new TileEntityRedstoneClock();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class BlockRedstoneClock extends BlockContainer {
         byte oldDelaySetting = getDelaySetting(world, x, y, z);
         byte newDelaySetting = (byte)((oldDelaySetting >= 5) ? 0 : oldDelaySetting + 1);
         setDelaySetting(world, x, y, z, newDelaySetting);
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityRedstoneClock)world.getBlockTileEntity(x, y, z)).delaySettingChanged();
+        ((TileEntityRedstoneClock)world.getBlockTileEntity(x, y, z)).delaySettingChanged();
 
         return true;
     }

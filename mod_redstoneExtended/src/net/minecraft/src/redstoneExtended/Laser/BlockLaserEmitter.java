@@ -10,6 +10,8 @@ public class BlockLaserEmitter extends BlockContainer implements net.minecraft.s
         super(id, Block.dispenser.blockIndexInTexture, Material.rock);
     }
 
+    public final static int textureFront = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/front_0.png");
+
     public final static net.minecraft.src.redstoneExtended.Laser.LaserMode[] operatingModes;
 
     static {
@@ -37,7 +39,7 @@ public class BlockLaserEmitter extends BlockContainer implements net.minecraft.s
             case 1:
                 return blockIndexInTexture + 17;
             default:
-                return blockIndexInTexture + ((getOrientation(iBlockAccess, x, y, z) == side) ? 1 : 0);
+                return ((getOrientation(iBlockAccess, x, y, z) == side) ? textureFront : blockIndexInTexture);
         }
     }
 
@@ -48,7 +50,7 @@ public class BlockLaserEmitter extends BlockContainer implements net.minecraft.s
             case 1:
                 return blockIndexInTexture + 17;
             case 3:
-                return blockIndexInTexture + 1;
+                return textureFront;
             default:
                 return blockIndexInTexture;
         }

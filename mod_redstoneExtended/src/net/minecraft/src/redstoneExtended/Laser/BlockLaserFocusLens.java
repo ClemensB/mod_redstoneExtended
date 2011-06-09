@@ -10,6 +10,10 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
         super(id, Block.stone.blockIndexInTexture, Material.rock);
     }
 
+    public final static int textureFrontDefault = BlockLaserEmitter.textureFront;
+    public final static int textureFrontDeadly = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/front_1.png");
+    public final static int textureFrontBridge = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/front_2.png");
+
     public final static net.minecraft.src.redstoneExtended.Laser.LaserShape[] operatingModes;
 
     static {
@@ -34,7 +38,16 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
         int orientation = getOrientation(iBlockAccess, x, y, z);
         if (side == orientation)
-            return Block.dispenser.getBlockTextureFromSide(3);
+            switch (getOperatingMode(iBlockAccess, x, y, z)) {
+                case 0:
+                    return textureFrontDefault;
+                case 1:
+                    return textureFrontDeadly;
+                case 2:
+                    return textureFrontBridge;
+                default:
+                    return textureFrontDefault;
+            }
         else if (side == DirectionUtil.invertDirection(orientation))
             return Block.blockSnow.blockIndexInTexture;
         else
@@ -45,7 +58,7 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
     public int getBlockTextureFromSide(int side) {
         switch (side) {
             case 3:
-                return Block.dispenser.getBlockTextureFromSide(3);
+                return textureFrontDefault;
             case 2:
                 return Block.blockSnow.blockIndexInTexture;
             default:
@@ -81,6 +94,7 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= 2 ? (byte)0 : (byte)(getOperatingMode(world, x, y, z) + 1));
 
+        world.markBlocksDirty(x, y, z, x, y, z);
         world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
         world.notifyBlocksOfNeighborChange(x, y, z, blockID);
 

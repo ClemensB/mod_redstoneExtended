@@ -176,8 +176,8 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.AddName(blockCheat, "Cheat Block");
 
 
-        ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityRedstoneClock.class, "RedstoneClock");
-        ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLightSensor.class, "RedstoneLightSensor");
+        ModLoader.RegisterTileEntity(TileEntityRedstoneClock.class, "RedstoneClock");
+        ModLoader.RegisterTileEntity(TileEntityLightSensor.class, "RedstoneLightSensor");
         ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaser.class, "Laser");
         ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter.class, "LaserEmitter");
         ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens.class, "LaserFocusLens");
