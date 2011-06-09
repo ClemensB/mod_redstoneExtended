@@ -1,8 +1,6 @@
 package net.minecraft.src.redstoneExtended.Util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Block;
-import net.minecraft.src.Item;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -15,23 +13,33 @@ public class IdManager {
         Block() {
             @Override
             public int generateId() {
-                return IdManager.getInstance().getFirstFreeBlockId();
+                for (int i = net.minecraft.src.Block.blocksList.length - 1; i >= 0; --i) {
+                    if ((net.minecraft.src.Block.blocksList[i] == null) && !IdManager.getInstance().reservedIds.contains(i))
+                        return i;
+                }
+
+                return -1;
             }
 
             @Override
             public boolean isIdUsed(int id) {
-                return IdManager.getInstance().isBlockIdUsed(id);
+                return net.minecraft.src.Block.blocksList[id] != null;
             }
         },
         Item() {
             @Override
             public int generateId() {
-                return IdManager.getInstance().getFirstFreeItemId();
+                for (int i = net.minecraft.src.Item.itemsList.length - 1; i >= 0; --i) {
+                    if ((net.minecraft.src.Item.itemsList[i] == null) && !IdManager.getInstance().reservedIds.contains(i))
+                        return i - 256;
+                }
+
+                return -1;
             }
 
             @Override
             public boolean isIdUsed(int id) {
-                return IdManager.getInstance().isItemIdUsed(id);
+                return net.minecraft.src.Item.itemsList[id] != null;
             }
         };
 
@@ -52,32 +60,6 @@ public class IdManager {
             instance = new IdManager();
 
         return instance;
-    }
-
-    public int getFirstFreeBlockId() {
-        for (int i = Block.blocksList.length - 1; i >= 0; --i) {
-            if ((Block.blocksList[i] == null) && !reservedIds.contains(i))
-                return i;
-        }
-
-        return -1;
-    }
-
-    public int getFirstFreeItemId() {
-        for (int i = Item.itemsList.length - 1; i >= 0; --i) {
-            if ((Item.itemsList[i] == null) && !reservedIds.contains(i))
-                return i - 256;
-        }
-
-        return -1;
-    }
-
-    public boolean isBlockIdUsed(int id) {
-        return Block.blocksList[id] != null;
-    }
-
-    public boolean isItemIdUsed(int id) {
-        return Item.itemsList[id] != null;
     }
 
     public int getId(String name, IdType idType) {
