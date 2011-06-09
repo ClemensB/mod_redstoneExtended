@@ -148,6 +148,7 @@ public class BlockLaserMirror extends BlockContainer implements net.minecraft.sr
         net.minecraft.src.redstoneExtended.Laser.LaserMode laserMode = new net.minecraft.src.redstoneExtended.Laser.LaserMode(shape, color);
         setLaserMode(world, x, y, z, laserMode);
         setDistance(world, x, y, z, distance);
+        world.notifyBlocksOfNeighborChange(x, y, z, blockID);
 
         return true;
     }
