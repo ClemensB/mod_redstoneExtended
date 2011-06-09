@@ -3,6 +3,7 @@ package net.minecraft.src.redstoneExtended.Util;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -14,7 +15,7 @@ public class IdManager {
             @Override
             public int generateId() {
                 for (int i = net.minecraft.src.Block.blocksList.length - 1; i >= 0; --i) {
-                    if ((net.minecraft.src.Block.blocksList[i] == null) && !IdManager.getInstance().reservedIds.contains(i))
+                    if ((net.minecraft.src.Block.blocksList[i] == null) && !IdManager.getInstance().reservedIds.get(Block).contains(i))
                         return i;
                 }
 
@@ -30,7 +31,7 @@ public class IdManager {
             @Override
             public int generateId() {
                 for (int i = net.minecraft.src.Item.itemsList.length - 1; i >= 0; --i) {
-                    if ((net.minecraft.src.Item.itemsList[i] == null) && !IdManager.getInstance().reservedIds.contains(i))
+                    if ((net.minecraft.src.Item.itemsList[i] == null) && !IdManager.getInstance().reservedIds.get(Item).contains(i))
                         return i - 256;
                 }
 
@@ -50,7 +51,7 @@ public class IdManager {
 
     private static IdManager instance;
 
-    private LinkedList<Integer> reservedIds;
+    private HashMap<IdType, LinkedList<Integer>> reservedIds;
 
     public IdManager() {
     }
@@ -91,7 +92,7 @@ public class IdManager {
 
             if (reservedIds == null) {
                 LoggingUtil.logDebug("Initializing reserved id list");
-                reservedIds = new LinkedList<Integer>();
+                reservedIds = new HashMap<IdType, LinkedList<Integer>>();
 
                 String patIdTypeStr = "";
                 for (IdType idTypePossibility : IdType.values()) {
@@ -109,7 +110,10 @@ public class IdManager {
                         String strReservedId = ids.getProperty(propertyName);
                         int reservedId = Integer.parseInt(strReservedId);
 
-                        reservedIds.add(reservedId);
+                        if (!reservedIds.containsKey(idType))
+                            reservedIds.put(idType, new LinkedList<Integer>());
+
+                        reservedIds.get(idType).add(reservedId);
                     }
                 }
             }
