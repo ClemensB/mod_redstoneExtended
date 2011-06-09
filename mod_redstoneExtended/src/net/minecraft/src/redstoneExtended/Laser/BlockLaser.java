@@ -2,6 +2,7 @@ package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
 import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
+import net.minecraft.src.redstoneExtended.Util.Position;
 
 import java.util.Random;
 
@@ -86,6 +87,15 @@ public class BlockLaser extends BlockContainer implements net.minecraft.src.reds
         net.minecraft.src.redstoneExtended.Util.Position parentPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(DirectionUtil.invertDirection(getOrientation(world, x, y, z)));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
 
+        if (getLaserMode(world, x, y, z).shape.equals(LaserShapes.Deadly)) {
+            Position nextPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+            if (world.getBlockMaterial(nextPos.X, nextPos.Y, nextPos.Z).getBurning()) {
+                Position abovePos = nextPos.positionMoveInDirection(0);
+                if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).func_27283_g())
+                    return true;
+            }
+        }
+
         return (!((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) ||
                 !(((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z)) ||
                 net.minecraft.src.redstoneExtended.Laser.LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
@@ -149,6 +159,16 @@ public class BlockLaser extends BlockContainer implements net.minecraft.src.reds
         if (!(((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z))) {
             setDistance(world, x, y, z, ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
             world.notifyBlocksOfNeighborChange(x, y, z, blockID);
+        }
+
+        if (getLaserMode(world, x, y, z).shape.equals(LaserShapes.Deadly)) {
+            Position nextPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+            if (world.getBlockMaterial(nextPos.X, nextPos.Y, nextPos.Z).getBurning()) {
+                Position abovePos = nextPos.positionMoveInDirection(0);
+                if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).func_27283_g()) {
+                    world.setBlockWithNotify(nextPos.X, nextPos.Y, nextPos.Z, Block.fire.blockID);
+                }
+            }
         }
 
         net.minecraft.src.redstoneExtended.Laser.LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
