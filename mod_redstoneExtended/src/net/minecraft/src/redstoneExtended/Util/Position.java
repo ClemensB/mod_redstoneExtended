@@ -1,14 +1,30 @@
 package net.minecraft.src.redstoneExtended.Util;
 
-public class Position {
-    public int X;
-    public int Y;
-    public int Z;
+public class Position implements Cloneable {
+    public int X = 0;
+    public int Y = 0;
+    public int Z = 0;
+
+    public Position() {
+    }
 
     public Position(int x, int y, int z) {
         X = x;
         Y = y;
         Z = z;
+    }
+
+    public Position getClone() {
+        try {
+            return (Position)clone();
+        } catch (CloneNotSupportedException e) {
+            return new Position();
+        }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public Position positionMoveInDirection(int direction) {

@@ -5,78 +5,233 @@ import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Tessellator;
 
 public class RenderUtil {
-    public static void renderOverlay(Block block, double x, double y, double z, int textureIndex, int layer, double offsetX, double offsetZ, double scaleX, double scaleZ, double rotation, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
+    public static void renderFaceOfBlockEx(IBlockAccess iBlockAccess, Block block, byte face, Position blockPos, byte textureId, byte layer, Vector3d offset,
+                                           Vector3d scale, double rotation, Vector2d textureOffset, Vector2d textureScale, ColorRGB colorMultiplier, boolean ignoreLighting) {
         Tessellator tessellator = Tessellator.instance;
-        int texturePositionX = (textureIndex & 0xF) << 4;
-        int texturePositionY = textureIndex & 0xF0;
-        double textureUMin = ((double)texturePositionX + block.minX * 16D) / 256D;
-        double textureUMax = (((double)texturePositionX + block.maxX * 16D) - 0.01D) / 256D;
-        double textureVMin = ((double)texturePositionY + block.minZ * 16D) / 256D;
-        double textureVMax = (((double)texturePositionY + block.maxZ * 16D) - 0.01D) / 256D;
+
+        float blockBrightness = block.getBlockBrightness(iBlockAccess, blockPos.X, blockPos.Y, blockPos.Z);
+        Position relativeBlockPos = blockPos.getClone().positionMoveInDirection(DirectionUtil.invertDirection(face));
+        float relativeBlockBrightness = block.getBlockBrightness(iBlockAccess, relativeBlockPos.X, relativeBlockPos.Y, relativeBlockPos.Z);
+
+        if (face == 1 && block.maxX != 1.0D && !block.blockMaterial.getIsLiquid())
+            relativeBlockBrightness = blockBrightness;
+
+        if (face == 2 && block.minZ > 0.0D)
+            relativeBlockBrightness = blockBrightness;
+
+        if (face == 3 && block.maxZ < 1.0D)
+            relativeBlockBrightness = blockBrightness;
+
+        if (face == 4 && block.minX > 0.0D)
+            relativeBlockBrightness = blockBrightness;
+
+        if (face == 5 && block.maxX < 1.0D)
+            relativeBlockBrightness = blockBrightness;
+
+        if (ignoreLighting)
+            relativeBlockBrightness = 1F;
+
+        tessellator.setColorOpaque_F(((float)(colorMultiplier.R & 0xff) / 255F) * relativeBlockBrightness, ((float)(colorMultiplier.G & 0xff) / 255F) * relativeBlockBrightness, ((float)(colorMultiplier.B & 0xff) / 255F) * relativeBlockBrightness);
+
+        renderBlockFaceEx(block, face, new Vector3d(blockPos.X, blockPos.Y, blockPos.Z), textureId, layer, offset, scale, rotation, textureOffset, textureScale);
+    }
+
+    public static void renderBlockFaceEx(Block block, byte face, Vector3d blockPos, byte textureId, byte layer,
+                                         Vector3d offset, Vector3d scale, double rotation, Vector2d textureOffset, Vector2d textureScale) {
+        Tessellator tessellator = Tessellator.instance;
+
+        int textureIndexX = (textureId & 0xF) << 4;
+        int textureIndexY = textureId & 0xF0;
+
+        double textureUMin = ((double)textureIndexX + block.minX * 16D) / 256D;
+        double textureUMax = (((double)textureIndexX + block.maxX * 16D) - 0.01D) / 256D;
+        double textureVMin = ((double)textureIndexY + block.minZ * 16D) / 256D;
+        double textureVMax = (((double)textureIndexY + block.maxZ * 16D) - 0.01D) / 256D;
+
         if (block.minX < 0.0D || block.maxX > 1.0D) {
-            textureUMin = ((float)texturePositionX + 0.0F) / 256F;
-            textureUMax = ((float)texturePositionX + 15.99F) / 256F;
+            textureUMin = ((double)textureIndexX) / 256D;
+            textureUMax = ((double)textureIndexX + 15.99D) / 256D;
         }
+
         if (block.minZ < 0.0D || block.maxZ > 1.0D) {
-            textureVMin = ((float)texturePositionY + 0.0F) / 256F;
-            textureVMax = ((float)texturePositionY + 15.99F) / 256F;
+            textureVMin = ((double)textureIndexY) / 256D;
+            textureVMax = ((double)textureIndexY + 15.99D) / 256D;
         }
 
-        textureUMin += textureOffsetU;
-        textureUMax += textureOffsetU;
-        textureVMin += textureOffsetV;
-        textureVMax += textureOffsetV;
-        textureUMax = textureUMin + ((textureUMax - textureUMin) * textureScaleU);
-        textureVMax = textureVMin + ((textureVMax - textureVMin) * textureScaleV);
+        textureUMin += textureOffset.X;
+        textureUMax += textureOffset.X;
+        textureVMin += textureOffset.Y;
+        textureVMax += textureOffset.Y;
 
-        double absolutePosXMin = x + block.minX + offsetX;
-        double absolutePosXMax = x + (block.minX + ((block.maxX - block.minX) * scaleX)) + offsetX;
-        double absolutePosY = y + block.maxY + 0.001D + (layer * 0.001D);
-        double absolutePosZMin = z + block.minZ + offsetZ;
-        double absolutePosZMax = z + (block.minZ + ((block.maxZ - block.minZ) * scaleZ)) + offsetZ;
+        textureUMax = textureUMin + ((textureUMax - textureUMin) * textureScale.X);
+        textureVMax = textureVMin + ((textureVMax - textureVMin) * textureScale.Y);
 
-        double rotationRad = Math.toRadians(rotation);
+        Vector3d layerOffset = new Vector3d(0D, 0D, 0D);
+        switch (face) {
+            case 0:
+                layerOffset.Y = -1D;
+                break;
+            case 1:
+                layerOffset.Y = 1D;
+                break;
+            case 2:
+                layerOffset.Z = 1D;
+                break;
+            case 3:
+                layerOffset.Z = -1D;
+                break;
+            case 4:
+                layerOffset.X = 1D;
+                break;
+            case 5:
+                layerOffset.X = -1D;
+                break;
+        }
+        layerOffset.multiply((layer + 1) * 0.001D);
+
+        double absolutePosXMin = blockPos.X + block.minX + offset.X + layerOffset.X;
+        double absolutePosXMax = blockPos.X + (block.minX + ((block.maxX - block.minX) * scale.X)) + offset.X + layerOffset.X;
+        double absolutePosYMin = blockPos.Y + block.minY + layerOffset.Y;
+        double absolutePosYMax = blockPos.Y + (block.minY + ((block.maxY - block.minY) * scale.Y)) + offset.Y + layerOffset.Y;
+        double absolutePosZMin = blockPos.Z + block.minZ + offset.Z + layerOffset.Z;
+        double absolutePosZMax = blockPos.Z + (block.minZ + ((block.maxZ - block.minZ) * scale.Z)) + offset.Z + layerOffset.Z;
+
+        double rotationInRadians = Math.toRadians(rotation);
 
         double centerX = absolutePosXMin + ((absolutePosXMax - absolutePosXMin) / 2);
+        double centerY = absolutePosYMin + ((absolutePosYMax - absolutePosYMin) / 2);
         double centerZ = absolutePosZMin + ((absolutePosZMax - absolutePosZMin) / 2);
 
-        double quadRotatedTLX = centerX + Math.cos(rotationRad) * (absolutePosXMax - centerX) - Math.sin(rotationRad) * (absolutePosZMax - centerZ);
-        double quadRotatedTLZ = centerZ + Math.sin(rotationRad) * (absolutePosXMax - centerX) + Math.cos(rotationRad) * (absolutePosZMax - centerZ);
-        double quadRotatedTRX = centerX + Math.cos(rotationRad) * (absolutePosXMax - centerX) - Math.sin(rotationRad) * (absolutePosZMin - centerZ);
-        double quadRotatedTRZ = centerZ + Math.sin(rotationRad) * (absolutePosXMax - centerX) + Math.cos(rotationRad) * (absolutePosZMin - centerZ);
-        double quadRotatedBRX = centerX + Math.cos(rotationRad) * (absolutePosXMin - centerX) - Math.sin(rotationRad) * (absolutePosZMin - centerZ);
-        double quadRotatedBRZ = centerZ + Math.sin(rotationRad) * (absolutePosXMin - centerX) + Math.cos(rotationRad) * (absolutePosZMin - centerZ);
-        double quadRotatedBLX = centerX + Math.cos(rotationRad) * (absolutePosXMin - centerX) - Math.sin(rotationRad) * (absolutePosZMax - centerZ);
-        double quadRotatedBLZ = centerZ + Math.sin(rotationRad) * (absolutePosXMin - centerX) + Math.cos(rotationRad) * (absolutePosZMax - centerZ);
+        Vector3d quadTL = new Vector3d(0D, 0D, 0D),
+                quadTR = new Vector3d(0D, 0D, 0D),
+                quadBR = new Vector3d(0D, 0D, 0D),
+                quadBL = new Vector3d(0D, 0D, 0D);
+        Vector2d quadUVTL = new Vector2d(0D, 0D),
+                quadUVTR = new Vector2d(0D, 0D),
+                quadUVBR = new Vector2d(0D, 0D),
+                quadUVBL = new Vector2d(0D, 0D);
 
-        tessellator.addVertexWithUV(quadRotatedTLX, absolutePosY, quadRotatedTLZ, textureUMax, textureVMax);
-        tessellator.addVertexWithUV(quadRotatedTRX, absolutePosY, quadRotatedTRZ, textureUMax, textureVMin);
-        tessellator.addVertexWithUV(quadRotatedBRX, absolutePosY, quadRotatedBRZ, textureUMin, textureVMin);
-        tessellator.addVertexWithUV(quadRotatedBLX, absolutePosY, quadRotatedBLZ, textureUMin, textureVMax);
-    }
+        switch (face) {
+            case 0:
+                quadTL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        absolutePosYMin,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
+                quadTR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        absolutePosYMin,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        absolutePosYMin,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        absolutePosYMin,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
 
-    public static void renderBlockOverlay(IBlockAccess iBlockAccess, Block block, int x, int y, int z, int textureIndex, int level, double xOffset, double zOffset, double xScale, double zScale, double rotation, boolean ignoreLighting, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
-        int colorMultiplier = block.colorMultiplier(iBlockAccess, x, y, z);
-        float colorMultiplierR = (float)(colorMultiplier >> 16 & 0xFF) / 255F;
-        float colorMultiplierG = (float)(colorMultiplier >> 8 & 0xFF) / 255F;
-        float colorMultiplierB = (float)(colorMultiplier & 0xFF) / 255F;
+                quadUVTL = new Vector2d(textureUMin, textureVMax);
+                quadUVTR = new Vector2d(textureUMin, textureVMin);
+                quadUVBR = new Vector2d(textureUMax, textureVMin);
+                quadUVBL = new Vector2d(textureUMax, textureVMax);
+                break;
+            case 1:
+                quadTL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        absolutePosYMax,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
+                quadTR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        absolutePosYMax,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        absolutePosYMax,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        absolutePosYMax,
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
 
-        renderBlockOverlay(iBlockAccess, block, x, y, z, textureIndex, level, xOffset, zOffset, xScale, zScale, rotation, colorMultiplierR, colorMultiplierG, colorMultiplierB, ignoreLighting, textureOffsetU, textureOffsetV, textureScaleU, textureScaleV);
-    }
+                quadUVTL = new Vector2d(textureUMax, textureVMax);
+                quadUVTR = new Vector2d(textureUMax, textureVMin);
+                quadUVBR = new Vector2d(textureUMin, textureVMin);
+                quadUVBL = new Vector2d(textureUMin, textureVMax);
+                break;
+            case 2:
+                quadTL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosYMax - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosYMax - centerY),
+                        absolutePosZMax);
+                quadTR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosYMin - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosYMin - centerY),
+                        absolutePosZMax);
+                quadBR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosYMin - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosYMin - centerY),
+                        absolutePosZMax);
+                quadBL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosYMax - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosYMax - centerY),
+                        absolutePosZMax);
 
-    public static void renderBlockOverlay(IBlockAccess iBlockAccess, Block block, int x, int y, int z, int textureIndex, int layer, double xOffset, double zOffset, double xScale, double zScale, double rotationDeg, float colorMultiplierR, float colorMultiplierG, float colorMultiplierB, boolean ignoreLighting, double textureOffsetU, double textureOffsetV, double textureScaleU, double textureScaleV) {
-        Tessellator tessellator = Tessellator.instance;
+                quadUVTL = new Vector2d(textureUMin, textureVMin);
+                quadUVTR = new Vector2d(textureUMin, textureVMax);
+                quadUVBR = new Vector2d(textureUMax, textureVMax);
+                quadUVBL = new Vector2d(textureUMax, textureVMin);
+                break;
+            case 3:
+                quadTL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosYMax - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosYMax - centerY),
+                        absolutePosZMin);
+                quadTR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosYMax - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosYMax - centerY),
+                        absolutePosZMin);
+                quadBR = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMax - centerX) - Math.sin(rotationInRadians) * (absolutePosYMin - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMax - centerX) + Math.cos(rotationInRadians) * (absolutePosYMin - centerY),
+                        absolutePosZMin);
+                quadBL = new Vector3d(centerX + Math.cos(rotationInRadians) * (absolutePosXMin - centerX) - Math.sin(rotationInRadians) * (absolutePosYMin - centerY),
+                        centerY + Math.sin(rotationInRadians) * (absolutePosXMin - centerX) + Math.cos(rotationInRadians) * (absolutePosYMin - centerY),
+                        absolutePosZMin);
 
-        float blockBrightness = block.getBlockBrightness(iBlockAccess, x, y, z);
-        float blockBrightnessAbove = block.getBlockBrightness(iBlockAccess, x, y + 1, z);
-        if (block.maxY != 1.0D && !block.blockMaterial.getIsLiquid()) {
-            blockBrightnessAbove = blockBrightness;
+                quadUVTL = new Vector2d(textureUMax, textureVMin);
+                quadUVTR = new Vector2d(textureUMin, textureVMin);
+                quadUVBR = new Vector2d(textureUMin, textureVMax);
+                quadUVBL = new Vector2d(textureUMax, textureVMax);
+                break;
+            case 4:
+                quadTL = new Vector3d(absolutePosXMax,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMin - centerY) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMin - centerY) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
+                quadTR = new Vector3d(absolutePosXMax,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMin - centerY) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMin - centerY) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBR = new Vector3d(absolutePosXMax,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMax - centerY) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMax - centerY) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBL = new Vector3d(absolutePosXMax,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMax - centerY) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMax - centerY) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
+
+                quadUVTL = new Vector2d(textureUMin, textureVMax);
+                quadUVTR = new Vector2d(textureUMax, textureVMax);
+                quadUVBR = new Vector2d(textureUMax, textureVMin);
+                quadUVBL = new Vector2d(textureUMin, textureVMin);
+                break;
+            case 5:
+                quadTL = new Vector3d(absolutePosXMin,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMax - centerY) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMax - centerY) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
+                quadTR = new Vector3d(absolutePosXMin,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMax - centerY) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMax - centerY) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBR = new Vector3d(absolutePosXMin,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMin - centerY) - Math.sin(rotationInRadians) * (absolutePosZMin - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMin - centerY) + Math.cos(rotationInRadians) * (absolutePosZMin - centerZ));
+                quadBL = new Vector3d(absolutePosXMin,
+                        centerY + Math.cos(rotationInRadians) * (absolutePosYMin - centerY) - Math.sin(rotationInRadians) * (absolutePosZMax - centerZ),
+                        centerZ + Math.sin(rotationInRadians) * (absolutePosYMin - centerY) + Math.cos(rotationInRadians) * (absolutePosZMax - centerZ));
+
+                quadUVTL = new Vector2d(textureUMax, textureVMin);
+                quadUVTR = new Vector2d(textureUMin, textureVMin);
+                quadUVBR = new Vector2d(textureUMin, textureVMax);
+                quadUVBL = new Vector2d(textureUMax, textureVMax);
+                break;
         }
-        if (ignoreLighting)
-            blockBrightnessAbove = 1F;
-        tessellator.setColorOpaque_F(colorMultiplierR * blockBrightnessAbove, colorMultiplierG * blockBrightnessAbove, colorMultiplierB * blockBrightnessAbove);
 
-        renderOverlay(block, x, y, z, textureIndex, layer, xOffset, zOffset, xScale, zScale, rotationDeg, textureOffsetU, textureOffsetV, textureScaleU, textureScaleV);
+        tessellator.addVertexWithUV(quadTL.X, quadTL.Y, quadTL.Z, quadUVTL.X, quadUVTL.Y);
+        tessellator.addVertexWithUV(quadTR.X, quadTR.Y, quadTR.Z, quadUVTR.X, quadUVTR.Y);
+        tessellator.addVertexWithUV(quadBR.X, quadBR.Y, quadBR.Z, quadUVBR.X, quadUVBR.Y);
+        tessellator.addVertexWithUV(quadBL.X, quadBL.Y, quadBL.Z, quadUVBL.X, quadUVBL.Y);
     }
 
     public static void renderTorchOnCeiling(Block block, double x, double y, double z) {

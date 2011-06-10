@@ -3,9 +3,9 @@ package net.minecraft.src.redstoneExtended.Util;
 import net.minecraft.src.NBTTagCompound;
 
 public class ColorRGB implements Cloneable {
-    public byte R = (byte)0;
-    public byte G = (byte)0;
-    public byte B = (byte)0;
+    public byte R = (byte)255;
+    public byte G = (byte)255;
+    public byte B = (byte)255;
 
     public ColorRGB() {
     }
@@ -14,6 +14,12 @@ public class ColorRGB implements Cloneable {
         R = r;
         G = g;
         B = b;
+    }
+
+    public ColorRGB(int r, int g, int b) {
+        R = (byte)r;
+        G = (byte)g;
+        B = (byte)b;
     }
 
     public static ColorRGB readFromNBT(NBTTagCompound nbtTagCompound) {
