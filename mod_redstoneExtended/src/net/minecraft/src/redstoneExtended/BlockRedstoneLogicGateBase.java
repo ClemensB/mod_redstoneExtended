@@ -192,6 +192,7 @@ public abstract class BlockRedstoneLogicGateBase extends Block {
         int oldOperatingMode = getOperatingMode(world, x, y, z);
         int newOperatingMode = (oldOperatingMode == (getOperatingModeCount() - 1)) ? 0 : oldOperatingMode + 1;
         setOperatingMode(world, x, y, z, newOperatingMode);
+        world.markBlocksDirty(x, y, z, x, y, z);
 
         boolean powered = isBeingPowered(world, x, y, z);
 
