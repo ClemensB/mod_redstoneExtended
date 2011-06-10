@@ -96,6 +96,7 @@ public abstract class BlockRedstoneFlipFlop extends Block {
     @Override
     public void updateTick(World world, int x, int y, int z, Random random) {
         setState(world, x, y, z, !getState(world, x, y, z));
+        world.markBlocksDirty(x, y, z, x, y, z);
     }
 
     @Override
