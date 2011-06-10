@@ -110,6 +110,7 @@ public class BlockRedstoneLightSensor extends BlockContainer {
         byte oldTriggerSetting = getTriggerSetting(world, x, y, z);
         byte newTriggerSetting = (byte)((oldTriggerSetting >= 5) ? 0 : oldTriggerSetting + 1);
         setTriggerSetting(world, x, y, z, newTriggerSetting);
+        world.markBlocksDirty(x, y, z, x, y, z);
 
         return true;
     }
@@ -145,8 +146,10 @@ public class BlockRedstoneLightSensor extends BlockContainer {
             default:
                 isPowered = false;
         }
-        if (isPowered != getState(world, x, y, z))
+        if (isPowered != getState(world, x, y, z)) {
             setState(world, x, y, z, isPowered);
+            world.markBlocksDirty(x, y, z, x, y, z);
+        }
     }
 
     private static boolean getStateFromMetadata(int metadata) {
