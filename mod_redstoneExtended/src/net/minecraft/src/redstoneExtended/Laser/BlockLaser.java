@@ -6,7 +6,7 @@ import net.minecraft.src.redstoneExtended.Util.Position;
 
 import java.util.Random;
 
-public class BlockLaser extends BlockContainer implements net.minecraft.src.redstoneExtended.Laser.ILaserEmitter {
+public class BlockLaser extends BlockContainer implements ILaserEmitter {
     public BlockLaser(int id) {
         super(id, Block.glass.blockIndexInTexture, net.minecraft.src.redstoneExtended.Laser.Materials.laser);
     }

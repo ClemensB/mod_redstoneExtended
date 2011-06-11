@@ -1,16 +1,21 @@
 package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
 import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
+import net.minecraft.src.redstoneExtended.Util.Vector2d;
+import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
+public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
     public BlockLaserEmitter(int id) {
         super(id, Block.dispenser.blockIndexInTexture, Material.rock);
     }
 
-    public final static int textureFront = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/front_0.png");
+    public final static int textureFront = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontDefault.png");
+    public final static int textureFrontInv = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontInv.png");
 
     public final static net.minecraft.src.redstoneExtended.Laser.LaserMode[] operatingModes;
 
@@ -28,6 +33,56 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
     }
 
     @Override
+    public int getRenderType() {
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z));
+    }
+
+    @Override
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return textureFront;
+    }
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0D);
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(1D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return 0D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return ColorRGB.Colors.White;
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return false;
+    }
+
+    @Override
     public int tickRate() {
         return 2;
     }
@@ -39,7 +94,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
             case 1:
                 return blockIndexInTexture + 17;
             default:
-                return ((getOrientation(iBlockAccess, x, y, z) == side) ? textureFront : blockIndexInTexture);
+                return ((getOrientation(iBlockAccess, x, y, z) == side) ? blockIndexInTexture + 17 : blockIndexInTexture);
         }
     }
 
@@ -50,7 +105,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter {
             case 1:
                 return blockIndexInTexture + 17;
             case 3:
-                return textureFront;
+                return textureFrontInv;
             default:
                 return blockIndexInTexture;
         }

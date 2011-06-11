@@ -1,14 +1,13 @@
 package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
-import net.minecraft.src.redstoneExtended.Util.MathUtil;
+import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
+import net.minecraft.src.redstoneExtended.Util.*;
 
 import java.util.LinkedList;
 import java.util.Random;
 
-public class BlockLaserMirror extends BlockContainer implements net.minecraft.src.redstoneExtended.Laser.ILaserEmitter {
+public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
     public BlockLaserMirror(int id) {
         super(id, Block.blockSnow.blockIndexInTexture, Material.rock);
     }
@@ -16,10 +15,67 @@ public class BlockLaserMirror extends BlockContainer implements net.minecraft.sr
     public static final int textureFrontDefault = BlockLaserFocusLens.textureFrontDefault;
     public static final int textureFrontDeadly = BlockLaserFocusLens.textureFrontDeadly;
     public static final int textureFrontBridge = BlockLaserFocusLens.textureFrontBridge;
+    public static final int textureFrontInv = BlockLaserFocusLens.textureFrontInv;
 
     @Override
     public TileEntity getBlockEntity() {
         return new net.minecraft.src.redstoneExtended.Laser.TileEntityLaserMirror();
+    }
+
+    @Override
+    public int getRenderType() {
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z));
+    }
+
+    @Override
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        LaserShape shape = getLaserMode(iBlockAccess, x, y, z).shape;
+        if (shape.equals(LaserShapes.Deadly))
+            return textureFrontDeadly;
+        else if (shape.equals(LaserShapes.Bridge))
+            return mod_redstoneExtended.getInstance().emptyTexture;
+        else
+            return textureFrontDefault;
+    }
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0D);
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(1D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return 0D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return ColorRGB.Colors.White;
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return false;
     }
 
     @Override
@@ -32,12 +88,10 @@ public class BlockLaserMirror extends BlockContainer implements net.minecraft.sr
         int orientation = getOrientation(iBlockAccess, x, y, z);
         if (side == orientation) {
             LaserShape shape = getLaserMode(iBlockAccess, x, y, z).shape;
-            if (shape.equals(LaserShapes.Deadly))
-                return textureFrontDeadly;
-            else if (shape.equals(LaserShapes.Bridge))
+            if (shape.equals(LaserShapes.Bridge))
                 return textureFrontBridge;
             else
-                return textureFrontDefault;
+                return Block.dispenser.blockIndexInTexture + 17;
         } else
             return Block.blockSnow.blockIndexInTexture;
     }
@@ -45,7 +99,7 @@ public class BlockLaserMirror extends BlockContainer implements net.minecraft.sr
     @Override
     public int getBlockTextureFromSide(int side) {
         if (side == 3)
-            return textureFrontDefault;
+            return textureFrontInv;
         else
             return Block.blockSnow.blockIndexInTexture;
     }

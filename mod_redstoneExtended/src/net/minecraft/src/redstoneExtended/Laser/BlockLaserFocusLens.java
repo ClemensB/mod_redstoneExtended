@@ -1,18 +1,23 @@
 package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
 import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
+import net.minecraft.src.redstoneExtended.Util.Vector2d;
+import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public class BlockLaserFocusLens extends BlockContainer implements net.minecraft.src.redstoneExtended.Laser.ILaserEmitter {
+public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
     public BlockLaserFocusLens(int id) {
         super(id, Block.stone.blockIndexInTexture, Material.rock);
     }
 
     public final static int textureFrontDefault = BlockLaserEmitter.textureFront;
-    public final static int textureFrontDeadly = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/front_1.png");
-    public final static int textureFrontBridge = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/front_2.png");
+    public final static int textureFrontDeadly = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontDeadly.png");
+    public final static int textureFrontBridge = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontBridge.png");
+    public final static int textureFrontInv = BlockLaserEmitter.textureFrontInv;
 
     public final static net.minecraft.src.redstoneExtended.Laser.LaserShape[] operatingModes;
 
@@ -30,6 +35,64 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
     }
 
     @Override
+    public int getRenderType() {
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) &&
+                getOperatingMode(iBlockAccess, x, y, z) != 2;
+    }
+
+    @Override
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        switch (getOperatingMode(iBlockAccess, x, y, z)) {
+            case 0:
+                return textureFrontDefault;
+            case 1:
+                return textureFrontDeadly;
+            default:
+                return mod_redstoneExtended.getInstance().emptyTexture;
+        }
+    }
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0D);
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(1D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return 0D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return ColorRGB.Colors.White;
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return false;
+    }
+
+    @Override
     public int tickRate() {
         return 1;
     }
@@ -38,16 +101,8 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
         int orientation = getOrientation(iBlockAccess, x, y, z);
         if (side == orientation)
-            switch (getOperatingMode(iBlockAccess, x, y, z)) {
-                case 0:
-                    return textureFrontDefault;
-                case 1:
-                    return textureFrontDeadly;
-                case 2:
-                    return textureFrontBridge;
-                default:
-                    return textureFrontDefault;
-            }
+            return (getOperatingMode(iBlockAccess, x, y, z) == 2) ? textureFrontBridge :
+                    Block.dispenser.blockIndexInTexture + 17;
         else if (side == DirectionUtil.invertDirection(orientation))
             return Block.blockSnow.blockIndexInTexture;
         else
@@ -58,7 +113,7 @@ public class BlockLaserFocusLens extends BlockContainer implements net.minecraft
     public int getBlockTextureFromSide(int side) {
         switch (side) {
             case 3:
-                return textureFrontDefault;
+                return textureFrontInv;
             case 2:
                 return Block.blockSnow.blockIndexInTexture;
             default:
