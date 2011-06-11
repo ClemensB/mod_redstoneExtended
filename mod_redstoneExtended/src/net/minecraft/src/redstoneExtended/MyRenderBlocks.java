@@ -11,12 +11,33 @@ public class MyRenderBlocks {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
         if (block instanceof IBlockWithOverlay) {
+            IBlockWithOverlay iBlockWithOverlay = (IBlockWithOverlay)block;
             for (byte layer = 0; layer < 8; layer++) {
-                for (byte i = 0; i < 6; i++) {
-                    int textureId = ((IBlockWithOverlay)block).getBlockOverlayTexture(iBlockAccess, x, y, z, i, layer);
-                    if (textureId != -1) {
-                        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, i, new Position(x, y, z), (byte)textureId, (byte)(layer + 1), new Vector3d(),
-                                new Vector3d(1D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(255, 255, 255), false);
+                for (byte face = 0; face < 6; face++) {
+                    if (iBlockWithOverlay.shouldOverlayBeRendered(iBlockAccess, x, y, z, face, layer)) {
+                        byte textureId = (byte)iBlockWithOverlay.getBlockOverlayTexture(iBlockAccess, x, y, z, face, layer);
+                        Vector3d offset = new Vector3d(0D);
+                        Vector3d scale = new Vector3d(1D);
+                        double rotation = 0D;
+                        Vector2d textureOffset = new Vector2d(0D);
+                        Vector2d textureScale = new Vector2d(1D);
+                        ColorRGB color = ColorRGB.Colors.White;
+                        boolean ignoreLighting = false;
+
+                        if (block instanceof IBlockWithOverlayEx) {
+                            IBlockWithOverlayEx iBlockWithOverlayEx = (IBlockWithOverlayEx)block;
+
+                            offset = iBlockWithOverlayEx.getOverlayOffset(iBlockAccess, x, y, z, face, layer);
+                            scale = iBlockWithOverlayEx.getOverlayScale(iBlockAccess, x, y, z, face, layer);
+                            rotation = iBlockWithOverlayEx.getOverlayRotation(iBlockAccess, x, y, z, face, layer);
+                            textureOffset = iBlockWithOverlayEx.getOverlayTextureOffset(iBlockAccess, x, y, z, face, layer);
+                            textureScale = iBlockWithOverlayEx.getOverlayTextureScale(iBlockAccess, x, y, z, face, layer);
+                            color = iBlockWithOverlayEx.getOverlayColorMultiplier(iBlockAccess, x, y, z, face, layer);
+                            ignoreLighting = iBlockWithOverlayEx.shouldOverlayIgnoreLighting(iBlockAccess, x, y, z, face, layer);
+                        }
+
+                        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, face, new Position(x, y, z), textureId,
+                                layer, offset, scale, rotation, textureOffset, textureScale, color, ignoreLighting);
                     }
                 }
             }
