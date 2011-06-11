@@ -87,7 +87,7 @@ public class RenderUtil {
                 layerOffset.X = -1D;
                 break;
         }
-        layerOffset.multiply((layer + 1) * 0.001D);
+        layerOffset.multiply(layer * 0.001D);
 
         double absolutePosXMin = blockPos.X + block.minX + offset.X + layerOffset.X;
         double absolutePosXMax = blockPos.X + (block.minX + ((block.maxX - block.minX) * scale.X)) + offset.X + layerOffset.X;
