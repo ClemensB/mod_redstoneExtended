@@ -5,6 +5,7 @@ import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.Tessellator;
 import net.minecraft.src.redstoneExtended.Util.*;
+import org.lwjgl.opengl.GL11;
 
 public class MyRenderBlocks {
     public static boolean renderStandardBlockWithOverlay(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
@@ -44,6 +45,38 @@ public class MyRenderBlocks {
         }
 
         return true;
+    }
+
+    public static void renderStandardBlockWithOverlayInv(RenderBlocks renderBlocks, Block block, int metadata) {
+        Tessellator tessellator = Tessellator.instance;
+
+        block.setBlockBoundsForItemRender();
+        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, -1F, 0.0F);
+        renderBlocks.renderBottomFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(0, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 1.0F, 0.0F);
+        renderBlocks.renderTopFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(1, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 0.0F, -1F);
+        renderBlocks.renderEastFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(2, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 0.0F, 1.0F);
+        renderBlocks.renderWestFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(3, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(-1F, 0.0F, 0.0F);
+        renderBlocks.renderNorthFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(4, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(1.0F, 0.0F, 0.0F);
+        renderBlocks.renderSouthFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(5, metadata));
+        tessellator.draw();
+        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
     public static boolean renderBlockRedstoneLogicGate(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
