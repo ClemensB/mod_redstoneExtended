@@ -22,6 +22,10 @@ public class Position implements Cloneable {
         }
     }
 
+    public Vector3d toVector() {
+        return new Vector3d((double)X, (double)Y, (double)Z);
+    }
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();

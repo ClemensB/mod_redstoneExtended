@@ -33,7 +33,7 @@ public class RenderUtil {
 
         tessellator.setColorOpaque_F(((float)(colorMultiplier.R & 0xff) / 255F) * relativeBlockBrightness, ((float)(colorMultiplier.G & 0xff) / 255F) * relativeBlockBrightness, ((float)(colorMultiplier.B & 0xff) / 255F) * relativeBlockBrightness);
 
-        renderBlockFaceEx(block, face, new Vector3d(blockPos.X, blockPos.Y, blockPos.Z), textureId, layer, offset, scale, rotation, textureOffset, textureScale);
+        renderBlockFaceEx(block, face, blockPos.toVector(), textureId, layer, offset, scale, rotation, textureOffset, textureScale);
     }
 
     public static void renderBlockFaceEx(Block block, byte face, Vector3d blockPos, byte textureId, byte layer,
