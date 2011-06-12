@@ -8,13 +8,20 @@ import java.util.Random;
 
 public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
     public BlockLaserFocusLens(int id) {
-        super(id, Block.stone.blockIndexInTexture, Material.rock);
+        super(id, Block.dispenser.blockIndexInTexture + 17, Material.rock);
     }
 
     public final static int textureFrontDefault = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
     public final static int textureFrontDeadly = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDeadly.png");
     public final static int textureFrontBridge = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontBridge.png");
+    public final static int textureSideLaserStrip = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStrip.png");
+    public final static int textureSideLaserStripOverlay = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStripOverlay.png");
+    public final static int textureBack = TextureManager.getInstance().getTerrainTexture("/laserReceiver/back.png");
+    public final static int textureBackOverlay = TextureManager.getInstance().getTerrainTexture("/laserReceiver/backOverlay.png");
+
     public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
+    public final static int textureSideInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideDisInv.png");
+    public final static int textureSideRotInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideDisRotInv.png");
 
     public final static net.minecraft.src.redstoneExtended.Laser.LaserShape[] operatingModes;
 
@@ -38,20 +45,32 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) &&
-                getOperatingMode(iBlockAccess, x, y, z) != 2;
+        return (layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) &&
+                getOperatingMode(iBlockAccess, x, y, z) != 2) ||
+                (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) &&
+                        (layer == 1 || layer == 2));
     }
 
     @Override
     public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        switch (getOperatingMode(iBlockAccess, x, y, z)) {
-            case 0:
-                return textureFrontDefault;
-            case 1:
-                return textureFrontDeadly;
-            default:
-                return mod_redstoneExtended.getInstance().emptyTexture;
-        }
+        if (side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)))
+            switch (getOperatingMode(iBlockAccess, x, y, z)) {
+                case 0:
+                    return textureFrontDefault;
+                case 1:
+                    return textureFrontDeadly;
+                default:
+                    return mod_redstoneExtended.getInstance().emptyTexture;
+            }
+        else if (side == getOrientation(iBlockAccess, x, y, z))
+            if (layer == 1)
+                return textureBack;
+            else
+                return textureBackOverlay;
+        else if (layer == 1)
+            return textureSideLaserStrip;
+        else
+            return textureSideLaserStripOverlay;
     }
 
     @Override
@@ -66,7 +85,28 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return 0D;
+        if (side > 1)
+            return 0D;
+
+        int rotation = 0;
+        int orientation = getOrientation(iBlockAccess, x, y, z);
+
+        switch (orientation) {
+            case 2:
+                rotation = 2;
+                break;
+            case 3:
+                rotation = 0;
+                break;
+            case 4:
+                rotation = 1;
+                break;
+            case 5:
+                rotation = 3;
+                break;
+        }
+
+        return ((double)(rotation + 1) * 90D);
     }
 
     @Override
@@ -81,12 +121,14 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new ColorRGB(128);
+        return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1 &&
+                getState(iBlockAccess, x, y, z)) ? getLaserMode(iBlockAccess, x, y, z).color : ColorRGB.Colors.Gray;
     }
 
     @Override
     public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return false;
+        return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1 &&
+                getState(iBlockAccess, x, y, z));
     }
 
     @Override
@@ -97,24 +139,19 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
     @Override
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
         int orientation = getOrientation(iBlockAccess, x, y, z);
-        if (side == orientation)
-            return (getOperatingMode(iBlockAccess, x, y, z) == 2) ? textureFrontBridge :
-                    Block.dispenser.blockIndexInTexture + 17;
-        else if (side == DirectionUtil.invertDirection(orientation))
-            return Block.blockSnow.blockIndexInTexture;
-        else
-            return blockIndexInTexture;
+        return (side == orientation && getOperatingMode(iBlockAccess, x, y, z) == 2) ? textureFrontBridge : blockIndexInTexture;
     }
 
     @Override
     public int getBlockTextureFromSide(int side) {
         switch (side) {
+            case 0:
+            case 1:
+                return textureSideRotInv;
             case 3:
                 return textureFrontInv;
-            case 2:
-                return Block.blockSnow.blockIndexInTexture;
             default:
-                return blockIndexInTexture;
+                return textureSideInv;
         }
     }
 
