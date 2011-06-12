@@ -94,26 +94,21 @@ public class IdManager {
                 LoggingUtil.logDebug("Initializing reserved id list");
                 reservedIds = new HashMap<IdType, LinkedList<Integer>>();
 
-                String patIdTypeStr = "";
                 for (IdType idTypePossibility : IdType.values()) {
-                    if (!patIdTypeStr.equals(""))
-                        patIdTypeStr += "|";
-                    patIdTypeStr += idTypePossibility.name();
-                }
+                    if (!reservedIds.containsKey(idTypePossibility))
+                        reservedIds.put(idTypePossibility, new LinkedList<Integer>());
 
-                Pattern pattern = Pattern.compile("^(" + patIdTypeStr + ")\\.[a-zA-Z0-9]+$");
+                    Pattern pattern = Pattern.compile("^" + idTypePossibility.name() + "\\.[a-zA-Z0-9]+$");
 
-                for (String propertyName : ids.stringPropertyNames()) {
-                    Matcher matcher = pattern.matcher(propertyName);
+                    for (String propertyName : ids.stringPropertyNames()) {
+                        Matcher matcher = pattern.matcher(propertyName);
 
-                    if (matcher.matches()) {
-                        String strReservedId = ids.getProperty(propertyName);
-                        int reservedId = Integer.parseInt(strReservedId);
+                        if (matcher.matches()) {
+                            String strReservedId = ids.getProperty(propertyName);
+                            int reservedId = Integer.parseInt(strReservedId);
 
-                        if (!reservedIds.containsKey(idType))
-                            reservedIds.put(idType, new LinkedList<Integer>());
-
-                        reservedIds.get(idType).add(reservedId);
+                            reservedIds.get(idTypePossibility).add(reservedId);
+                        }
                     }
                 }
             }
