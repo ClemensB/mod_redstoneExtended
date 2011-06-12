@@ -67,8 +67,9 @@ public class ColorRGB implements Cloneable {
     }
 
     public static final class Colors {
-        public static final ColorRGB White = new ColorRGB(255, 255, 255);
-        public static final ColorRGB Black = new ColorRGB(0, 0, 0);
+        public static final ColorRGB White = new ColorRGB(255);
+        public static final ColorRGB Gray = new ColorRGB(128);
+        public static final ColorRGB Black = new ColorRGB(0);
         public static final ColorRGB Red = new ColorRGB(255, 0, 0);
         public static final ColorRGB Green = new ColorRGB(0, 255, 0);
         public static final ColorRGB Blue = new ColorRGB(0, 0, 255);

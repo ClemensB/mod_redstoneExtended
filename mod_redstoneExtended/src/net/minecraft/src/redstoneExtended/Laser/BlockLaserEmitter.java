@@ -8,19 +8,24 @@ import java.util.Random;
 
 public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
     public BlockLaserEmitter(int id) {
-        super(id, Block.dispenser.blockIndexInTexture, Material.rock);
+        super(id, Block.dispenser.blockIndexInTexture + 17, Material.rock);
     }
 
     public final static int textureFront = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
+    public final static int textureSideLaserStrip = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStrip.png");
+    public final static int textureSideLaserStripOverlay = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStripOverlay.png");
+
     public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
+    public final static int textureSideInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideInv.png");
+    public final static int textureSideRotInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideRotInv.png");
 
     public final static net.minecraft.src.redstoneExtended.Laser.LaserMode[] operatingModes;
 
     static {
         operatingModes = new net.minecraft.src.redstoneExtended.Laser.LaserMode[] {
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)255, (byte)0, (byte)0)),
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)255, (byte)0)),
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)0, (byte)0, (byte)255))
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, ColorRGB.Colors.Red),
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, ColorRGB.Colors.Green),
+                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, ColorRGB.Colors.Blue)
         };
     }
 
@@ -36,12 +41,19 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     @Override
     public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z));
+        return (side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1) ||
+                (side != getOrientation(iBlockAccess, x, y, z) && side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) &&
+                        (layer == 1 || layer == 2));
     }
 
     @Override
     public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return textureFront;
+        if (side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)))
+            return textureFront;
+        else if (layer == 1)
+            return textureSideLaserStrip;
+        else
+            return textureSideLaserStripOverlay;
     }
 
     @Override
@@ -56,7 +68,28 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     @Override
     public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return 0D;
+        if (side > 1)
+            return 0D;
+
+        int rotation = 0;
+        int orientation = getOrientation(iBlockAccess, x, y, z);
+
+        switch (orientation) {
+            case 2:
+                rotation = 2;
+                break;
+            case 3:
+                rotation = 0;
+                break;
+            case 4:
+                rotation = 1;
+                break;
+            case 5:
+                rotation = 3;
+                break;
+        }
+
+        return ((double)(rotation + 1) * 90D);
     }
 
     @Override
@@ -71,12 +104,13 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new ColorRGB(128);
+        return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1) ?
+                operatingModes[getOperatingMode(iBlockAccess, x, y, z)].color : ColorRGB.Colors.Gray;
     }
 
     @Override
     public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return false;
+        return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1);
     }
 
     @Override
@@ -86,13 +120,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     @Override
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
-        switch (side) {
-            case 0:
-            case 1:
-                return blockIndexInTexture + 17;
-            default:
-                return ((getOrientation(iBlockAccess, x, y, z) == side) ? blockIndexInTexture + 17 : blockIndexInTexture);
-        }
+        return blockIndexInTexture;
     }
 
     @Override
@@ -100,12 +128,20 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
         switch (side) {
             case 0:
             case 1:
-                return blockIndexInTexture + 17;
+                return textureSideRotInv;
             case 3:
                 return textureFrontInv;
-            default:
+            case 2:
                 return blockIndexInTexture;
+            default:
+                return textureSideInv;
         }
+    }
+
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z) {
+        super.onBlockAdded(world, x, y, z);
+        world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
     }
 
     @Override
@@ -136,6 +172,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer) {
         setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= (operatingModes.length - 1) ? (byte)0 : (byte)(getOperatingMode(world, x, y, z) + 1));
 
+        world.markBlocksDirty(x, y, z, x, y, z);
         world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
         world.notifyBlocksOfNeighborChange(x, y, z, blockID);
 

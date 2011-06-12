@@ -22,7 +22,7 @@ public class MyRenderBlocks {
                         double rotation = 0D;
                         Vector2d textureOffset = new Vector2d(0D);
                         Vector2d textureScale = new Vector2d(1D);
-                        ColorRGB color = ColorRGB.Colors.White;
+                        ColorRGB colorMultiplier = ColorRGB.Colors.White;
                         boolean ignoreLighting = false;
 
                         if (block instanceof IBlockWithOverlayEx) {
@@ -33,12 +33,12 @@ public class MyRenderBlocks {
                             rotation = iBlockWithOverlayEx.getOverlayRotation(iBlockAccess, x, y, z, face, layer);
                             textureOffset = iBlockWithOverlayEx.getOverlayTextureOffset(iBlockAccess, x, y, z, face, layer);
                             textureScale = iBlockWithOverlayEx.getOverlayTextureScale(iBlockAccess, x, y, z, face, layer);
-                            color = iBlockWithOverlayEx.getOverlayColorMultiplier(iBlockAccess, x, y, z, face, layer);
+                            colorMultiplier = iBlockWithOverlayEx.getOverlayColorMultiplier(iBlockAccess, x, y, z, face, layer);
                             ignoreLighting = iBlockWithOverlayEx.shouldOverlayIgnoreLighting(iBlockAccess, x, y, z, face, layer);
                         }
 
                         RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, face, new Position(x, y, z), textureId,
-                                layer, offset, scale, rotation, textureOffset, textureScale, color, ignoreLighting);
+                                layer, offset, scale, rotation, textureOffset, textureScale, colorMultiplier, ignoreLighting);
                     }
                 }
             }
