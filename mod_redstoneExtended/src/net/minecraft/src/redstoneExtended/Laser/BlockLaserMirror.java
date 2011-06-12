@@ -9,13 +9,17 @@ import java.util.Random;
 
 public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
     public BlockLaserMirror(int id) {
-        super(id, Block.blockSnow.blockIndexInTexture, Material.rock);
+        super(id, Block.dispenser.blockIndexInTexture + 17, Material.rock);
     }
 
     public final static int textureFrontDefault = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
     public final static int textureFrontDeadly = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDeadly.png");
     public final static int textureFrontBridge = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontBridge.png");
+    public final static int textureBack = TextureManager.getInstance().getTerrainTexture("/laserReceiver/back.png");
+    public final static int textureBackOverlay = TextureManager.getInstance().getTerrainTexture("/laserReceiver/backOverlay.png");
+
     public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
+    public final static int textureBackInv = TextureManager.getInstance().getTerrainTexture("/laserReceiver/backInv.png");
 
     @Override
     public TileEntity getBlockEntity() {
@@ -29,18 +33,27 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
 
     @Override
     public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z));
+        return (layer == 1 && side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z))) ||
+                (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && (layer == 1 || layer == 2));
     }
 
     @Override
     public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        LaserShape shape = getLaserMode(iBlockAccess, x, y, z).shape;
-        if (shape.equals(LaserShapes.Deadly))
-            return textureFrontDeadly;
-        else if (shape.equals(LaserShapes.Bridge))
-            return mod_redstoneExtended.getInstance().emptyTexture;
+        if (side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z))) {
+            LaserShape shape = getLaserMode(iBlockAccess, x, y, z).shape;
+
+            if (!getState(iBlockAccess, x, y, z))
+                return textureFrontDefault;
+            if (shape.equals(LaserShapes.Deadly))
+                return textureFrontDeadly;
+            else if (shape.equals(LaserShapes.Bridge))
+                return mod_redstoneExtended.getInstance().emptyTexture;
+            else
+                return textureFrontDefault;
+        } else if (layer == 1)
+            return textureBack;
         else
-            return textureFrontDefault;
+            return textureBackOverlay;
     }
 
     @Override
@@ -70,7 +83,8 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new ColorRGB(128);
+        return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1 &&
+                getState(iBlockAccess, x, y, z)) ? getLaserMode(iBlockAccess, x, y, z).color : ColorRGB.Colors.Gray;
     }
 
     @Override
@@ -86,14 +100,8 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     @Override
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
         int orientation = getOrientation(iBlockAccess, x, y, z);
-        if (side == orientation) {
-            LaserShape shape = getLaserMode(iBlockAccess, x, y, z).shape;
-            if (shape.equals(LaserShapes.Bridge))
-                return textureFrontBridge;
-            else
-                return Block.dispenser.blockIndexInTexture + 17;
-        } else
-            return Block.blockSnow.blockIndexInTexture;
+        return (side == orientation && getLaserMode(iBlockAccess, x, y, z).shape.equals(LaserShapes.Bridge) &&
+                getState(iBlockAccess, x, y, z)) ? textureFrontBridge : blockIndexInTexture;
     }
 
     @Override
@@ -101,7 +109,7 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
         if (side == 3)
             return textureFrontInv;
         else
-            return Block.blockSnow.blockIndexInTexture;
+            return textureBackInv;
     }
 
     @Override
