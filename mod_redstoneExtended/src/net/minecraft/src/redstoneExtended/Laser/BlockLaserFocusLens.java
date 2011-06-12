@@ -173,8 +173,10 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public void updateTick(World world, int x, int y, int z, Random random) {
-        if (getState(world, x, y, z) != updateInputState(world, x, y, z))
+        if (getState(world, x, y, z) != updateInputState(world, x, y, z)) {
             setState(world, x, y, z, !getState(world, x, y, z));
+            world.markBlocksDirty(x, y, z, x, y, z);
+        }
 
         net.minecraft.src.redstoneExtended.Laser.LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
