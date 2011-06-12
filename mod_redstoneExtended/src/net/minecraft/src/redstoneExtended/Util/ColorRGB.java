@@ -22,6 +22,14 @@ public class ColorRGB implements Cloneable {
         B = (byte)b;
     }
 
+    public ColorRGB(byte value) {
+        R = G = B = value;
+    }
+
+    public ColorRGB(int value) {
+        R = G = B = (byte)value;
+    }
+
     public static ColorRGB readFromNBT(NBTTagCompound nbtTagCompound) {
         byte r = nbtTagCompound.getByte("R");
         byte g = nbtTagCompound.getByte("G");

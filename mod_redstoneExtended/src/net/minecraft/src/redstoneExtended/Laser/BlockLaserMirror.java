@@ -12,10 +12,10 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
         super(id, Block.blockSnow.blockIndexInTexture, Material.rock);
     }
 
-    public static final int textureFrontDefault = BlockLaserFocusLens.textureFrontDefault;
-    public static final int textureFrontDeadly = BlockLaserFocusLens.textureFrontDeadly;
-    public static final int textureFrontBridge = BlockLaserFocusLens.textureFrontBridge;
-    public static final int textureFrontInv = BlockLaserFocusLens.textureFrontInv;
+    public final static int textureFrontDefault = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
+    public final static int textureFrontDeadly = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDeadly.png");
+    public final static int textureFrontBridge = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontBridge.png");
+    public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
 
     @Override
     public TileEntity getBlockEntity() {
@@ -70,7 +70,7 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return ColorRGB.Colors.White;
+        return new ColorRGB(128);
     }
 
     @Override

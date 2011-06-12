@@ -2,10 +2,7 @@ package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
 import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
+import net.minecraft.src.redstoneExtended.Util.*;
 
 import java.util.Random;
 
@@ -14,8 +11,8 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
         super(id, Block.dispenser.blockIndexInTexture, Material.rock);
     }
 
-    public final static int textureFront = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontDefault.png");
-    public final static int textureFrontInv = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontInv.png");
+    public final static int textureFront = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
+    public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
 
     public final static net.minecraft.src.redstoneExtended.Laser.LaserMode[] operatingModes;
 
@@ -74,7 +71,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return ColorRGB.Colors.White;
+        return new ColorRGB(128);
     }
 
     @Override

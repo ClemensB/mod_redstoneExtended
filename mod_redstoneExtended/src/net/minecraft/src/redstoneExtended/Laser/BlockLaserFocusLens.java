@@ -2,10 +2,7 @@ package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
 import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
+import net.minecraft.src.redstoneExtended.Util.*;
 
 import java.util.Random;
 
@@ -14,10 +11,10 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         super(id, Block.stone.blockIndexInTexture, Material.rock);
     }
 
-    public final static int textureFrontDefault = BlockLaserEmitter.textureFront;
-    public final static int textureFrontDeadly = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontDeadly.png");
-    public final static int textureFrontBridge = ModLoader.addOverride("/terrain.png", "/redstoneExtended/laserEmitter/frontBridge.png");
-    public final static int textureFrontInv = BlockLaserEmitter.textureFrontInv;
+    public final static int textureFrontDefault = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
+    public final static int textureFrontDeadly = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDeadly.png");
+    public final static int textureFrontBridge = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontBridge.png");
+    public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
 
     public final static net.minecraft.src.redstoneExtended.Laser.LaserShape[] operatingModes;
 
@@ -84,7 +81,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return ColorRGB.Colors.White;
+        return new ColorRGB(128);
     }
 
     @Override
