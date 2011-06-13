@@ -14,7 +14,7 @@ public class TileEntityLaserMirror extends TileEntity {
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        mode = net.minecraft.src.redstoneExtended.Laser.LaserMode.readFromNBT(nbtTagCompound.getCompoundTag("Mode"));
+        mode = LaserMode.readFromNBT(nbtTagCompound.getCompoundTag("Mode"));
         distance = nbtTagCompound.getShort("Distance");
     }
 
@@ -22,7 +22,7 @@ public class TileEntityLaserMirror extends TileEntity {
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         NBTTagCompound modeTag = new NBTTagCompound();
-        net.minecraft.src.redstoneExtended.Laser.LaserMode.writeToNBT(modeTag, mode);
+        LaserMode.writeToNBT(modeTag, mode);
         nbtTagCompound.setCompoundTag("Mode", modeTag);
         nbtTagCompound.setShort("Distance", (short)distance);
     }

@@ -19,19 +19,19 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     public final static int textureSideInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideInv.png");
     public final static int textureSideRotInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideRotInv.png");
 
-    public final static net.minecraft.src.redstoneExtended.Laser.LaserMode[] operatingModes;
+    public final static LaserMode[] operatingModes;
 
     static {
-        operatingModes = new net.minecraft.src.redstoneExtended.Laser.LaserMode[] {
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, ColorRGB.Colors.Red),
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, ColorRGB.Colors.Green),
-                new net.minecraft.src.redstoneExtended.Laser.LaserMode(LaserShapes.Default, ColorRGB.Colors.Blue)
+        operatingModes = new LaserMode[] {
+                new LaserMode(LaserShapes.Default, ColorRGB.Colors.Red),
+                new LaserMode(LaserShapes.Default, ColorRGB.Colors.Green),
+                new LaserMode(LaserShapes.Default, ColorRGB.Colors.Blue)
         };
     }
 
     @Override
     public TileEntity getBlockEntity() {
-        return new net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter();
+        return new TileEntityLaserEmitter();
     }
 
     @Override
@@ -157,7 +157,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
         return (getState(world, x, y, z) != isBeingPowered(world, x, y, z)) ||
-                net.minecraft.src.redstoneExtended.Laser.LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -165,7 +165,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
         if (getState(world, x, y, z) != isBeingPowered(world, x, y, z))
             setState(world, x, y, z, !getState(world, x, y, z));
 
-        net.minecraft.src.redstoneExtended.Laser.LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
+        LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -241,7 +241,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     }
 
     @Override
-    public net.minecraft.src.redstoneExtended.Laser.LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 

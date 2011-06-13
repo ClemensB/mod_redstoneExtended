@@ -29,38 +29,38 @@ public class ColorRYB implements Cloneable {
         nbtTagCompound.setByte("B", colorRYB.B);
     }
 
-    public net.minecraft.src.redstoneExtended.Util.ColorRGB toColorRGB() {
+    public ColorRGB toColorRGB() {
         float iR = (float)(R & 0xff) / 255f, iY = (float)(Y & 0xff) / 255f, iB = (float)(B & 0xff) / 255f;
         float oR, oG, oB;
 
         float x0, x1, x2, x3, y0, y1;
 
-        x0 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.163f);
-        x1 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.0f);
-        x2 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.5f);
-        x3 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.2f);
-        y0 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iY, x0, x1);
-        y1 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iY, x2, x3);
-        oR = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iR, y0, y1);
+        x0 = MathUtil.cubicInterpolation(iB, 1.0f, 0.163f);
+        x1 = MathUtil.cubicInterpolation(iB, 1.0f, 0.0f);
+        x2 = MathUtil.cubicInterpolation(iB, 1.0f, 0.5f);
+        x3 = MathUtil.cubicInterpolation(iB, 1.0f, 0.2f);
+        y0 = MathUtil.cubicInterpolation(iY, x0, x1);
+        y1 = MathUtil.cubicInterpolation(iY, x2, x3);
+        oR = MathUtil.cubicInterpolation(iR, y0, y1);
 
-        x0 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.373f);
-        x1 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.66f);
-        x2 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 0.0f, 0.0f);
-        x3 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 0.5f, 0.094f);
-        y0 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iY, x0, x1);
-        y1 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iY, x2, x3);
-        oG = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iR, y0, y1);
+        x0 = MathUtil.cubicInterpolation(iB, 1.0f, 0.373f);
+        x1 = MathUtil.cubicInterpolation(iB, 1.0f, 0.66f);
+        x2 = MathUtil.cubicInterpolation(iB, 0.0f, 0.0f);
+        x3 = MathUtil.cubicInterpolation(iB, 0.5f, 0.094f);
+        y0 = MathUtil.cubicInterpolation(iY, x0, x1);
+        y1 = MathUtil.cubicInterpolation(iY, x2, x3);
+        oG = MathUtil.cubicInterpolation(iR, y0, y1);
 
-        x0 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 1.0f, 0.6f);
-        x1 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 0.0f, 0.2f);
-        x2 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 0.0f, 0.5f);
-        x3 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iB, 0.0f, 0.0f);
-        y0 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iY, x0, x1);
-        y1 = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iY, x2, x3);
-        oB = net.minecraft.src.redstoneExtended.Util.MathUtil.cubicInterpolation(iR, y0, y1);
+        x0 = MathUtil.cubicInterpolation(iB, 1.0f, 0.6f);
+        x1 = MathUtil.cubicInterpolation(iB, 0.0f, 0.2f);
+        x2 = MathUtil.cubicInterpolation(iB, 0.0f, 0.5f);
+        x3 = MathUtil.cubicInterpolation(iB, 0.0f, 0.0f);
+        y0 = MathUtil.cubicInterpolation(iY, x0, x1);
+        y1 = MathUtil.cubicInterpolation(iY, x2, x3);
+        oB = MathUtil.cubicInterpolation(iR, y0, y1);
 
         byte bR = (byte)(oR * 255f), bG = (byte)(oG * 255f), bB = (byte)(oB * 255f);
-        return new net.minecraft.src.redstoneExtended.Util.ColorRGB(bR, bG, bB);
+        return new ColorRGB(bR, bG, bB);
     }
 
     public int toRGBInt() {

@@ -7,7 +7,7 @@ public class TileEntityLaser extends TileEntity {
     public int orientation = 0;
     public int distance = 0;
 
-    public net.minecraft.src.redstoneExtended.Laser.LaserMode mode = new net.minecraft.src.redstoneExtended.Laser.LaserMode();
+    public LaserMode mode = new LaserMode();
 
     public TileEntityLaser() {
     }
@@ -17,7 +17,7 @@ public class TileEntityLaser extends TileEntity {
         super.readFromNBT(nbtTagCompound);
         orientation = nbtTagCompound.getByte("Orientation");
         distance = nbtTagCompound.getShort("Distance");
-        mode = net.minecraft.src.redstoneExtended.Laser.LaserMode.readFromNBT(nbtTagCompound.getCompoundTag("Mode"));
+        mode = LaserMode.readFromNBT(nbtTagCompound.getCompoundTag("Mode"));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class TileEntityLaser extends TileEntity {
         nbtTagCompound.setByte("Orientation", (byte)orientation);
         nbtTagCompound.setShort("Distance", (short)distance);
         NBTTagCompound modeTag = new NBTTagCompound();
-        net.minecraft.src.redstoneExtended.Laser.LaserMode.writeToNBT(modeTag, mode);
+        LaserMode.writeToNBT(modeTag, mode);
         nbtTagCompound.setCompoundTag("Mode", modeTag);
     }
 }

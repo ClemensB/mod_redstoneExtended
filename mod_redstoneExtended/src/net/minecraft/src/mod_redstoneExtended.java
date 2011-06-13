@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.minecraft.src.redstoneExtended.*;
+import net.minecraft.src.redstoneExtended.Laser.*;
 import net.minecraft.src.redstoneExtended.Util.IdManager;
 import net.minecraft.src.redstoneExtended.Util.LoggingUtil;
 
@@ -96,10 +97,10 @@ public class mod_redstoneExtended extends BaseMod {
         blockRedstoneRandom = (new BlockRedstoneRandom(IdManager.getInstance().getId("redstoneRandom", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRandom");
         blockRedstoneHardenedTorchIdle = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchIdle", IdManager.IdType.Block), ModLoader.addOverride("/terrain.png", "/redstoneExtended/hardenedTorch/idle.png"), false)).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
         blockRedstoneHardenedTorchActive = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchActive", IdManager.IdType.Block), ModLoader.addOverride("/terrain.png", "/redstoneExtended/hardenedTorch/active.png"), true)).setHardness(0.0F).setLightValue(0.5F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
-        blockLaser = (new net.minecraft.src.redstoneExtended.Laser.BlockLaser(IdManager.getInstance().getId("laser", IdManager.IdType.Block))).setHardness(-1.0F).setResistance(6000000F).setLightValue(0.625F).setStepSound(Block.soundGlassFootstep).setBlockName("laser");
-        blockLaserEmitter = (new net.minecraft.src.redstoneExtended.Laser.BlockLaserEmitter(IdManager.getInstance().getId("laserEmitter", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserEmitter");
-        blockLaserFocusLens = (new net.minecraft.src.redstoneExtended.Laser.BlockLaserFocusLens(IdManager.getInstance().getId("laserFocusLens", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserFocusLens");
-        blockLaserMirror = (new net.minecraft.src.redstoneExtended.Laser.BlockLaserMirror(IdManager.getInstance().getId("laserMirror", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserMirror");
+        blockLaser = (new BlockLaser(IdManager.getInstance().getId("laser", IdManager.IdType.Block))).setHardness(-1.0F).setResistance(6000000F).setLightValue(0.625F).setStepSound(Block.soundGlassFootstep).setBlockName("laser");
+        blockLaserEmitter = (new BlockLaserEmitter(IdManager.getInstance().getId("laserEmitter", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserEmitter");
+        blockLaserFocusLens = (new BlockLaserFocusLens(IdManager.getInstance().getId("laserFocusLens", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserFocusLens");
+        blockLaserMirror = (new BlockLaserMirror(IdManager.getInstance().getId("laserMirror", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserMirror");
         blockCheat = (new BlockCheat(IdManager.getInstance().getId("cheatBlock", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
 
 
@@ -176,10 +177,10 @@ public class mod_redstoneExtended extends BaseMod {
 
         ModLoader.RegisterTileEntity(TileEntityRedstoneClock.class, "RedstoneClock");
         ModLoader.RegisterTileEntity(TileEntityLightSensor.class, "RedstoneLightSensor");
-        ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaser.class, "Laser");
-        ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter.class, "LaserEmitter");
-        ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens.class, "LaserFocusLens");
-        ModLoader.RegisterTileEntity(net.minecraft.src.redstoneExtended.Laser.TileEntityLaserMirror.class, "LaserMirror");
+        ModLoader.RegisterTileEntity(TileEntityLaser.class, "Laser");
+        ModLoader.RegisterTileEntity(TileEntityLaserEmitter.class, "LaserEmitter");
+        ModLoader.RegisterTileEntity(TileEntityLaserFocusLens.class, "LaserFocusLens");
+        ModLoader.RegisterTileEntity(TileEntityLaserMirror.class, "LaserMirror");
 
         registerRecipes();
     }

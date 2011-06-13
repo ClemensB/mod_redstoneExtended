@@ -4,7 +4,7 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.redstoneExtended.Util.ColorRGB;
 
 public class LaserMode implements Cloneable {
-    public LaserShape shape = new net.minecraft.src.redstoneExtended.Laser.LaserShape();
+    public LaserShape shape = new LaserShape();
 
     public ColorRGB color = new ColorRGB((byte)255, (byte)255, (byte)255);
 
