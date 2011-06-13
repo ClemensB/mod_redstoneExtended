@@ -56,7 +56,6 @@ public class mod_redstoneExtended extends BaseMod {
 
 
     public final int renderStandardBlockWithOverlay;
-    public final int renderBlockRedstoneLogicGate;
     public final int renderBlockRedstoneClock;
     public final int renderBlockRedstoneLightSensor;
     public final int renderBlockRedstoneFlipFlop;
@@ -68,7 +67,6 @@ public class mod_redstoneExtended extends BaseMod {
         instance = this;
 
         renderStandardBlockWithOverlay = ModLoader.getUniqueBlockModelID(this, true);
-        renderBlockRedstoneLogicGate = ModLoader.getUniqueBlockModelID(this, false);
         renderBlockRedstoneClock = ModLoader.getUniqueBlockModelID(this, false);
         renderBlockRedstoneLightSensor = ModLoader.getUniqueBlockModelID(this, false);
         renderBlockRedstoneFlipFlop = ModLoader.getUniqueBlockModelID(this, false);
@@ -294,8 +292,6 @@ public class mod_redstoneExtended extends BaseMod {
     public boolean RenderWorldBlock(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, int x, int y, int z, Block block, int modelID) {
         if (modelID == renderStandardBlockWithOverlay)
             return MyRenderBlocks.renderStandardBlockWithOverlay(renderBlocks, iBlockAccess, block, x, y, z);
-        else if (modelID == renderBlockRedstoneLogicGate)
-            return MyRenderBlocks.renderBlockRedstoneLogicGate(renderBlocks, iBlockAccess, block, x, y, z);
         else if (modelID == renderBlockRedstoneClock)
             return MyRenderBlocks.renderBlockRedstoneClock(renderBlocks, iBlockAccess, block, x, y, z);
         else if (modelID == renderBlockRedstoneLightSensor)

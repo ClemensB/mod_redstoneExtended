@@ -1,11 +1,14 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
 import net.minecraft.src.redstoneExtended.Util.LoggingUtil;
+import net.minecraft.src.redstoneExtended.Util.Vector2d;
+import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public abstract class BlockRedstoneLogicGateBase extends Block {
+public abstract class BlockRedstoneLogicGateBase extends Block implements IBlockWithOverlayEx {
     private final boolean active;
 
     BlockRedstoneLogicGateBase(int id, boolean isActive) {
@@ -14,7 +17,7 @@ public abstract class BlockRedstoneLogicGateBase extends Block {
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 
         if ((operatingModeCount() < 1) || (operatingModeCount() > 4))
-            LoggingUtil.logError("Operating mode count must be between 1 and 4!");
+            LoggingUtil.logError("Operating mode count must in range of 1 and 4!");
     }
 
 
@@ -247,22 +250,72 @@ public abstract class BlockRedstoneLogicGateBase extends Block {
 
     @Override
     public int getRenderType() {
-        return mod_redstoneExtended.getInstance().renderBlockRedstoneLogicGate;
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
     }
 
     @Override
     public int getBlockTextureFromSideAndMetadata(int side, int metadata) {
-        switch (side) {
-            case 6:
-                return operatingModeTexture(getOperatingModeFromMetadata(metadata), 0, active);
-            case 7:
-                return operatingModeTexture(getOperatingModeFromMetadata(metadata), 1, active);
-            case 8:
-                return operatingModeTexture(getOperatingModeFromMetadata(metadata), 2, active);
-            case 9:
-                return operatingModeTexture(getOperatingModeFromMetadata(metadata), 3, active);
+        return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return (side == 1 && (layer == 1 | layer == 2 | layer == 3 | layer == 4));
+    }
+
+    @Override
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        int operatingMode = getOperatingMode(iBlockAccess, x, y, z);
+        switch (layer) {
+            case 1:
+                return operatingModeTexture(operatingMode, 0, active);
+            case 2:
+                return operatingModeTexture(operatingMode, 1, active);
+            case 3:
+                return operatingModeTexture(operatingMode, 2, active);
+            case 4:
+                return operatingModeTexture(operatingMode, 3, active);
             default:
-                return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
+                return mod_redstoneExtended.getInstance().emptyTexture;
         }
+    }
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0D);
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(1D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return getOrientation(iBlockAccess, x, y, z) * 90D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        if (layer != 1)
+            return ColorRGB.Colors.White;
+
+        float[] redstoneColor = active ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
+        return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return (layer == 1 && active);
     }
 }

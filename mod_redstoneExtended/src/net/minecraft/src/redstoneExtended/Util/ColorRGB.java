@@ -22,12 +22,22 @@ public class ColorRGB implements Cloneable {
         B = (byte)b;
     }
 
+    public ColorRGB(float r, float g, float b) {
+        R = (byte)(r * 255f);
+        G = (byte)(g * 255f);
+        B = (byte)(b * 255f);
+    }
+
     public ColorRGB(byte value) {
         R = G = B = value;
     }
 
     public ColorRGB(int value) {
         R = G = B = (byte)value;
+    }
+
+    public ColorRGB(float value) {
+        R = G = B = (byte)(value * 255f);
     }
 
     public static ColorRGB readFromNBT(NBTTagCompound nbtTagCompound) {
