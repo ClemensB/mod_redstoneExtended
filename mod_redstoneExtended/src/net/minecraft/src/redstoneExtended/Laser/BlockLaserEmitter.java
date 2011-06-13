@@ -170,7 +170,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer) {
-        setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= (operatingModes.length - 1) ? (byte)0 : (byte)(getOperatingMode(world, x, y, z) + 1));
+        setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= (operatingModes.length - 1) ? 0 : (getOperatingMode(world, x, y, z) + 1));
 
         world.markBlocksDirty(x, y, z, x, y, z);
         world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
@@ -188,8 +188,8 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    public static byte getOrientationFromMetadata(int metadata) {
-        return (byte)(metadata & 0x7);
+    public static int getOrientationFromMetadata(int metadata) {
+        return metadata & 0x7;
     }
 
     public static int setStateInMetadata(int metadata, boolean state) {
@@ -205,7 +205,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
         return getStateFromMetadata(metadata);
     }
 
-    public static byte getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getOrientationFromMetadata(metadata);
     }
@@ -222,12 +222,12 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    public static byte getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
+    public static int getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
     }
 
-    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, byte operatingMode) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
+    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, int operatingMode) {
+        ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
     }
 
     @Override
@@ -249,7 +249,7 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     }
 
     @Override
-    public short getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public int getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return 0;
 

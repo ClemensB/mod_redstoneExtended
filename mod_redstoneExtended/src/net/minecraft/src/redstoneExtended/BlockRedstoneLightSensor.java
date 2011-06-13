@@ -107,8 +107,8 @@ public class BlockRedstoneLightSensor extends BlockContainer {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        byte oldTriggerSetting = getTriggerSetting(world, x, y, z);
-        byte newTriggerSetting = (byte)((oldTriggerSetting >= 5) ? 0 : oldTriggerSetting + 1);
+        int oldTriggerSetting = getTriggerSetting(world, x, y, z);
+        int newTriggerSetting = (oldTriggerSetting >= 5) ? 0 : oldTriggerSetting + 1;
         setTriggerSetting(world, x, y, z, newTriggerSetting);
         world.markBlocksDirty(x, y, z, x, y, z);
 
@@ -156,16 +156,16 @@ public class BlockRedstoneLightSensor extends BlockContainer {
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    private static byte getTriggerSettingFromMetadata(int metadata) {
-        return (byte)(metadata & 0x7);
+    private static int getTriggerSettingFromMetadata(int metadata) {
+        return metadata & 0x7;
     }
 
     private static int setStateInMetadata(int metadata, boolean state) {
         return ((metadata & 0x7) | ((state ? 1 : 0) << 3) & 0x8);
     }
 
-    private static int setTriggerSettingInMetadata(int metadata, byte delaySetting) {
-        return ((metadata & 0x8) | ((int)delaySetting & 0x7));
+    private static int setTriggerSettingInMetadata(int metadata, int triggerSetting) {
+        return ((metadata & 0x8) | (triggerSetting & 0x7));
     }
 
     public static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
@@ -173,7 +173,7 @@ public class BlockRedstoneLightSensor extends BlockContainer {
         return getStateFromMetadata(metadata);
     }
 
-    private static byte getTriggerSetting(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static int getTriggerSetting(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getTriggerSettingFromMetadata(metadata);
     }
@@ -184,9 +184,9 @@ public class BlockRedstoneLightSensor extends BlockContainer {
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    private static void setTriggerSetting(World world, int x, int y, int z, byte delaySetting) {
+    private static void setTriggerSetting(World world, int x, int y, int z, int triggerSetting) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
-        int newMetadata = setTriggerSettingInMetadata(oldMetadata, delaySetting);
+        int newMetadata = setTriggerSettingInMetadata(oldMetadata, triggerSetting);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 }

@@ -168,7 +168,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
         return (getState(world, x, y, z) != updateInputState(world, x, y, z)) ||
-                net.minecraft.src.redstoneExtended.Laser.LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -183,7 +183,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= 2 ? (byte)0 : (byte)(getOperatingMode(world, x, y, z) + 1));
+        setOperatingMode(world, x, y, z, getOperatingMode(world, x, y, z) >= 2 ? 0 : (getOperatingMode(world, x, y, z) + 1));
 
         world.markBlocksDirty(x, y, z, x, y, z);
         world.scheduleBlockUpdate(x, y, z, blockID, tickRate());
@@ -194,7 +194,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
 
     protected boolean updateInputState(IBlockAccess iBlockAccess, int x, int y, int z) {
         int orientation = getOrientation(iBlockAccess, x, y, z);
-        net.minecraft.src.redstoneExtended.Util.Position sourcePos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(DirectionUtil.invertDirection(orientation));
+        net.minecraft.src.redstoneExtended.Util.Position sourcePos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).moveInDirection(DirectionUtil.invertDirection(orientation));
         int sourceBlockId = iBlockAccess.getBlockId(sourcePos.X, sourcePos.Y, sourcePos.Z);
         if ((Block.blocksList[sourceBlockId] instanceof net.minecraft.src.redstoneExtended.Laser.ILaserEmitter) && (((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[sourceBlockId]).isProvidingLaserPowerInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation))) {
             setLaserMode(iBlockAccess, x, y, z, ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(iBlockAccess, sourcePos.X, sourcePos.Y, sourcePos.Z, orientation).getClone());
@@ -205,20 +205,20 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         return false;
     }
 
-    public static byte getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
+    public static int getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
     }
 
-    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, byte operatingMode) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
+    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, int operatingMode) {
+        ((TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
     }
 
     public static boolean getStateFromMetadata(int metadata) {
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    public static byte getOrientationFromMetadata(int metadata) {
-        return (byte)(metadata & 0x7);
+    public static int getOrientationFromMetadata(int metadata) {
+        return metadata & 0x7;
     }
 
     public static int setStateInMetadata(int metadata, boolean state) {
@@ -234,7 +234,7 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         return getStateFromMetadata(metadata);
     }
 
-    public static byte getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getOrientationFromMetadata(metadata);
     }
@@ -259,11 +259,11 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
         ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).mode = laserMode;
     }
 
-    public static short getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
+    public static int getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
         return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).distance;
     }
 
-    public static void setDistance(IBlockAccess iBlockAccess, int x, int y, int z, short distance) {
+    public static void setDistance(IBlockAccess iBlockAccess, int x, int y, int z, int distance) {
         ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserFocusLens)iBlockAccess.getBlockTileEntity(x, y, z)).distance = distance;
     }
 
@@ -286,10 +286,10 @@ public class BlockLaserFocusLens extends BlockContainer implements ILaserEmitter
     }
 
     @Override
-    public short getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public int getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return 0;
 
-        return (short)(getDistance(iBlockAccess, x, y, z) + 1);
+        return (getDistance(iBlockAccess, x, y, z) + 1);
     }
 }

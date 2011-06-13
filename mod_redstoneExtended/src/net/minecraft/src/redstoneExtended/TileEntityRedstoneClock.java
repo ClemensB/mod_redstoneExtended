@@ -5,8 +5,8 @@ import net.minecraft.src.TileEntity;
 
 public class TileEntityRedstoneClock extends TileEntity {
     private boolean state = false;
-    private short time = 0;
-    private byte delaySetting = 0;
+    private int time = 0;
+    private int delaySetting = 0;
 
     private static final short[] delays;
 
@@ -40,8 +40,8 @@ public class TileEntityRedstoneClock extends TileEntity {
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean("State", state);
-        nbtTagCompound.setShort("Time", time);
-        nbtTagCompound.setByte("DelaySetting", delaySetting);
+        nbtTagCompound.setShort("Time", (short)time);
+        nbtTagCompound.setByte("DelaySetting", (byte)delaySetting);
     }
 
     public void delaySettingChanged() {

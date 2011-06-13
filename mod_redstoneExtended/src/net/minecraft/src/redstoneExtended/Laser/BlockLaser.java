@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class BlockLaser extends BlockContainer implements ILaserEmitter {
     public BlockLaser(int id) {
-        super(id, Block.glass.blockIndexInTexture, net.minecraft.src.redstoneExtended.Laser.Materials.laser);
+        super(id, Block.glass.blockIndexInTexture, Materials.laser);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess iBlockAccess, int x, int y, int z) {
-        byte orientation = ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).orientation;
-        float width = ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width;
+        int orientation = getOrientation(iBlockAccess, x, y, z);
+        float width = ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.width;
         float min = 0.5F - (width / 2F);
         float max = 0.5F + (width / 2F);
         switch (orientation) {
@@ -55,12 +55,12 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture;
+        return ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode.shape.texture;
     }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        if (((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.shape.collision)
+        if (((TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.shape.collision)
             return super.getCollisionBoundingBoxFromPool(world, x, y, z);
         else
             return null;
@@ -68,10 +68,10 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public boolean canBlockStay(World world, int x, int y, int z) {
-        int orientation = ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)world.getBlockTileEntity(x, y, z)).orientation;
-        net.minecraft.src.redstoneExtended.Util.Position parentPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(DirectionUtil.invertDirection(orientation));
+        int orientation = ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).orientation;
+        Position parentPos = new Position(x, y, z).moveInDirection(DirectionUtil.invertDirection(orientation));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
-        return ((Block.blocksList[parentBlockId] instanceof net.minecraft.src.redstoneExtended.Laser.ILaserEmitter) && ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).isProvidingLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
+        return ((Block.blocksList[parentBlockId] instanceof ILaserEmitter) && ((ILaserEmitter)Block.blocksList[parentBlockId]).isProvidingLaserPowerInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, orientation));
     }
 
     @Override
@@ -84,49 +84,49 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         if (!canBlockStay(world, x, y, z))
             return true;
 
-        net.minecraft.src.redstoneExtended.Util.Position parentPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(DirectionUtil.invertDirection(getOrientation(world, x, y, z)));
+        Position parentPos = new Position(x, y, z).moveInDirection(DirectionUtil.invertDirection(getOrientation(world, x, y, z)));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
 
         if (getLaserMode(world, x, y, z).shape.equals(LaserShapes.Deadly)) {
-            Position nextPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+            Position nextPos = new Position(x, y, z).moveInDirection(getOrientation(world, x, y, z));
             if (world.getBlockMaterial(nextPos.X, nextPos.Y, nextPos.Z).getBurning()) {
-                Position abovePos = nextPos.positionMoveInDirection(0);
+                Position abovePos = nextPos.moveInDirection(0);
                 if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).func_27283_g())
                     return true;
             }
         }
 
-        return (!((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) ||
-                !(((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z)) ||
-                net.minecraft.src.redstoneExtended.Laser.LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
+        return (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) ||
+                !(((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z)) ||
+                LaserUtil.isBlockUpdateForLaserInDirectionNecessary(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     private boolean hasNotMaximumLength(IBlockAccess iBlockAccess, int x, int y, int z) {
         return getDistance(iBlockAccess, x, y, z) < 30;
     }
 
-    public static byte getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).orientation;
+    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).orientation;
     }
 
-    public static void setOrientation(World world, int x, int y, int z, byte orientation) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)world.getBlockTileEntity(x, y, z)).orientation = orientation;
+    public static void setOrientation(World world, int x, int y, int z, int orientation) {
+        ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).orientation = orientation;
     }
 
-    public static short getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).distance;
+    public static int getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).distance;
     }
 
-    public static void setDistance(World world, int x, int y, int z, short distance) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)world.getBlockTileEntity(x, y, z)).distance = distance;
+    public static void setDistance(World world, int x, int y, int z, int distance) {
+        ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).distance = distance;
     }
 
-    public static net.minecraft.src.redstoneExtended.Laser.LaserMode getLaserMode(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode;
+    public static LaserMode getLaserMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaser)iBlockAccess.getBlockTileEntity(x, y, z)).mode;
     }
 
-    public static void setLaserMode(World world, int x, int y, int z, net.minecraft.src.redstoneExtended.Laser.LaserMode laserMode) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode = laserMode;
+    public static void setLaserMode(World world, int x, int y, int z, LaserMode laserMode) {
+        ((TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode = laserMode;
     }
 
     @Override
@@ -150,28 +150,28 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
             return;
         }
 
-        net.minecraft.src.redstoneExtended.Util.Position parentPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(DirectionUtil.invertDirection(getOrientation(world, x, y, z)));
+        Position parentPos = new Position(x, y, z).moveInDirection(DirectionUtil.invertDirection(getOrientation(world, x, y, z)));
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
-        if (!((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) {
-            setLaserMode(world, x, y, z, ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
+        if (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) {
+            setLaserMode(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
             world.notifyBlocksOfNeighborChange(x, y, z, blockID);
         }
-        if (!(((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z))) {
-            setDistance(world, x, y, z, ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
+        if (!(((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z))) {
+            setDistance(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
             world.notifyBlocksOfNeighborChange(x, y, z, blockID);
         }
 
         if (getLaserMode(world, x, y, z).shape.equals(LaserShapes.Deadly)) {
-            Position nextPos = new Position(x, y, z).positionMoveInDirection(getOrientation(world, x, y, z));
+            Position nextPos = new Position(x, y, z).moveInDirection(getOrientation(world, x, y, z));
             if (world.getBlockMaterial(nextPos.X, nextPos.Y, nextPos.Z).getBurning()) {
-                Position abovePos = nextPos.positionMoveInDirection(0);
+                Position abovePos = nextPos.moveInDirection(0);
                 if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).func_27283_g()) {
                     world.setBlockWithNotify(nextPos.X, nextPos.Y, nextPos.Z, Block.fire.blockID);
                 }
             }
         }
 
-        net.minecraft.src.redstoneExtended.Laser.LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
+        LaserUtil.blockUpdateForLaserInDirection(world, x, y, z, getOrientation(world, x, y, z));
     }
 
     @Override
@@ -181,12 +181,12 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
 
     @Override
     public TileEntity getBlockEntity() {
-        return new net.minecraft.src.redstoneExtended.Laser.TileEntityLaser();
+        return new TileEntityLaser();
     }
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-        short damage = ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaser)world.getBlockTileEntity(x, y, z)).mode.shape.damage;
+        int damage = getLaserMode(world, x, y, z).shape.damage;
         if (damage > 0)
             entity.attackEntityFrom(null, damage);
     }
@@ -202,7 +202,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
     }
 
     @Override
-    public net.minecraft.src.redstoneExtended.Laser.LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public LaserMode getLaserModeProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return null;
 
@@ -210,10 +210,10 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
     }
 
     @Override
-    public short getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public int getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return 0;
 
-        return (short)(getDistance(iBlockAccess, x, y, z) + 1);
+        return (getDistance(iBlockAccess, x, y, z) + 1);
     }
 }

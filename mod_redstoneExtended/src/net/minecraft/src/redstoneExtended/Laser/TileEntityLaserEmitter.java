@@ -4,7 +4,7 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 
 public class TileEntityLaserEmitter extends TileEntity {
-    public byte operatingMode;
+    public int operatingMode;
 
     public TileEntityLaserEmitter() {
     }
@@ -18,6 +18,6 @@ public class TileEntityLaserEmitter extends TileEntity {
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setByte("OperatingMode", operatingMode);
+        nbtTagCompound.setByte("OperatingMode", (byte)operatingMode);
     }
 }

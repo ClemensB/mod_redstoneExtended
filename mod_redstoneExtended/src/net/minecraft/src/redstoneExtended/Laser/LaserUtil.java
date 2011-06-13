@@ -5,7 +5,7 @@ import net.minecraft.src.World;
 import net.minecraft.src.mod_redstoneExtended;
 
 public class LaserUtil {
-    public static boolean isBlockUpdateForLaserInDirectionNecessary(World world, int x, int y, int z, byte direction) {
+    public static boolean isBlockUpdateForLaserInDirectionNecessary(World world, int x, int y, int z, int direction) {
         int blockId = world.getBlockId(x, y, z);
         Block block = Block.blocksList[blockId];
         net.minecraft.src.redstoneExtended.Laser.ILaserEmitter laserEmitter = (net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)block;
@@ -13,7 +13,7 @@ public class LaserUtil {
         if (!laserEmitter.canProvideLaserPowerInDirection(world, x, y, z, direction))
             return false;
 
-        net.minecraft.src.redstoneExtended.Util.Position laserPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(direction);
+        net.minecraft.src.redstoneExtended.Util.Position laserPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).moveInDirection(direction);
         int laserBlockId = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
 
         if (laserEmitter.isProvidingLaserPowerInDirection(world, x, y, z, direction)) {
@@ -34,7 +34,7 @@ public class LaserUtil {
         return false;
     }
 
-    public static void blockUpdateForLaserInDirection(World world, int x, int y, int z, byte direction) {
+    public static void blockUpdateForLaserInDirection(World world, int x, int y, int z, int direction) {
         int blockId = world.getBlockId(x, y, z);
         Block block = Block.blocksList[blockId];
         net.minecraft.src.redstoneExtended.Laser.ILaserEmitter laserEmitter = (net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)block;
@@ -42,7 +42,7 @@ public class LaserUtil {
         if (!laserEmitter.canProvideLaserPowerInDirection(world, x, y, z, direction))
             return;
 
-        net.minecraft.src.redstoneExtended.Util.Position laserPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(direction);
+        net.minecraft.src.redstoneExtended.Util.Position laserPos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).moveInDirection(direction);
         int laserBlockId = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
         boolean blockUpdateNecessary = false;
 
@@ -55,7 +55,7 @@ public class LaserUtil {
                 blockUpdateNecessary = true;
                 laserBlockId = world.getBlockId(laserPos.X, laserPos.Y, laserPos.Z);
 
-                net.minecraft.src.redstoneExtended.Laser.BlockLaser.setOrientation(world, laserPos.X, laserPos.Y, laserPos.Z, direction);
+                BlockLaser.setOrientation(world, laserPos.X, laserPos.Y, laserPos.Z, direction);
             }
 
             if ((laserBlockId == mod_redstoneExtended.getInstance().blockLaser.blockID) &&

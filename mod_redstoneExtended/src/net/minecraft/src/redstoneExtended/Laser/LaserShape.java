@@ -7,9 +7,9 @@ public class LaserShape implements Cloneable {
 
     public boolean collision;
 
-    public short damage;
+    public int damage;
 
-    public byte texture;
+    public int texture;
 
     public LaserShape() {
         width = LaserShapes.Default.width;
@@ -18,7 +18,7 @@ public class LaserShape implements Cloneable {
         texture = LaserShapes.Default.texture;
     }
 
-    public LaserShape(float width, boolean collision, short damage, byte texture) {
+    public LaserShape(float width, boolean collision, int damage, int texture) {
         this.width = width;
         this.collision = collision;
         this.damage = damage;
@@ -36,8 +36,8 @@ public class LaserShape implements Cloneable {
     public static void writeToNBT(NBTTagCompound nbtTagCompound, LaserShape laserShape) {
         nbtTagCompound.setFloat("Width", laserShape.width);
         nbtTagCompound.setBoolean("Collision", laserShape.collision);
-        nbtTagCompound.setShort("Damage", laserShape.damage);
-        nbtTagCompound.setByte("Texture", laserShape.texture);
+        nbtTagCompound.setShort("Damage", (short)laserShape.damage);
+        nbtTagCompound.setByte("Texture", (byte)laserShape.texture);
     }
 
     public LaserShape getClone() {

@@ -151,11 +151,11 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     }
 
     @Override
-    public short getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
+    public int getInitialDistanceProvidedInDirection(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         if (!isProvidingLaserPowerInDirection(iBlockAccess, x, y, z, direction))
             return 0;
 
-        return (short)(getDistance(iBlockAccess, x, y, z) + 1);
+        return (getDistance(iBlockAccess, x, y, z) + 1);
     }
 
     private boolean isBlockUpdateNecessary(World world, int x, int y, int z) {
@@ -166,20 +166,20 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     private boolean updateInputState(World world, int x, int y, int z) {
         int orientation = getOrientation(world, x, y, z);
 
-        short distance = Short.MAX_VALUE;
+        int distance = Short.MAX_VALUE;
         LinkedList<net.minecraft.src.redstoneExtended.Laser.LaserMode> inputLaserModes = new LinkedList<net.minecraft.src.redstoneExtended.Laser.LaserMode>();
 
         for (int i = 0; i < 6; i++) {
             if (i == orientation)
                 continue;
 
-            net.minecraft.src.redstoneExtended.Util.Position sourcePos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).positionMoveInDirection(i);
+            net.minecraft.src.redstoneExtended.Util.Position sourcePos = new net.minecraft.src.redstoneExtended.Util.Position(x, y, z).moveInDirection(i);
             int sourceBlockId = world.getBlockId(sourcePos.X, sourcePos.Y, sourcePos.Z);
             if ((Block.blocksList[sourceBlockId] instanceof net.minecraft.src.redstoneExtended.Laser.ILaserEmitter) &&
                     ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[sourceBlockId]).isProvidingLaserPowerInDirection(world, sourcePos.X, sourcePos.Y, sourcePos.Z, DirectionUtil.invertDirection(i))) {
-                inputLaserModes.add(((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(world, sourcePos.X, sourcePos.Y, sourcePos.Z, DirectionUtil.invertDirection(i)).getClone());
+                inputLaserModes.add(((ILaserEmitter)Block.blocksList[sourceBlockId]).getLaserModeProvidedInDirection(world, sourcePos.X, sourcePos.Y, sourcePos.Z, DirectionUtil.invertDirection(i)).getClone());
 
-                short sourceDistance = ((net.minecraft.src.redstoneExtended.Laser.ILaserEmitter)Block.blocksList[sourceBlockId]).getInitialDistanceProvidedInDirection(world, sourcePos.X, sourcePos.Y, sourcePos.Z, DirectionUtil.invertDirection(i));
+                int sourceDistance = ((ILaserEmitter)Block.blocksList[sourceBlockId]).getInitialDistanceProvidedInDirection(world, sourcePos.X, sourcePos.Y, sourcePos.Z, DirectionUtil.invertDirection(i));
                 if (sourceDistance < distance)
                     distance = sourceDistance;
             }
@@ -211,10 +211,10 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
             return false;
 
         colorR = MathUtil.clamp(0, 255, colorR);
-        colorG = net.minecraft.src.redstoneExtended.Util.MathUtil.clamp(0, 255, colorG);
-        colorB = net.minecraft.src.redstoneExtended.Util.MathUtil.clamp(0, 255, colorB);
+        colorG = MathUtil.clamp(0, 255, colorG);
+        colorB = MathUtil.clamp(0, 255, colorB);
 
-        ColorRGB color = new net.minecraft.src.redstoneExtended.Util.ColorRGB((byte)colorR, (byte)colorG, (byte)colorB);
+        ColorRGB color = new ColorRGB(colorR, colorG, colorB);
         net.minecraft.src.redstoneExtended.Laser.LaserShape shape = areShapesEquals ? lastLaserMode.shape.getClone() : new net.minecraft.src.redstoneExtended.Laser.LaserShape();
 
         net.minecraft.src.redstoneExtended.Laser.LaserMode laserMode = new net.minecraft.src.redstoneExtended.Laser.LaserMode(shape, color);
@@ -229,8 +229,8 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    public static byte getOrientationFromMetadata(int metadata) {
-        return (byte)(metadata & 0x7);
+    public static int getOrientationFromMetadata(int metadata) {
+        return metadata & 0x7;
     }
 
     public static int setStateInMetadata(int metadata, boolean state) {
@@ -246,7 +246,7 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
         return getStateFromMetadata(metadata);
     }
 
-    public static byte getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getOrientationFromMetadata(metadata);
     }
@@ -264,18 +264,18 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     }
 
     public static net.minecraft.src.redstoneExtended.Laser.LaserMode getLaserMode(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).mode;
+        return ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).mode;
     }
 
     public static void setLaserMode(IBlockAccess iBlockAccess, int x, int y, int z, net.minecraft.src.redstoneExtended.Laser.LaserMode laserMode) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).mode = laserMode;
+        ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).mode = laserMode;
     }
 
-    public static short getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
-        return ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).distance;
+    public static int getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
+        return ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).distance;
     }
 
-    public static void setDistance(IBlockAccess iBlockAccess, int x, int y, int z, short distance) {
-        ((net.minecraft.src.redstoneExtended.Laser.TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).distance = distance;
+    public static void setDistance(IBlockAccess iBlockAccess, int x, int y, int z, int distance) {
+        ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).distance = distance;
     }
 }

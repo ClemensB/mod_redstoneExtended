@@ -13,10 +13,10 @@ public class MyRenderBlocks {
 
         if (block instanceof IBlockWithOverlay) {
             IBlockWithOverlay iBlockWithOverlay = (IBlockWithOverlay)block;
-            for (byte layer = 0; layer < 8; layer++) {
-                for (byte face = 0; face < 6; face++) {
+            for (int layer = 0; layer < 8; layer++) {
+                for (int face = 0; face < 6; face++) {
                     if (iBlockWithOverlay.shouldOverlayBeRendered(iBlockAccess, x, y, z, face, layer)) {
-                        byte textureId = (byte)iBlockWithOverlay.getBlockOverlayTexture(iBlockAccess, x, y, z, face, layer);
+                        int textureId = iBlockWithOverlay.getBlockOverlayTexture(iBlockAccess, x, y, z, face, layer);
                         Vector3d offset = new Vector3d(0D);
                         Vector3d scale = new Vector3d(1D);
                         double rotation = 0D;
@@ -82,21 +82,21 @@ public class MyRenderBlocks {
     public static boolean renderBlockRedstoneLightSensor(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSideAndMetadata(6, iBlockAccess.getBlockMetadata(x, y, z)),
-                (byte)1, new Vector3d(0.0625D * 1.5D, 0D, 0.0625D * 1.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)Block.blockLapis.blockIndexInTexture,
-                (byte)1, new Vector3d(0.5D, 0D, 0.125D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)Block.glass.blockIndexInTexture,
-                (byte)2, new Vector3d(0.5D, 0D, 0.125D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D, 15D / 16D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)Block.blockLapis.blockIndexInTexture,
-                (byte)1, new Vector3d(0.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)Block.glass.blockIndexInTexture,
-                (byte)2, new Vector3d(0.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(0D, 1D / 256D), new Vector2d(1D, 15D / 16D), new ColorRGB(), false);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSideAndMetadata(6, iBlockAccess.getBlockMetadata(x, y, z)),
+                1, new Vector3d(0.0625D * 1.5D, 0D, 0.0625D * 1.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.blockLapis.blockIndexInTexture,
+                1, new Vector3d(0.5D, 0D, 0.125D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.glass.blockIndexInTexture,
+                2, new Vector3d(0.5D, 0D, 0.125D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D, 15D / 16D), new ColorRGB(), false);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.blockLapis.blockIndexInTexture,
+                1, new Vector3d(0.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.glass.blockIndexInTexture,
+                2, new Vector3d(0.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(0D, 1D / 256D), new Vector2d(1D, 15D / 16D), new ColorRGB(), false);
         boolean isActive = BlockRedstoneLightSensor.getState(iBlockAccess, x, y, z);
         float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
-        ColorRGB redstoneColorRGB = new ColorRGB((byte)(redstoneColor[0] * 255F), (byte)(redstoneColor[1] * 255F), (byte)(redstoneColor[2] * 255F));
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)Block.redstoneWire.blockIndexInTexture,
-                (byte)1, new Vector3d(0.0625D * 1.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
+        ColorRGB redstoneColorRGB = new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.redstoneWire.blockIndexInTexture,
+                1, new Vector3d(0.0625D * 1.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
 
         return true;
     }
@@ -105,17 +105,17 @@ public class MyRenderBlocks {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
         double rotation = BlockRedstoneFlipFlop.getOrientation(iBlockAccess, x, y, z) * 90D;
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSide(6),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSide(6),
+                1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
         boolean isActive = BlockRedstoneFlipFlop.getState(iBlockAccess, x, y, z);
         float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
-        ColorRGB redstoneColorRGB = new ColorRGB((byte)(redstoneColor[0] * 255F), (byte)(redstoneColor[1] * 255F), (byte)(redstoneColor[2] * 255F));
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSide(7),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
+        ColorRGB redstoneColorRGB = new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSide(7),
+                1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
         redstoneColor = isActive ? RenderBlocks.redstoneColors[0] : RenderBlocks.redstoneColors[13];
-        redstoneColorRGB = new ColorRGB((byte)(redstoneColor[0] * 255F), (byte)(redstoneColor[1] * 255F), (byte)(redstoneColor[2] * 255F));
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSide(8),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, !isActive);
+        redstoneColorRGB = new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSide(8),
+                1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, !isActive);
 
         return true;
     }

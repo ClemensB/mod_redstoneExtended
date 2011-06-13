@@ -90,8 +90,8 @@ public class BlockRedstoneClock extends BlockContainer implements IBlockWithOver
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        byte oldDelaySetting = getDelaySetting(world, x, y, z);
-        byte newDelaySetting = (byte)((oldDelaySetting >= 5) ? 0 : oldDelaySetting + 1);
+        int oldDelaySetting = getDelaySetting(world, x, y, z);
+        int newDelaySetting = (oldDelaySetting >= 5) ? 0 : oldDelaySetting + 1;
         setDelaySetting(world, x, y, z, newDelaySetting);
         ((TileEntityRedstoneClock)world.getBlockTileEntity(x, y, z)).delaySettingChanged();
 
@@ -107,16 +107,16 @@ public class BlockRedstoneClock extends BlockContainer implements IBlockWithOver
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    private static byte getDelaySettingFromMetadata(int metadata) {
-        return (byte)(metadata & 0x7);
+    private static int getDelaySettingFromMetadata(int metadata) {
+        return metadata & 0x7;
     }
 
     private static int setStateInMetadata(int metadata, boolean state) {
         return ((metadata & 0x7) | ((state ? 1 : 0) << 3) & 0x8);
     }
 
-    private static int setDelaySettingInMetadata(int metadata, byte delaySetting) {
-        return ((metadata & 0x8) | ((int)delaySetting & 0x7));
+    private static int setDelaySettingInMetadata(int metadata, int delaySetting) {
+        return ((metadata & 0x8) | (delaySetting & 0x7));
     }
 
     public static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
@@ -124,7 +124,7 @@ public class BlockRedstoneClock extends BlockContainer implements IBlockWithOver
         return getStateFromMetadata(metadata);
     }
 
-    public static byte getDelaySetting(IBlockAccess iBlockAccess, int x, int y, int z) {
+    public static int getDelaySetting(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getDelaySettingFromMetadata(metadata);
     }
@@ -135,7 +135,7 @@ public class BlockRedstoneClock extends BlockContainer implements IBlockWithOver
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    private static void setDelaySetting(World world, int x, int y, int z, byte delaySetting) {
+    private static void setDelaySetting(World world, int x, int y, int z, int delaySetting) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setDelaySettingInMetadata(oldMetadata, delaySetting);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);

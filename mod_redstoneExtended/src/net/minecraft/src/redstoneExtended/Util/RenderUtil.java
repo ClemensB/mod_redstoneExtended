@@ -5,12 +5,12 @@ import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Tessellator;
 
 public class RenderUtil {
-    public static void renderFaceOfBlockEx(IBlockAccess iBlockAccess, Block block, byte face, Position blockPos, byte textureId, byte layer, Vector3d offset,
+    public static void renderFaceOfBlockEx(IBlockAccess iBlockAccess, Block block, int face, Position blockPos, int textureId, int layer, Vector3d offset,
                                            Vector3d scale, double rotation, Vector2d textureOffset, Vector2d textureScale, ColorRGB colorMultiplier, boolean ignoreLighting) {
         Tessellator tessellator = Tessellator.instance;
 
         float blockBrightness = block.getBlockBrightness(iBlockAccess, blockPos.X, blockPos.Y, blockPos.Z);
-        Position relativeBlockPos = blockPos.getClone().positionMoveInDirection(DirectionUtil.invertDirection(face));
+        Position relativeBlockPos = blockPos.getClone().moveInDirection(DirectionUtil.invertDirection(face));
         float relativeBlockBrightness = block.getBlockBrightness(iBlockAccess, relativeBlockPos.X, relativeBlockPos.Y, relativeBlockPos.Z);
 
         if (face == 1 && block.maxX != 1.0D && !block.blockMaterial.getIsLiquid())
@@ -36,7 +36,7 @@ public class RenderUtil {
         renderBlockFaceEx(block, face, blockPos.toVector(), textureId, layer, offset, scale, rotation, textureOffset, textureScale);
     }
 
-    public static void renderBlockFaceEx(Block block, byte face, Vector3d blockPos, byte textureId, byte layer,
+    public static void renderBlockFaceEx(Block block, int face, Vector3d blockPos, int textureId, int layer,
                                          Vector3d offset, Vector3d scale, double rotation, Vector2d textureOffset, Vector2d textureScale) {
         Tessellator tessellator = Tessellator.instance;
 

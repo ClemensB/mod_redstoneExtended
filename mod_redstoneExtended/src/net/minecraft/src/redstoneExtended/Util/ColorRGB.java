@@ -3,54 +3,42 @@ package net.minecraft.src.redstoneExtended.Util;
 import net.minecraft.src.NBTTagCompound;
 
 public class ColorRGB implements Cloneable {
-    public byte R = (byte)255;
-    public byte G = (byte)255;
-    public byte B = (byte)255;
+    public int R = 255;
+    public int G = 255;
+    public int B = 255;
 
     public ColorRGB() {
     }
 
-    public ColorRGB(byte r, byte g, byte b) {
-        R = r;
-        G = g;
-        B = b;
-    }
-
     public ColorRGB(int r, int g, int b) {
-        R = (byte)r;
-        G = (byte)g;
-        B = (byte)b;
+        R = MathUtil.clamp(0, 255, r);
+        G = MathUtil.clamp(0, 255, g);
+        B = MathUtil.clamp(0, 255, b);
     }
 
     public ColorRGB(float r, float g, float b) {
-        R = (byte)(r * 255f);
-        G = (byte)(g * 255f);
-        B = (byte)(b * 255f);
-    }
-
-    public ColorRGB(byte value) {
-        R = G = B = value;
+        this((int)(r * 255f), (int)(g * 255f), (int)(b * 255f));
     }
 
     public ColorRGB(int value) {
-        R = G = B = (byte)value;
+        this(value, value, value);
     }
 
     public ColorRGB(float value) {
-        R = G = B = (byte)(value * 255f);
+        this((int)(value * 255f));
     }
 
     public static ColorRGB readFromNBT(NBTTagCompound nbtTagCompound) {
         byte r = nbtTagCompound.getByte("R");
         byte g = nbtTagCompound.getByte("G");
         byte b = nbtTagCompound.getByte("B");
-        return new ColorRGB(r, g, b);
+        return new ColorRGB(r & 0xff, g & 0xff, b & 0xff);
     }
 
     public static void writeToNBT(NBTTagCompound nbtTagCompound, ColorRGB color) {
-        nbtTagCompound.setByte("R", color.R);
-        nbtTagCompound.setByte("G", color.G);
-        nbtTagCompound.setByte("B", color.B);
+        nbtTagCompound.setByte("R", (byte)color.R);
+        nbtTagCompound.setByte("G", (byte)color.G);
+        nbtTagCompound.setByte("B", (byte)color.B);
     }
 
     public int toRGBInt() {

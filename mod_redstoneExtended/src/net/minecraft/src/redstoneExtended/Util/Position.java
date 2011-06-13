@@ -31,7 +31,7 @@ public class Position implements Cloneable {
         return super.clone();
     }
 
-    public Position positionMoveInDirection(int direction) {
+    public Position moveInDirection(int direction) {
         if (direction < 0 || direction > 5)
             throw new IllegalArgumentException("Direction must be in range of 0 and 5");
         switch (DirectionUtil.invertDirection(direction)) {
