@@ -79,39 +79,6 @@ public class MyRenderBlocks {
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    public static boolean renderBlockRedstoneLogicGate(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
-        renderBlocks.renderStandardBlock(block, x, y, z);
-
-        boolean isActive = block.blockID == ((BlockRedstoneLogicGateBase)block).blockId(true);
-        float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
-        int metadata = iBlockAccess.getBlockMetadata(x, y, z);
-        double rotation = BlockRedstoneLogicGateBase.getOrientationFromMetadata(metadata) * 90D;
-        ColorRGB redstoneColorRGB = new ColorRGB((byte)(redstoneColor[0] * 255F), (byte)(redstoneColor[1] * 255F), (byte)(redstoneColor[2] * 255F));
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSideAndMetadata(6, metadata),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSideAndMetadata(7, metadata),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSideAndMetadata(8, metadata),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSideAndMetadata(9, metadata),
-                (byte)1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-
-        return true;
-    }
-
-    public static boolean renderBlockRedstoneClock(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
-        renderBlocks.renderStandardBlock(block, x, y, z);
-
-        boolean isActive = BlockRedstoneClock.getState(iBlockAccess, x, y, z);
-        float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
-        int metadata = iBlockAccess.getBlockMetadata(x, y, z);
-        ColorRGB redstoneColorRGB = new ColorRGB((byte)(redstoneColor[0] * 255F), (byte)(redstoneColor[1] * 255F), (byte)(redstoneColor[2] * 255F));
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, (byte)1, new Position(x, y, z), (byte)block.getBlockTextureFromSideAndMetadata(6, metadata),
-                (byte)1, new Vector3d(), new Vector3d(1D), 0D, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
-
-        return true;
-    }
-
     public static boolean renderBlockRedstoneLightSensor(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
         renderBlocks.renderStandardBlock(block, x, y, z);
 

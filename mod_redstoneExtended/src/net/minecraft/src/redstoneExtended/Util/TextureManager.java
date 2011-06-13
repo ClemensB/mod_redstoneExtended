@@ -5,7 +5,7 @@ import net.minecraft.src.ModLoader;
 import java.util.HashMap;
 
 public class TextureManager {
-    public static TextureManager instance;
+    private static TextureManager instance;
 
     private String prefix;
 

@@ -1,11 +1,15 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.redstoneExtended.Util.Vector2d;
+import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public class BlockRedstoneClock extends BlockContainer {
-    private static final int texture = ModLoader.addOverride("/terrain.png", "/redstoneExtended/clock/clock.png");
+public class BlockRedstoneClock extends BlockContainer implements IBlockWithOverlayEx {
+    private static final int texture = TextureManager.getInstance().getTerrainTexture("/clock/clock.png");
 
     public BlockRedstoneClock(int id) {
         super(id, Block.stairSingle.getBlockTextureFromSideAndMetadata(1, 0), Material.circuits);
@@ -76,17 +80,12 @@ public class BlockRedstoneClock extends BlockContainer {
 
     @Override
     public int getRenderType() {
-        return mod_redstoneExtended.getInstance().renderBlockRedstoneClock;
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
     }
 
     @Override
     public int getBlockTextureFromSideAndMetadata(int side, int metadata) {
-        switch (side) {
-            case 6:
-                return texture;
-            default:
-                return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
-        }
+        return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
     }
 
     @Override
@@ -140,5 +139,52 @@ public class BlockRedstoneClock extends BlockContainer {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setDelaySettingInMetadata(oldMetadata, delaySetting);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return (side == 1 && layer == 1);
+    }
+
+    @Override
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return texture;
+    }
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0D);
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(1D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return 0D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        float[] redstoneColor = getState(iBlockAccess, x, y, z) ? RenderBlocks.redstoneColors[13] :
+                RenderBlocks.redstoneColors[0];
+        return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return getState(iBlockAccess, x, y, z);
     }
 }
