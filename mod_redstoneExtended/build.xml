@@ -1,0 +1,129 @@
+<project>
+    <property name="src" location="src"/>
+    <property name="deploy" location="deploy"/>
+    <property name="resources" location="../mod_redstoneExtended_resources"/>
+
+    <macrodef name="deleteEmptyDirectories">
+        <attribute name="dir"/>
+        <sequential>
+            <delete includeemptydirs="true">
+                <fileset dir="@{dir}">
+                    <and>
+                        <size value="0"/>
+                        <type type="dir"/>
+                    </and>
+                </fileset>
+            </delete>
+        </sequential>
+    </macrodef>
+
+    <target name="mcp_cleanup">
+        <exec dir="${mcp}" executable="python">
+            <arg line="runtime/cleanup.py conf/mcp.cfg -f"/>
+        </exec>
+    </target>
+
+    <target name="mcp_decompile">
+        <exec dir="${mcp}" executable="python">
+            <arg line="runtime/decompile.py conf/mcp.cfg"/>
+        </exec>
+    </target>
+
+    <target name="mcp_recompile">
+        <exec dir="${mcp}" executable="python">
+            <arg line="runtime/recompile.py conf/mcp.cfg"/>
+        </exec>
+    </target>
+
+    <target name="mcp_reobfuscate">
+        <exec dir="${mcp}" executable="python">
+            <arg line="runtime/reobfuscate.py conf/mcp.cfg"/>
+        </exec>
+        <deleteEmptyDirectories dir="${mcp}/reobf/minecraft"/>
+    </target>
+
+    <target name="mcp_updatemcp">
+        <exec dir="${mcp}" executable="python">
+            <arg line="runtime/updatemcp.py conf/mcp.cfg -f"/>
+        </exec>
+    </target>
+
+    <target name="mcp_updatemd5">
+        <exec dir="${mcp}" executable="python">
+            <arg line="runtime/updatemd5.py conf/mcp.cfg"/>
+        </exec>
+    </target>
+
+    <target name="mcp_downloadmc">
+        <mkdir dir="${mcp}/jars/bin"/>
+        <get dest="${mcp}/jars/bin">
+            <url url="http://s3.amazonaws.com/MinecraftDownload/minecraft.jar"/>
+            <url url="http://s3.amazonaws.com/MinecraftDownload/lwjgl.jar"/>
+            <url url="http://s3.amazonaws.com/MinecraftDownload/lwjgl_util.jar"/>
+            <url url="http://s3.amazonaws.com/MinecraftDownload/jinput.jar"/>
+            <url url="http://s3.amazonaws.com/MinecraftDownload/windows_natives.jar.lzma"/>
+        </get>
+        <exec dir="${mcp}/jars/bin" executable="7z">
+            <arg line="e windows_natives.jar.lzma"/>
+        </exec>
+        <delete file="${mcp}/jars/bin/windows_natives.jar.lzma"/>
+        <mkdir dir="${mcp}/jars/bin/natives"/>
+        <unjar src="${mcp}/jars/bin/windows_natives.jar" dest="${mcp}/jars/bin/natives"/>
+        <delete file="${mcp}/jars/bin/windows_natives.jar"/>
+        <delete dir="${mcp}/jars/bin/natives/META-INF"/>
+    </target>
+
+    <target name="mcp_applyml">
+        <get src="http://dl.dropbox.com/u/20629262/Latest/ModLoader.zip" dest="${mcp}"/>
+        <mkdir dir="${mcp}/mltemp"/>
+        <unzip src="${mcp}/ModLoader.zip" dest="${mcp}/mltemp"/>
+        <delete file="${mcp}/ModLoader.zip"/>
+        <exec dir="${mcp}/mltemp" executable="7z">
+            <arg line="a ../jars/bin/minecraft.jar *.*"/>
+        </exec>
+        <delete dir="${mcp}/mltemp"/>
+        <exec dir="${mcp}/jars/bin" executable="7z">
+            <arg line="d minecraft.jar META-INF"/>
+        </exec>
+    </target>
+
+    <target name="mcp_totalcleanupkeepsaves">
+        <delete dir="${mcp}/temp"/>
+        <delete dir="${mcp}/src"/>
+        <delete dir="${mcp}/bin"/>
+        <delete dir="${mcp}/reobf"/>
+        <delete dir="${mcp}/logs"/>
+        <delete>
+            <fileset dir="${mcp}/jars">
+                <exclude name="server.properties"/>
+                <exclude name="saves/**"/>
+            </fileset>
+            <dirset dir="${mcp}/jars">
+                <exclude name="saves"/>
+                <exclude name="saves/**"/>
+            </dirset>
+        </delete>
+    </target>
+
+    <target name="mcp_renew"
+            depends="mcp_totalcleanupkeepsaves,mcp_updatemcp,mcp_downloadmc,mcp_applyml,mcp_decompile"/>
+
+    <target name="compile">
+        <javac srcdir="${src}" destdir="${mcp}/bin/minecraft">
+            <classpath>
+                <pathelement path="${mcp}/bin/minecraft"/>
+                <pathelement location="${mcp}/jars/bin/lwjgl.jar"/>
+                <pathelement location="${mcp}/jars/bin/lwjgl_util.jar"/>
+                <pathelement location="${mcp}/jars/bin/jinput.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="deploy" depends="mcp_renew,compile,mcp_reobfuscate">
+        <mkdir dir="${deploy}"/>
+        <zip destfile="${deploy}/redstoneExtended.zip">
+            <zipfileset dir="${mcp}/reobf/minecraft"/>
+            <zipfileset dir="${resources}/redstoneExtended" prefix="redstoneExtended"/>
+        </zip>
+    </target>
+</project>
