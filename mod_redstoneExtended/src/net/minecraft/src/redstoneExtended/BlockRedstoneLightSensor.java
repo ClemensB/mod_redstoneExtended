@@ -1,10 +1,14 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.redstoneExtended.Util.Vector2d;
+import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public class BlockRedstoneLightSensor extends BlockContainer {
+public class BlockRedstoneLightSensor extends BlockContainer implements IBlockWithOverlayEx {
     private final int textureSun = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightSensor/sun.png");
     private final int textureRain = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightSensor/rain.png");
     private final int textureMoon = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightSensor/moon.png");
@@ -79,30 +83,12 @@ public class BlockRedstoneLightSensor extends BlockContainer {
 
     @Override
     public int getRenderType() {
-        return mod_redstoneExtended.getInstance().renderBlockRedstoneLightSensor;
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
     }
 
     @Override
-    public int getBlockTextureFromSideAndMetadata(int side, int metadata) {
-        switch (side) {
-            case 6:
-                switch (getTriggerSettingFromMetadata(metadata)) {
-                    case 0:
-                        return textureSun;
-                    case 1:
-                        return Block.torchWood.getBlockTextureFromSide(2);
-                    case 2:
-                        return textureRain;
-                    case 3:
-                        return Block.torchRedstoneActive.getBlockTextureFromSide(2);
-                    case 4:
-                        return textureMoon;
-                    case 5:
-                        return textureDarkness;
-                }
-            default:
-                return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
-        }
+    public int getBlockTextureFromSide(int side) {
+        return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
     }
 
     @Override
@@ -188,5 +174,94 @@ public class BlockRedstoneLightSensor extends BlockContainer {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setTriggerSettingInMetadata(oldMetadata, triggerSetting);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return side == 1 && layer >= 1 && layer <= 6;
+    }
+
+    @Override
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        switch (layer) {
+            case 1: {
+                switch (getTriggerSetting(iBlockAccess, x, y, z)) {
+                    case 0:
+                        return textureSun;
+                    case 1:
+                        return Block.torchWood.blockIndexInTexture;
+                    case 2:
+                        return textureRain;
+                    case 3:
+                        return Block.torchRedstoneActive.blockIndexInTexture;
+                    case 4:
+                        return textureMoon;
+                    case 5:
+                        return textureDarkness;
+                }
+            }
+            case 2:
+            case 3:
+                return Block.blockLapis.blockIndexInTexture;
+            case 4:
+            case 5:
+                return Block.glass.blockIndexInTexture;
+            case 6:
+                return Block.redstoneWire.blockIndexInTexture;
+            default:
+                return TextureManager.getInstance().emptyTexture;
+        }
+    }
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        switch (layer) {
+            case 1:
+                return new Vector3d(0.0625D * 1.5D, 0D, 0.0625D * 1.5D);
+            case 2:
+            case 4:
+                return new Vector3d(0.5D, 0D, 0.125D);
+            case 3:
+            case 5:
+                return new Vector3d(0.5D, 0D, 0.5D);
+            case 6:
+                return new Vector3d(0.0625D * 1.5D, 0.D, 0.5D);
+            default:
+                return new Vector3d(0D);
+        }
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return 0D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return layer == 5 ? new Vector2d(0D, 1D / 256D) : new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return layer == 4 || layer == 5 ? new Vector2d(1D, 15D / 16D) : new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        if (layer != 6)
+            return ColorRGB.Colors.White;
+
+        float[] redstoneColor = RenderBlocks.redstoneColors[getState(iBlockAccess, x, y, z) ? 13 : 0];
+        return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return layer == 6 && getState(iBlockAccess, x, y, z);
     }
 }

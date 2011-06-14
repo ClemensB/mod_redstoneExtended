@@ -12,11 +12,15 @@ public class TextureManager {
     private HashMap<String, Integer> loadedTerrainTextures;
     private HashMap<String, Integer> loadedItemTextures;
 
+    public final int emptyTexture;
+
     public TextureManager() {
         prefix = "/redstoneExtended";
 
         loadedTerrainTextures = new HashMap<String, Integer>();
         loadedItemTextures = new HashMap<String, Integer>();
+
+        emptyTexture = getTerrainTexture("/empty.png");
     }
 
     public static TextureManager getInstance() {

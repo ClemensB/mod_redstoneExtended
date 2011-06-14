@@ -1,10 +1,13 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
+import net.minecraft.src.redstoneExtended.Util.Vector2d;
+import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public abstract class BlockRedstoneFlipFlop extends Block {
+public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithOverlayEx {
     public BlockRedstoneFlipFlop(int id) {
         super(id, Block.stairSingle.getBlockTextureFromSideAndMetadata(1, 0), Material.circuits);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
@@ -135,11 +138,13 @@ public abstract class BlockRedstoneFlipFlop extends Block {
 
     @Override
     public int getRenderType() {
-        return mod_redstoneExtended.getInstance().renderBlockRedstoneFlipFlop;
+        return mod_redstoneExtended.getInstance().renderStandardBlockWithOverlay;
     }
 
     @Override
-    public abstract int getBlockTextureFromSide(int side);
+    public int getBlockTextureFromSide(int side) {
+        return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
+    }
 
     protected boolean isInputTopBeingPowered(World world, int x, int y, int z) {
         switch (getOrientation(world, x, y, z)) {
@@ -214,5 +219,53 @@ public abstract class BlockRedstoneFlipFlop extends Block {
     protected boolean isOutputRight(int direction, int orientation) {
         return ((orientation == 0 && direction == 4) || (orientation == 1 && direction == 2) ||
                 (orientation == 2 && direction == 5) || (orientation == 3 && direction == 3));
+    }
+
+    @Override
+    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return side == 1 && layer >= 1 && layer <= 3;
+    }
+
+    @Override
+    public abstract int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer);
+
+    @Override
+    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(0D);
+    }
+
+    @Override
+    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector3d(1D);
+    }
+
+    @Override
+    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return getOrientation(iBlockAccess, x, y, z) * 90D;
+    }
+
+    @Override
+    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(0D);
+    }
+
+    @Override
+    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return new Vector2d(1D);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        if (layer == 1)
+            return ColorRGB.Colors.White;
+
+        float[] redstoneColor = RenderBlocks.redstoneColors[getState(iBlockAccess, x, y, z) ? (layer == 2 ? 13 : 0) : (layer == 2 ? 0 : 13)];
+        return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        boolean state = getState(iBlockAccess, x, y, z);
+        return ((state && layer == 2) || (!state && layer == 3));
     }
 }

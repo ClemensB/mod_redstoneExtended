@@ -79,47 +79,6 @@ public class MyRenderBlocks {
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    public static boolean renderBlockRedstoneLightSensor(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
-        renderBlocks.renderStandardBlock(block, x, y, z);
-
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSideAndMetadata(6, iBlockAccess.getBlockMetadata(x, y, z)),
-                1, new Vector3d(0.0625D * 1.5D, 0D, 0.0625D * 1.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.blockLapis.blockIndexInTexture,
-                1, new Vector3d(0.5D, 0D, 0.125D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.glass.blockIndexInTexture,
-                2, new Vector3d(0.5D, 0D, 0.125D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D, 15D / 16D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.blockLapis.blockIndexInTexture,
-                1, new Vector3d(0.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.glass.blockIndexInTexture,
-                2, new Vector3d(0.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(0D, 1D / 256D), new Vector2d(1D, 15D / 16D), new ColorRGB(), false);
-        boolean isActive = BlockRedstoneLightSensor.getState(iBlockAccess, x, y, z);
-        float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
-        ColorRGB redstoneColorRGB = new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), Block.redstoneWire.blockIndexInTexture,
-                1, new Vector3d(0.0625D * 1.5D, 0D, 0.5D), new Vector3d(0.5D * 0.75D, 1D, 0.5D * 0.75D), 0D, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
-
-        return true;
-    }
-
-    public static boolean renderBlockRedstoneFlipFlop(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
-        renderBlocks.renderStandardBlock(block, x, y, z);
-
-        double rotation = BlockRedstoneFlipFlop.getOrientation(iBlockAccess, x, y, z) * 90D;
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSide(6),
-                1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), new ColorRGB(), false);
-        boolean isActive = BlockRedstoneFlipFlop.getState(iBlockAccess, x, y, z);
-        float[] redstoneColor = isActive ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
-        ColorRGB redstoneColorRGB = new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSide(7),
-                1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, isActive);
-        redstoneColor = isActive ? RenderBlocks.redstoneColors[0] : RenderBlocks.redstoneColors[13];
-        redstoneColorRGB = new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
-        RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, 1, new Position(x, y, z), block.getBlockTextureFromSide(8),
-                1, new Vector3d(), new Vector3d(1D), rotation, new Vector2d(), new Vector2d(1D), redstoneColorRGB, !isActive);
-
-        return true;
-    }
-
     public static boolean renderBlockTorch(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
         int orientation = iBlockAccess.getBlockMetadata(x, y, z) & 0x7;
         Tessellator tessellator = Tessellator.instance;

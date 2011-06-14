@@ -1,6 +1,10 @@
 package net.minecraft.src.redstoneExtended;
 
-import net.minecraft.src.*;
+import net.minecraft.src.IBlockAccess;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.World;
+import net.minecraft.src.mod_redstoneExtended;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 import java.util.Random;
 
@@ -44,16 +48,16 @@ public class BlockRedstoneRSNORLatch extends BlockRedstoneFlipFlop {
     }
 
     @Override
-    public int getBlockTextureFromSide(int side) {
-        switch (side) {
-            case 6:
+    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        switch (layer) {
+            case 1:
                 return textureInputs;
-            case 7:
+            case 2:
                 return textureOutput;
-            case 8:
+            case 3:
                 return textureInvOutput;
             default:
-                return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
+                return TextureManager.getInstance().emptyTexture;
         }
     }
 }
