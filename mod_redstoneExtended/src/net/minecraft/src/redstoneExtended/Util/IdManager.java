@@ -53,7 +53,7 @@ public class IdManager {
 
     private HashMap<IdType, LinkedList<Integer>> reservedIds;
 
-    public IdManager() {
+    private IdManager() {
     }
 
     public static IdManager getInstance() {

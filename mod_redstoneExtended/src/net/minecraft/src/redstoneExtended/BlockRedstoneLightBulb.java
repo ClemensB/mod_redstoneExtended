@@ -1,14 +1,15 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 import java.util.Random;
 
 public class BlockRedstoneLightBulb extends Block {
     private final boolean active;
 
-    private static final int textureOff = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightBulb/off.png");
-    private static final int textureOn = ModLoader.addOverride("/terrain.png", "/redstoneExtended/lightBulb/on.png");
+    private static final int textureOff = TextureManager.getInstance().getTerrainTexture("/lightBulb/off.png");
+    private static final int textureOn = TextureManager.getInstance().getTerrainTexture("/lightBulb/on.png");
 
     static final double positionInCeilingY = 0.3D;
 

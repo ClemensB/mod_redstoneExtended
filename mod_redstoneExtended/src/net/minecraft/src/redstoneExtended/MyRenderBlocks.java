@@ -52,30 +52,72 @@ public class MyRenderBlocks {
 
         block.setBlockBoundsForItemRender();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, -1F, 0.0F);
-        renderBlocks.renderBottomFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(0, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        renderBlocks.renderTopFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(1, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 0.0F, -1F);
-        renderBlocks.renderEastFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(2, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        renderBlocks.renderWestFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(3, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(-1F, 0.0F, 0.0F);
-        renderBlocks.renderNorthFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(4, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        renderBlocks.renderSouthFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(5, metadata));
-        tessellator.draw();
+
+        if (block instanceof IBlockWithOverlay) {
+            IBlockWithOverlay iBlockWithOverlay = (IBlockWithOverlay)block;
+            for (int face = 0; face < 6; face++) {
+                Vector3d normal = new Vector3d(0D);
+                switch (face) {
+                    case 0:
+                        normal = new Vector3d(0D, -1D, 0D);
+                        break;
+                    case 1:
+                        normal = new Vector3d(0D, 1D, 0D);
+                        break;
+                    case 2:
+                        normal = new Vector3d(0D, 0D, -1D);
+                        break;
+                    case 3:
+                        normal = new Vector3d(0D, 0D, 1D);
+                        break;
+                    case 4:
+                        normal = new Vector3d(-1D, 0D, 0D);
+                        break;
+                    case 5:
+                        normal = new Vector3d(1D, 0D, 0D);
+                        break;
+                }
+
+                tessellator.startDrawingQuads();
+                tessellator.setColorOpaque(255, 255, 255);
+                tessellator.setNormal((float)normal.X, (float)normal.Y, (float)normal.Z);
+                RenderUtil.renderBlockFaceEx(block, face, new Vector3d(0D), block.getBlockTextureFromSideAndMetadata(face, metadata),
+                        0, new Vector3d(0D), new Vector3d(1D), 0D, new Vector2d(0D), new Vector2d(1D));
+                tessellator.draw();
+
+                for (int layer = 0; layer < 8; layer++) {
+                    if (iBlockWithOverlay.shouldOverlayBeRenderedInGUI(face, layer)) {
+                        int textureId = iBlockWithOverlay.getBlockOverlayTextureInGUI(face, layer);
+                        Vector3d offset = new Vector3d(0D);
+                        Vector3d scale = new Vector3d(1D);
+                        double rotation = 0D;
+                        Vector2d textureOffset = new Vector2d(0D);
+                        Vector2d textureScale = new Vector2d(1D);
+                        ColorRGB colorMultiplier = ColorRGB.Colors.White;
+
+                        if (block instanceof IBlockWithOverlayEx) {
+                            IBlockWithOverlayEx iBlockWithOverlayEx = (IBlockWithOverlayEx)block;
+
+                            offset = iBlockWithOverlayEx.getOverlayOffsetInGUI(face, layer);
+                            scale = iBlockWithOverlayEx.getOverlayScaleInGUI(face, layer);
+                            rotation = iBlockWithOverlayEx.getOverlayRotationInGUI(face, layer);
+                            textureOffset = iBlockWithOverlayEx.getOverlayTextureOffsetInGUI(face, layer);
+                            textureScale = iBlockWithOverlayEx.getOverlayTextureScaleInGUI(face, layer);
+                            colorMultiplier = iBlockWithOverlayEx.getOverlayColorMultiplierInGUI(face, layer);
+                        }
+
+                        tessellator.startDrawingQuads();
+                        tessellator.setNormal((float)normal.X, (float)normal.Y, (float)normal.Z);
+                        tessellator.setColorOpaque(colorMultiplier.R, colorMultiplier.G, colorMultiplier.B);
+                        RenderUtil.renderBlockFaceEx(block, face, new Vector3d(0D), textureId,
+                                layer, offset, scale, rotation, textureOffset, textureScale);
+                        tessellator.setColorOpaque(255, 255, 255);
+                        tessellator.draw();
+                    }
+                }
+            }
+        }
+
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 

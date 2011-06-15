@@ -3,13 +3,13 @@ package net.minecraft.src.redstoneExtended.Laser;
 import net.minecraft.src.NBTTagCompound;
 
 public class LaserShape implements Cloneable {
-    public float width;
+    public final float width;
 
-    public boolean collision;
+    public final boolean collision;
 
-    public int damage;
+    public final int damage;
 
-    public int texture;
+    public final int texture;
 
     public LaserShape() {
         width = LaserShapes.Default.width;

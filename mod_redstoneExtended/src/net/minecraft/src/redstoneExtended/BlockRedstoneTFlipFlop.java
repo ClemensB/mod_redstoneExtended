@@ -1,17 +1,13 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.ModLoader;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_redstoneExtended;
 import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
-import java.util.Random;
-
 public class BlockRedstoneTFlipFlop extends BlockRedstoneFlipFlop {
-    private static final int textureInputs = ModLoader.addOverride("/terrain.png", "/redstoneExtended/flipFlops/TFlipFlop/inputs.png");
-    private static final int textureOutput = ModLoader.addOverride("/terrain.png", "/redstoneExtended/flipFlops/TFlipFlop/output.png");
-    private static final int textureInvOutput = ModLoader.addOverride("/terrain.png", "/redstoneExtended/flipFlops/TFlipFlop/invOutput.png");
+    private static final int textureInputs = TextureManager.getInstance().getTerrainTexture("/flipFlops/TFlipFlop/inputs.png");
+    private static final int textureOutput = TextureManager.getInstance().getTerrainTexture("/flipFlops/TFlipFlop/output.png");
+    private static final int textureInvOutput = TextureManager.getInstance().getTerrainTexture("/flipFlops/TFlipFlop/invOutput.png");
 
     public BlockRedstoneTFlipFlop(int id) {
         super(id);
@@ -34,11 +30,6 @@ public class BlockRedstoneTFlipFlop extends BlockRedstoneFlipFlop {
     }
 
     @Override
-    public int idDropped(int i, Random random) {
-        return mod_redstoneExtended.getInstance().itemRedstoneTFlipFlop.shiftedIndex;
-    }
-
-    @Override
     public boolean isPoweringTo(IBlockAccess iBlockAccess, int x, int y, int z, int direction) {
         boolean state = getState(iBlockAccess, x, y, z);
         int orientation = getOrientation(iBlockAccess, x, y, z);
@@ -46,7 +37,7 @@ public class BlockRedstoneTFlipFlop extends BlockRedstoneFlipFlop {
     }
 
     @Override
-    public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+    public int getBlockOverlayTextureInGUI(int side, int layer) {
         switch (layer) {
             case 1:
                 return textureInputs;

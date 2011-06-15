@@ -1,13 +1,13 @@
 package net.minecraft.src.redstoneExtended;
 
-import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_redstoneExtended;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 public class BlockRedstoneLogicGateAND extends BlockRedstoneLogicGateBase {
-    private static final int textureBase = ModLoader.addOverride("/terrain.png", "/redstoneExtended/logicGates/AND/base.png");
-    private static final int textureInputA = ModLoader.addOverride("/terrain.png", "/redstoneExtended/logicGates/AND/inputA.png");
-    private static final int textureInputB = ModLoader.addOverride("/terrain.png", "/redstoneExtended/logicGates/AND/inputB.png");
-    private static final int textureInputC = ModLoader.addOverride("/terrain.png", "/redstoneExtended/logicGates/AND/inputC.png");
+    private static final int textureBase = TextureManager.getInstance().getTerrainTexture("/logicGates/AND/base.png");
+    private static final int textureInputA = TextureManager.getInstance().getTerrainTexture("/logicGates/AND/inputA.png");
+    private static final int textureInputB = TextureManager.getInstance().getTerrainTexture("/logicGates/AND/inputB.png");
+    private static final int textureInputC = TextureManager.getInstance().getTerrainTexture("/logicGates/AND/inputC.png");
 
     public BlockRedstoneLogicGateAND(int id, boolean isActive) {
         super(id, isActive);
@@ -16,11 +16,6 @@ public class BlockRedstoneLogicGateAND extends BlockRedstoneLogicGateBase {
     @Override
     public int blockId(boolean isActive) {
         return isActive ? mod_redstoneExtended.getInstance().blockRedstoneLogicGateANDActive.blockID : mod_redstoneExtended.getInstance().blockRedstoneLogicGateANDIdle.blockID;
-    }
-
-    @Override
-    public int itemId() {
-        return mod_redstoneExtended.getInstance().itemRedstoneLogicGateAND.shiftedIndex;
     }
 
     @Override
@@ -39,13 +34,13 @@ public class BlockRedstoneLogicGateAND extends BlockRedstoneLogicGateBase {
             case 0:
                 return textureBase;
             case 1:
-                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 2) ? textureInputA : mod_redstoneExtended.getInstance().emptyTexture;
+                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 2) ? textureInputA : TextureManager.getInstance().emptyTexture;
             case 2:
-                return (operatingMode == 0 || operatingMode == 2 || operatingMode == 3) ? textureInputB : mod_redstoneExtended.getInstance().emptyTexture;
+                return (operatingMode == 0 || operatingMode == 2 || operatingMode == 3) ? textureInputB : TextureManager.getInstance().emptyTexture;
             case 3:
-                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 3) ? textureInputC : mod_redstoneExtended.getInstance().emptyTexture;
+                return (operatingMode == 0 || operatingMode == 1 || operatingMode == 3) ? textureInputC : TextureManager.getInstance().emptyTexture;
             default:
-                return mod_redstoneExtended.getInstance().emptyTexture;
+                return TextureManager.getInstance().emptyTexture;
         }
     }
 

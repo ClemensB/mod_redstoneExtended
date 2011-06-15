@@ -1,25 +1,22 @@
 package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
+import net.minecraft.src.redstoneExtended.BlockContainerWithOverlay;
 import net.minecraft.src.redstoneExtended.Util.*;
 
 import java.util.LinkedList;
 import java.util.Random;
 
-public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
+public class BlockLaserMirror extends BlockContainerWithOverlay implements ILaserEmitter {
     public BlockLaserMirror(int id) {
         super(id, Block.dispenser.blockIndexInTexture + 17, Material.rock);
     }
 
-    public final static int textureFrontDefault = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
-    public final static int textureFrontDeadly = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDeadly.png");
-    public final static int textureFrontBridge = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontBridge.png");
-    public final static int textureBack = TextureManager.getInstance().getTerrainTexture("/laserReceiver/back.png");
-    public final static int textureBackOverlay = TextureManager.getInstance().getTerrainTexture("/laserReceiver/backOverlay.png");
-
-    public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
-    public final static int textureBackInv = TextureManager.getInstance().getTerrainTexture("/laserReceiver/backInv.png");
+    private final static int textureFrontDefault = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
+    private final static int textureFrontDeadly = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDeadly.png");
+    private final static int textureFrontBridge = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontBridge.png");
+    private final static int textureBack = TextureManager.getInstance().getTerrainTexture("/laserReceiver/back.png");
+    private final static int textureBackOverlay = TextureManager.getInstance().getTerrainTexture("/laserReceiver/backOverlay.png");
 
     @Override
     public TileEntity getBlockEntity() {
@@ -38,6 +35,11 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     }
 
     @Override
+    public boolean shouldOverlayBeRenderedInGUI(int side, int layer) {
+        return (side == 3 && layer == 1) || (side != 3 && (layer == 1 || layer == 2));
+    }
+
+    @Override
     public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
         if (side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z))) {
             LaserShape shape = getLaserMode(iBlockAccess, x, y, z).shape;
@@ -47,7 +49,7 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
             if (shape.equals(LaserShapes.Deadly))
                 return textureFrontDeadly;
             else if (shape.equals(LaserShapes.Bridge))
-                return mod_redstoneExtended.getInstance().emptyTexture;
+                return TextureManager.getInstance().emptyTexture;
             else
                 return textureFrontDefault;
         } else if (layer == 1)
@@ -57,28 +59,13 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     }
 
     @Override
-    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(0D);
-    }
-
-    @Override
-    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(1D);
-    }
-
-    @Override
-    public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return 0D;
-    }
-
-    @Override
-    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(0D);
-    }
-
-    @Override
-    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(1D);
+    public int getBlockOverlayTextureInGUI(int side, int layer) {
+        if (side == 2)
+            return textureFrontDefault;
+        else if (layer == 1)
+            return textureBack;
+        else
+            return textureBackOverlay;
     }
 
     @Override
@@ -88,8 +75,8 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
     }
 
     @Override
-    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return false;
+    public ColorRGB getOverlayColorMultiplierInGUI(int side, int layer) {
+        return ColorRGB.Colors.Gray;
     }
 
     @Override
@@ -106,10 +93,7 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
 
     @Override
     public int getBlockTextureFromSide(int side) {
-        if (side == 3)
-            return textureFrontInv;
-        else
-            return textureBackInv;
+        return blockIndexInTexture;
     }
 
     @Override
@@ -225,57 +209,57 @@ public class BlockLaserMirror extends BlockContainer implements ILaserEmitter, I
         return true;
     }
 
-    public static boolean getStateFromMetadata(int metadata) {
+    private static boolean getStateFromMetadata(int metadata) {
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    public static int getOrientationFromMetadata(int metadata) {
+    private static int getOrientationFromMetadata(int metadata) {
         return metadata & 0x7;
     }
 
-    public static int setStateInMetadata(int metadata, boolean state) {
+    private static int setStateInMetadata(int metadata, boolean state) {
         return ((metadata & 0x7) | ((state ? 1 : 0) << 3) & 0x8);
     }
 
-    public static int setOrientationInMetadata(int metadata, int orientation) {
+    private static int setOrientationInMetadata(int metadata, int orientation) {
         return ((metadata & 0x8) | (orientation & 0x7));
     }
 
-    public static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getStateFromMetadata(metadata);
     }
 
-    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getOrientationFromMetadata(metadata);
     }
 
-    public static void setState(World world, int x, int y, int z, boolean state) {
+    private static void setState(World world, int x, int y, int z, boolean state) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setStateInMetadata(oldMetadata, state);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    public static void setOrientation(World world, int x, int y, int z, int orientation) {
+    private static void setOrientation(World world, int x, int y, int z, int orientation) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setOrientationInMetadata(oldMetadata, orientation);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    public static LaserMode getLaserMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static LaserMode getLaserMode(IBlockAccess iBlockAccess, int x, int y, int z) {
         return ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).mode;
     }
 
-    public static void setLaserMode(IBlockAccess iBlockAccess, int x, int y, int z, LaserMode laserMode) {
+    private static void setLaserMode(IBlockAccess iBlockAccess, int x, int y, int z, LaserMode laserMode) {
         ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).mode = laserMode;
     }
 
-    public static int getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static int getDistance(IBlockAccess iBlockAccess, int x, int y, int z) {
         return ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).distance;
     }
 
-    public static void setDistance(IBlockAccess iBlockAccess, int x, int y, int z, int distance) {
+    private static void setDistance(IBlockAccess iBlockAccess, int x, int y, int z, int distance) {
         ((TileEntityLaserMirror)iBlockAccess.getBlockTileEntity(x, y, z)).distance = distance;
     }
 }

@@ -4,6 +4,7 @@ import net.minecraft.src.redstoneExtended.*;
 import net.minecraft.src.redstoneExtended.Laser.*;
 import net.minecraft.src.redstoneExtended.Util.IdManager;
 import net.minecraft.src.redstoneExtended.Util.LoggingUtil;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 public class mod_redstoneExtended extends BaseMod {
     private static mod_redstoneExtended instance;
@@ -40,26 +41,8 @@ public class mod_redstoneExtended extends BaseMod {
     public final Block blockCheat;
 
 
-    public final Item itemRedstoneLogicGateNOT;
-    public final Item itemRedstoneLogicGateAND;
-    public final Item itemRedstoneLogicGateNAND;
-    public final Item itemRedstoneLogicGateOR;
-    public final Item itemRedstoneLogicGateNOR;
-    public final Item itemRedstoneLogicGateXOR;
-    public final Item itemRedstoneLogicGateXNOR;
-    public final Item itemRedstoneClock;
-    public final Item itemRedstoneLightSensor;
-    public final Item itemRedstoneRSNORLatch;
-    public final Item itemRedstoneDFlipFlop;
-    public final Item itemRedstoneTFlipFlop;
-    public final Item itemRedstoneJKFlipFlop;
-    public final Item itemRedstoneRandom;
-
-
     public final int renderStandardBlockWithOverlay;
     public final int renderBlockTorchExtended;
-
-    public final int emptyTexture = ModLoader.addOverride("/terrain.png", "/redstoneExtended/empty.png");
 
     public mod_redstoneExtended() {
         instance = this;
@@ -91,29 +74,13 @@ public class mod_redstoneExtended extends BaseMod {
         blockRedstoneTFlipFlop = (new BlockRedstoneTFlipFlop(IdManager.getInstance().getId("redstoneTFlipFlop", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneTFlipFlop");
         blockRedstoneJKFlipFlop = (new BlockRedstoneJKFlipFlop(IdManager.getInstance().getId("redstoneJKFlipFlop", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneJKFlipFlop");
         blockRedstoneRandom = (new BlockRedstoneRandom(IdManager.getInstance().getId("redstoneRandom", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRandom");
-        blockRedstoneHardenedTorchIdle = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchIdle", IdManager.IdType.Block), ModLoader.addOverride("/terrain.png", "/redstoneExtended/hardenedTorch/idle.png"), false)).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
-        blockRedstoneHardenedTorchActive = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchActive", IdManager.IdType.Block), ModLoader.addOverride("/terrain.png", "/redstoneExtended/hardenedTorch/active.png"), true)).setHardness(0.0F).setLightValue(0.5F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
+        blockRedstoneHardenedTorchIdle = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchIdle", IdManager.IdType.Block), TextureManager.getInstance().getTerrainTexture("/hardenedTorch/idle.png"), false)).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
+        blockRedstoneHardenedTorchActive = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchActive", IdManager.IdType.Block), TextureManager.getInstance().getTerrainTexture("/hardenedTorch/active.png"), true)).setHardness(0.0F).setLightValue(0.5F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
         blockLaser = (new BlockLaser(IdManager.getInstance().getId("laser", IdManager.IdType.Block))).setHardness(-1.0F).setResistance(6000000F).setLightValue(0.625F).setStepSound(Block.soundGlassFootstep).setBlockName("laser");
         blockLaserEmitter = (new BlockLaserEmitter(IdManager.getInstance().getId("laserEmitter", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserEmitter");
         blockLaserFocusLens = (new BlockLaserFocusLens(IdManager.getInstance().getId("laserFocusLens", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserFocusLens");
         blockLaserMirror = (new BlockLaserMirror(IdManager.getInstance().getId("laserMirror", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserMirror");
         blockCheat = (new BlockCheat(IdManager.getInstance().getId("cheatBlock", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
-
-
-        itemRedstoneLogicGateNOT = (new ItemReed(IdManager.getInstance().getId("logicGateNOT", IdManager.IdType.Item), blockRedstoneLogicGateNOTIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOT/icon.png")).setItemName("logicGateNOT");
-        itemRedstoneLogicGateAND = (new ItemReed(IdManager.getInstance().getId("logicGateAND", IdManager.IdType.Item), blockRedstoneLogicGateANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/AND/icon.png")).setItemName("logicGateAND");
-        itemRedstoneLogicGateNAND = (new ItemReed(IdManager.getInstance().getId("logicGateNAND", IdManager.IdType.Item), blockRedstoneLogicGateNANDIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NAND/icon.png")).setItemName("logicGateNAND");
-        itemRedstoneLogicGateOR = (new ItemReed(IdManager.getInstance().getId("logicGateOR", IdManager.IdType.Item), blockRedstoneLogicGateORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/OR/icon.png")).setItemName("logicGateOR");
-        itemRedstoneLogicGateNOR = (new ItemReed(IdManager.getInstance().getId("logicGateNOR", IdManager.IdType.Item), blockRedstoneLogicGateNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/NOR/icon.png")).setItemName("logicGateNOR");
-        itemRedstoneLogicGateXOR = (new ItemReed(IdManager.getInstance().getId("logicGateXOR", IdManager.IdType.Item), blockRedstoneLogicGateXORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XOR/icon.png")).setItemName("logicGateXOR");
-        itemRedstoneLogicGateXNOR = (new ItemReed(IdManager.getInstance().getId("logicGateXNOR", IdManager.IdType.Item), blockRedstoneLogicGateXNORIdle)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/logicGates/XNOR/icon.png")).setItemName("logicGateXNOR");
-        itemRedstoneClock = (new ItemReed(IdManager.getInstance().getId("redstoneClock", IdManager.IdType.Item), blockRedstoneClock)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/clock/icon.png")).setItemName("redstoneClock");
-        itemRedstoneLightSensor = (new ItemReed(IdManager.getInstance().getId("redstoneLightSensor", IdManager.IdType.Item), blockRedstoneLightSensor)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/lightSensor/icon.png")).setItemName("redstoneLightSensor");
-        itemRedstoneRSNORLatch = (new ItemReed(IdManager.getInstance().getId("redstoneRSNORLatch", IdManager.IdType.Item), blockRedstoneRSNORLatch)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/RSNORLatch/icon.png")).setItemName("redstoneRSNORLatch");
-        itemRedstoneDFlipFlop = (new ItemReed(IdManager.getInstance().getId("redstoneDFlipFlop", IdManager.IdType.Item), blockRedstoneDFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/DFlipFlop/icon.png")).setItemName("redstoneDFlipFlop");
-        itemRedstoneTFlipFlop = (new ItemReed(IdManager.getInstance().getId("redstoneTFlipFlop", IdManager.IdType.Item), blockRedstoneTFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/TFlipFlop/icon.png")).setItemName("redstoneTFlipFlop");
-        itemRedstoneJKFlipFlop = (new ItemReed(IdManager.getInstance().getId("redstoneJKFlipFlop", IdManager.IdType.Item), blockRedstoneJKFlipFlop)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/JKFlipFlop/icon.png")).setItemName("redstoneJKFlipFlop");
-        itemRedstoneRandom = (new ItemReed(IdManager.getInstance().getId("redstoneRandom", IdManager.IdType.Item), blockRedstoneRandom)).setIconIndex(ModLoader.addOverride("/gui/items.png", "/redstoneExtended/flipFlops/Random/icon.png")).setItemName("redstoneRandom");
 
 
         ModLoader.RegisterBlock(blockRedstoneLogicGateNOTIdle);
@@ -148,21 +115,21 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.RegisterBlock(blockCheat);
 
 
-        ModLoader.AddName(itemRedstoneLogicGateNOT, "NOT Gate");
-        ModLoader.AddName(itemRedstoneLogicGateAND, "AND Gate");
-        ModLoader.AddName(itemRedstoneLogicGateNAND, "NAND Gate");
-        ModLoader.AddName(itemRedstoneLogicGateOR, "OR Gate");
-        ModLoader.AddName(itemRedstoneLogicGateNOR, "NOR Gate");
-        ModLoader.AddName(itemRedstoneLogicGateXOR, "XOR Gate");
-        ModLoader.AddName(itemRedstoneLogicGateXNOR, "XNOR Gate");
-        ModLoader.AddName(itemRedstoneClock, "Redstone Clock");
-        ModLoader.AddName(itemRedstoneLightSensor, "Light Sensor");
-        ModLoader.AddName(itemRedstoneRSNORLatch, "RS NOR Latch");
+        ModLoader.AddName(blockRedstoneLogicGateNOTIdle, "NOT Gate");
+        ModLoader.AddName(blockRedstoneLogicGateANDIdle, "AND Gate");
+        ModLoader.AddName(blockRedstoneLogicGateNANDIdle, "NAND Gate");
+        ModLoader.AddName(blockRedstoneLogicGateORIdle, "OR Gate");
+        ModLoader.AddName(blockRedstoneLogicGateNORIdle, "NOR Gate");
+        ModLoader.AddName(blockRedstoneLogicGateXORIdle, "XOR Gate");
+        ModLoader.AddName(blockRedstoneLogicGateXNORIdle, "XNOR Gate");
+        ModLoader.AddName(blockRedstoneClock, "Redstone Clock");
+        ModLoader.AddName(blockRedstoneLightSensor, "Light Sensor");
+        ModLoader.AddName(blockRedstoneRSNORLatch, "RS NOR Latch");
         ModLoader.AddName(blockRedstoneLightBulbOff, "Light Bulb");
-        ModLoader.AddName(itemRedstoneDFlipFlop, "D flip-flop");
-        ModLoader.AddName(itemRedstoneTFlipFlop, "T flip-flop");
-        ModLoader.AddName(itemRedstoneJKFlipFlop, "JK flip-flop");
-        ModLoader.AddName(itemRedstoneRandom, "Random Number Generator");
+        ModLoader.AddName(blockRedstoneDFlipFlop, "D flip-flop");
+        ModLoader.AddName(blockRedstoneTFlipFlop, "T flip-flop");
+        ModLoader.AddName(blockRedstoneJKFlipFlop, "JK flip-flop");
+        ModLoader.AddName(blockRedstoneRandom, "Random Number Generator");
         ModLoader.AddLocalization(blockRedstoneHardenedTorchActive.getBlockName() + ".hardened.name", "Hardened Redstone Torch");
         ModLoader.AddLocalization(blockRedstoneHardenedTorchActive.getBlockName() + ".highSpeed.name", "High Speed Redstone Torch");
         ModLoader.AddName(blockLaserEmitter, "Laser Emitter");
@@ -182,52 +149,52 @@ public class mod_redstoneExtended extends BaseMod {
     }
 
     private void registerRecipes() {
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateNOT, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLogicGateNOTIdle, 1), new Object[] {
                 "_OI", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateAND, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLogicGateANDIdle, 1), new Object[] {
                 "I_I", "OOO", " I ", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNAND, 1), new Object[] {
-                itemRedstoneLogicGateNOT, itemRedstoneLogicGateAND
+        ModLoader.AddShapelessRecipe(new ItemStack(blockRedstoneLogicGateNANDIdle, 1), new Object[] {
+                blockRedstoneLogicGateNOTIdle, blockRedstoneLogicGateANDIdle
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateOR, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLogicGateORIdle, 1), new Object[] {
                 " I ", "_O_", " _ ", 'I', Block.torchRedstoneActive, '_', Item.redstone, 'O', Block.stone
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateNOR, 1), new Object[] {
-                itemRedstoneLogicGateNOT, itemRedstoneLogicGateOR
+        ModLoader.AddShapelessRecipe(new ItemStack(blockRedstoneLogicGateNORIdle, 1), new Object[] {
+                blockRedstoneLogicGateNOTIdle, blockRedstoneLogicGateORIdle
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLogicGateXOR, 1), new Object[] {
-                "O N", "_A_", " _ ", '_', Item.redstone, 'O', itemRedstoneLogicGateOR, 'N', itemRedstoneLogicGateNAND, 'A', itemRedstoneLogicGateAND
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLogicGateXORIdle, 1), new Object[] {
+                "O N", "_A_", " _ ", '_', Item.redstone, 'O', blockRedstoneLogicGateORIdle, 'N', blockRedstoneLogicGateNANDIdle, 'A', blockRedstoneLogicGateANDIdle
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneLogicGateXNOR, 1), new Object[] {
-                itemRedstoneLogicGateNOT, itemRedstoneLogicGateXOR
+        ModLoader.AddShapelessRecipe(new ItemStack(blockRedstoneLogicGateXNORIdle, 1), new Object[] {
+                blockRedstoneLogicGateNOTIdle, blockRedstoneLogicGateXORIdle
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneClock, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneClock, 1), new Object[] {
                 " I ", "IOI", " I ", 'O', Block.stone, 'I', Block.torchRedstoneActive
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneLightSensor, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneLightSensor, 1), new Object[] {
                 "###", "_X_", "OOO", '_', Item.redstone, '#', Block.glass, 'X', new ItemStack(Item.dyePowder, 1, 4), 'O', Block.stone
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneRSNORLatch, 1), new Object[] {
                 "__O", "I I", "O__", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneRSNORLatch, 1), new Object[] {
                 "_IO", "_ _", "OI_", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneRSNORLatch, 1), new Object[] {
                 "O__", "I I", "__O", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRSNORLatch, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneRSNORLatch, 1), new Object[] {
                 "OI_", "_ _", "_IO", '_', Item.redstone, 'I', Block.torchRedstoneActive, 'O', Block.stone
         });
 
@@ -235,19 +202,19 @@ public class mod_redstoneExtended extends BaseMod {
                 " # ", "#_#", " / ", '#', Block.glass, '_', Item.redstone, '/', Item.stick
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneDFlipFlop, 1), new Object[] {
-                " L ", "_R_", '_', Item.redstone, 'L', Block.lever, 'R', itemRedstoneRSNORLatch
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneDFlipFlop, 1), new Object[] {
+                " L ", "_R_", '_', Item.redstone, 'L', Block.lever, 'R', blockRedstoneRSNORLatch
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneTFlipFlop, 1), new Object[] {
-                " B ", "_R_", '_', Item.redstone, 'B', Block.button, 'R', itemRedstoneRSNORLatch
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneTFlipFlop, 1), new Object[] {
+                " B ", "_R_", '_', Item.redstone, 'B', Block.button, 'R', blockRedstoneRSNORLatch
         });
 
-        ModLoader.AddShapelessRecipe(new ItemStack(itemRedstoneJKFlipFlop, 1), new Object[] {
-                itemRedstoneTFlipFlop, itemRedstoneRSNORLatch
+        ModLoader.AddShapelessRecipe(new ItemStack(blockRedstoneJKFlipFlop, 1), new Object[] {
+                blockRedstoneTFlipFlop, blockRedstoneRSNORLatch
         });
 
-        ModLoader.AddRecipe(new ItemStack(itemRedstoneRandom, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockRedstoneRandom, 1), new Object[] {
                 " I ", "I_I", " I ", '_', Item.redstone, 'I', Block.torchRedstoneActive
         });
 

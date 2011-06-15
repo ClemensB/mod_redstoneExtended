@@ -2,7 +2,7 @@ package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.Block;
 
-public class LaserShapes {
+class LaserShapes {
     public static final LaserShape Default;
     public static final LaserShape Deadly;
     public static final LaserShape Bridge;

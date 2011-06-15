@@ -233,7 +233,25 @@
     </group>
   </component>
   <component name="ProjectDictionaryState">
-    <dictionary name="Cle" />
+    <dictionary name="Cle">
+      <words>
+        <w>amazonaws</w>
+        <w>applyml</w>
+        <w>conf</w>
+        <w>downloadmc</w>
+        <w>dropbox</w>
+        <w>jinput</w>
+        <w>lwjgl</w>
+        <w>lzma</w>
+        <w>minecraft</w>
+        <w>mltemp</w>
+        <w>reobf</w>
+        <w>reobfuscate</w>
+        <w>totalcleanupkeepsaves</w>
+        <w>updatemcp</w>
+        <w>updatemd</w>
+      </words>
+    </dictionary>
     <dictionary name="mod_redstoneAdvanced">
       <words>
         <w>nand</w>

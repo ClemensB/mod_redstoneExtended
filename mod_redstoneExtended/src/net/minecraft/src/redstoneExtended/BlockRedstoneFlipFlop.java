@@ -2,13 +2,11 @@ package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
 import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 import java.util.Random;
 
-public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithOverlayEx {
-    public BlockRedstoneFlipFlop(int id) {
+public abstract class BlockRedstoneFlipFlop extends BlockWithOverlay {
+    BlockRedstoneFlipFlop(int id) {
         super(id, Block.stairSingle.getBlockTextureFromSideAndMetadata(1, 0), Material.circuits);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
     }
@@ -29,17 +27,17 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
         return ((metadata & 0xC) | (orientation & 0x3));
     }
 
-    public static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
+    static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getStateFromMetadata(metadata);
     }
 
-    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+    static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getOrientationFromMetadata(metadata);
     }
 
-    protected static void setState(World world, int x, int y, int z, boolean state) {
+    private static void setState(World world, int x, int y, int z, boolean state) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setStateInMetadata(oldMetadata, state);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
@@ -116,9 +114,6 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
     }
 
     @Override
-    public abstract int idDropped(int i, Random random);
-
-    @Override
     public boolean isIndirectlyPoweringTo(World world, int x, int y, int z, int direction) {
         return isPoweringTo(world, x, y, z, direction);
     }
@@ -146,7 +141,7 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
         return Block.stairSingle.getBlockTextureFromSideAndMetadata(side, 0);
     }
 
-    protected boolean isInputTopBeingPowered(World world, int x, int y, int z) {
+    boolean isInputTopBeingPowered(World world, int x, int y, int z) {
         switch (getOrientation(world, x, y, z)) {
             case 0:
                 return world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2);
@@ -161,7 +156,7 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
         }
     }
 
-    protected boolean isInputLeftBeingPowered(World world, int x, int y, int z) {
+    boolean isInputLeftBeingPowered(World world, int x, int y, int z) {
         switch (getOrientation(world, x, y, z)) {
             case 0:
                 return world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4);
@@ -176,7 +171,7 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
         }
     }
 
-    protected boolean isInputBottomBeingPowered(World world, int x, int y, int z) {
+    boolean isInputBottomBeingPowered(World world, int x, int y, int z) {
         switch (getOrientation(world, x, y, z)) {
             case 0:
                 return world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3);
@@ -191,7 +186,7 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
         }
     }
 
-    protected boolean isInputRightBeingPowered(World world, int x, int y, int z) {
+    boolean isInputRightBeingPowered(World world, int x, int y, int z) {
         switch (getOrientation(world, x, y, z)) {
             case 0:
                 return world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5);
@@ -206,38 +201,28 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
         }
     }
 
-    protected boolean isOutputBottom(int direction, int orientation) {
+    boolean isOutputBottom(int direction, int orientation) {
         return ((orientation == 0 && direction == 2) || (orientation == 1 && direction == 5) ||
                 (orientation == 2 && direction == 3) || (orientation == 3 && direction == 4));
     }
 
-    protected boolean isOutputTop(int direction, int orientation) {
+    boolean isOutputTop(int direction, int orientation) {
         return ((orientation == 0 && direction == 3) || (orientation == 1 && direction == 4) ||
                 (orientation == 2 && direction == 2) || (orientation == 3 && direction == 5));
     }
 
-    protected boolean isOutputRight(int direction, int orientation) {
+    boolean isOutputRight(int direction, int orientation) {
         return ((orientation == 0 && direction == 4) || (orientation == 1 && direction == 2) ||
                 (orientation == 2 && direction == 5) || (orientation == 3 && direction == 3));
     }
 
     @Override
-    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+    public boolean shouldOverlayBeRenderedInGUI(int side, int layer) {
         return side == 1 && layer >= 1 && layer <= 3;
     }
 
     @Override
-    public abstract int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer);
-
-    @Override
-    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(0D);
-    }
-
-    @Override
-    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(1D);
-    }
+    public abstract int getBlockOverlayTextureInGUI(int side, int layer);
 
     @Override
     public double getOverlayRotation(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
@@ -245,13 +230,8 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
     }
 
     @Override
-    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(0D);
-    }
-
-    @Override
-    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(1D);
+    public double getOverlayRotationInGUI(int side, int layer) {
+        return 0D;
     }
 
     @Override
@@ -260,6 +240,15 @@ public abstract class BlockRedstoneFlipFlop extends Block implements IBlockWithO
             return ColorRGB.Colors.White;
 
         float[] redstoneColor = RenderBlocks.redstoneColors[getState(iBlockAccess, x, y, z) ? (layer == 2 ? 13 : 0) : (layer == 2 ? 0 : 13)];
+        return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplierInGUI(int side, int layer) {
+        if (layer == 1)
+            return ColorRGB.Colors.White;
+
+        float[] redstoneColor = RenderBlocks.redstoneColors[layer == 2 ? 13 : 0];
         return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
     }
 

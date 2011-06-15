@@ -7,14 +7,14 @@ import java.util.HashMap;
 public class TextureManager {
     private static TextureManager instance;
 
-    private String prefix;
+    private final String prefix;
 
-    private HashMap<String, Integer> loadedTerrainTextures;
-    private HashMap<String, Integer> loadedItemTextures;
+    private final HashMap<String, Integer> loadedTerrainTextures;
+    private final HashMap<String, Integer> loadedItemTextures;
 
     public final int emptyTexture;
 
-    public TextureManager() {
+    private TextureManager() {
         prefix = "/redstoneExtended";
 
         loadedTerrainTextures = new HashMap<String, Integer>();

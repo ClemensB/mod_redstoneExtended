@@ -5,7 +5,7 @@ import net.minecraft.src.World;
 import net.minecraft.src.mod_redstoneExtended;
 import net.minecraft.src.redstoneExtended.Util.Position;
 
-public class LaserUtil {
+class LaserUtil {
     public static boolean isBlockUpdateForLaserInDirectionNecessary(World world, int x, int y, int z, int direction) {
         int blockId = world.getBlockId(x, y, z);
         Block block = Block.blocksList[blockId];

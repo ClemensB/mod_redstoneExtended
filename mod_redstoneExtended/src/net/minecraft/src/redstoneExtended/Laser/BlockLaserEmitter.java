@@ -1,25 +1,23 @@
 package net.minecraft.src.redstoneExtended.Laser;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.IBlockWithOverlayEx;
-import net.minecraft.src.redstoneExtended.Util.*;
+import net.minecraft.src.redstoneExtended.BlockContainerWithOverlay;
+import net.minecraft.src.redstoneExtended.Util.ColorRGB;
+import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 import java.util.Random;
 
-public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, IBlockWithOverlayEx {
+public class BlockLaserEmitter extends BlockContainerWithOverlay implements ILaserEmitter {
     public BlockLaserEmitter(int id) {
         super(id, Block.dispenser.blockIndexInTexture + 17, Material.rock);
     }
 
-    public final static int textureFront = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
-    public final static int textureSideLaserStrip = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStrip.png");
-    public final static int textureSideLaserStripOverlay = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStripOverlay.png");
+    private final static int textureFront = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontDefault.png");
+    private final static int textureSideLaserStrip = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStrip.png");
+    private final static int textureSideLaserStripOverlay = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideLaserStripOverlay.png");
 
-    public final static int textureFrontInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/frontInv.png");
-    public final static int textureSideInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideInv.png");
-    public final static int textureSideRotInv = TextureManager.getInstance().getTerrainTexture("/laserEmitter/sideRotInv.png");
-
-    public final static LaserMode[] operatingModes;
+    private final static LaserMode[] operatingModes;
 
     static {
         operatingModes = new LaserMode[] {
@@ -47,6 +45,11 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     }
 
     @Override
+    public boolean shouldOverlayBeRenderedInGUI(int side, int layer) {
+        return (side == 2 && layer == 1) || (side != 3 && side != 2 && (layer == 1 || layer == 2));
+    }
+
+    @Override
     public int getBlockOverlayTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
         if (side == DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)))
             return textureFront;
@@ -57,13 +60,13 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     }
 
     @Override
-    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(0D);
-    }
-
-    @Override
-    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(1D);
+    public int getBlockOverlayTextureInGUI(int side, int layer) {
+        if (side == 2)
+            return textureFront;
+        else if (layer == 1)
+            return textureSideLaserStrip;
+        else
+            return textureSideLaserStripOverlay;
     }
 
     @Override
@@ -93,19 +96,19 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     }
 
     @Override
-    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(0D);
-    }
-
-    @Override
-    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(1D);
+    public double getOverlayRotationInGUI(int side, int layer) {
+        return side > 1 ? 0D : 90D;
     }
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
         return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1) ?
                 operatingModes[getOperatingMode(iBlockAccess, x, y, z)].color : ColorRGB.Colors.Gray;
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplierInGUI(int side, int layer) {
+        return (side != 2 && layer == 1) ? operatingModes[0].color : ColorRGB.Colors.Gray;
     }
 
     @Override
@@ -119,23 +122,8 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
     }
 
     @Override
-    public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
-        return blockIndexInTexture;
-    }
-
-    @Override
     public int getBlockTextureFromSide(int side) {
-        switch (side) {
-            case 0:
-            case 1:
-                return textureSideRotInv;
-            case 3:
-                return textureFrontInv;
-            case 2:
-                return blockIndexInTexture;
-            default:
-                return textureSideInv;
-        }
+        return blockIndexInTexture;
     }
 
     @Override
@@ -184,49 +172,49 @@ public class BlockLaserEmitter extends BlockContainer implements ILaserEmitter, 
                 world.isBlockIndirectlyGettingPowered(x, y + 1, z);
     }
 
-    public static boolean getStateFromMetadata(int metadata) {
+    private static boolean getStateFromMetadata(int metadata) {
         return ((metadata & 0x8) >> 3) == 1;
     }
 
-    public static int getOrientationFromMetadata(int metadata) {
+    private static int getOrientationFromMetadata(int metadata) {
         return metadata & 0x7;
     }
 
-    public static int setStateInMetadata(int metadata, boolean state) {
+    private static int setStateInMetadata(int metadata, boolean state) {
         return ((metadata & 0x7) | ((state ? 1 : 0) << 3) & 0x8);
     }
 
-    public static int setOrientationInMetadata(int metadata, int orientation) {
+    private static int setOrientationInMetadata(int metadata, int orientation) {
         return ((metadata & 0x8) | (orientation & 0x7));
     }
 
-    public static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static boolean getState(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getStateFromMetadata(metadata);
     }
 
-    public static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static int getOrientation(IBlockAccess iBlockAccess, int x, int y, int z) {
         int metadata = iBlockAccess.getBlockMetadata(x, y, z);
         return getOrientationFromMetadata(metadata);
     }
 
-    public static void setState(World world, int x, int y, int z, boolean state) {
+    private static void setState(World world, int x, int y, int z, boolean state) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setStateInMetadata(oldMetadata, state);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    public static void setOrientation(World world, int x, int y, int z, int orientation) {
+    private static void setOrientation(World world, int x, int y, int z, int orientation) {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = setOrientationInMetadata(oldMetadata, orientation);
         world.setBlockMetadataWithNotify(x, y, z, newMetadata);
     }
 
-    public static int getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
+    private static int getOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z) {
         return ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode;
     }
 
-    public static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, int operatingMode) {
+    private static void setOperatingMode(IBlockAccess iBlockAccess, int x, int y, int z, int operatingMode) {
         ((TileEntityLaserEmitter)iBlockAccess.getBlockTileEntity(x, y, z)).operatingMode = operatingMode;
     }
 

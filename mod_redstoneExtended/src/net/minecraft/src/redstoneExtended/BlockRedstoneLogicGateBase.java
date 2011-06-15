@@ -3,12 +3,11 @@ package net.minecraft.src.redstoneExtended;
 import net.minecraft.src.*;
 import net.minecraft.src.redstoneExtended.Util.ColorRGB;
 import net.minecraft.src.redstoneExtended.Util.LoggingUtil;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
+import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 import java.util.Random;
 
-public abstract class BlockRedstoneLogicGateBase extends Block implements IBlockWithOverlayEx {
+public abstract class BlockRedstoneLogicGateBase extends BlockWithOverlay {
     private final boolean active;
 
     BlockRedstoneLogicGateBase(int id, boolean isActive) {
@@ -29,12 +28,9 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
 
     protected abstract int operatingModeCount();
 
-    public abstract int blockId(boolean active);
+    protected abstract int blockId(boolean active);
 
-    protected abstract int itemId();
-
-
-    public static int getOrientationFromMetadata(int metadata) {
+    private static int getOrientationFromMetadata(int metadata) {
         return metadata & 0x3;
     }
 
@@ -138,6 +134,11 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
     }
 
     @Override
+    public int idDropped(int metadata, Random random) {
+        return blockId(false);
+    }
+
+    @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
         return world.isBlockOpaqueCube(x, y - 1, z) &&
                 super.canPlaceBlockAt(world, x, y, z);
@@ -217,11 +218,6 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
             world.scheduleBlockUpdate(x, y, z, blockID, operatingModeDelay(operatingMode));
     }
 
-    @Override
-    public int idDropped(int i, Random random) {
-        return itemId();
-    }
-
 
     @Override
     public boolean isIndirectlyPoweringTo(World world, int x, int y, int z, int direction) {
@@ -259,8 +255,8 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
     }
 
     @Override
-    public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return (side == 1 && (layer == 1 | layer == 2 | layer == 3 | layer == 4));
+    public boolean shouldOverlayBeRenderedInGUI(int side, int layer) {
+        return (side == 1 && layer >= 1 && layer <= 4);
     }
 
     @Override
@@ -276,18 +272,13 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
             case 4:
                 return operatingModeTexture(operatingMode, 3, active);
             default:
-                return mod_redstoneExtended.getInstance().emptyTexture;
+                return TextureManager.getInstance().emptyTexture;
         }
     }
 
     @Override
-    public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(0D);
-    }
-
-    @Override
-    public Vector3d getOverlayScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector3d(1D);
+    public int getBlockOverlayTextureInGUI(int side, int layer) {
+        return operatingModeTexture(0, layer - 1, true);
     }
 
     @Override
@@ -296,13 +287,8 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
     }
 
     @Override
-    public Vector2d getOverlayTextureOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(0D);
-    }
-
-    @Override
-    public Vector2d getOverlayTextureScale(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
-        return new Vector2d(1D);
+    public double getOverlayRotationInGUI(int side, int layer) {
+        return 0D;
     }
 
     @Override
@@ -311,6 +297,15 @@ public abstract class BlockRedstoneLogicGateBase extends Block implements IBlock
             return ColorRGB.Colors.White;
 
         float[] redstoneColor = active ? RenderBlocks.redstoneColors[13] : RenderBlocks.redstoneColors[0];
+        return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
+    }
+
+    @Override
+    public ColorRGB getOverlayColorMultiplierInGUI(int side, int layer) {
+        if (layer != 1)
+            return ColorRGB.Colors.White;
+
+        float[] redstoneColor = RenderBlocks.redstoneColors[0];
         return new ColorRGB(redstoneColor[0], redstoneColor[1], redstoneColor[2]);
     }
 
