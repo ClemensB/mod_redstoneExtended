@@ -1,7 +1,7 @@
 <project>
     <property name="src" location="src"/>
     <property name="deploy" location="deploy"/>
-    <property name="resources" location="../mod_redstoneExtended_resources"/>
+    <property name="resources" location="../resources"/>
 
     <macrodef name="deleteEmptyDirectories">
         <attribute name="dir"/>
@@ -123,7 +123,9 @@
         <mkdir dir="${deploy}"/>
         <zip destfile="${deploy}/redstoneExtended.zip">
             <zipfileset dir="${mcp}/reobf/minecraft"/>
+            <zipfileset dir="${resources}/util" prefix="util"/>
             <zipfileset dir="${resources}/redstoneExtended" prefix="redstoneExtended"/>
+            <zipfileset dir="${resources}/lasers" prefix="lasers"/>
         </zip>
     </target>
 </project>

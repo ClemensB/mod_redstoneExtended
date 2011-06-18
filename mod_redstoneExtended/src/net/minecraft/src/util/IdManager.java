@@ -1,6 +1,8 @@
 package net.minecraft.src.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.BaseMod;
+import sun.reflect.Reflection;
 
 import java.io.*;
 import java.util.HashMap;
@@ -64,7 +66,26 @@ public class IdManager {
     }
 
     public int getId(String name, IdType idType) {
-        File configDir = new File(Minecraft.getMinecraftDir(), "/mods/mod_redstoneExtended/");
+        Class caller = Reflection.getCallerClass(2);
+        String callerName = caller.getSimpleName();
+
+        if (BaseMod.class.isAssignableFrom(caller) && callerName.startsWith("mod_") &&
+                callerName.length() > 4)
+            return getId(callerName.substring(4), name, idType);
+        else
+            throw new IllegalCallerException("This method has to be called by a BaseMod with the prefix mod_");
+    }
+
+    public int getId(BaseMod mod, String name, IdType idType) {
+        String modClassName = mod.getClass().getSimpleName();
+        if (modClassName.startsWith("mod_") && modClassName.length() > 4)
+            return getId(modClassName.substring(4), name, idType);
+        else
+            throw new IllegalArgumentException("The argument mod has to be a BaseMod with the prefix mod_");
+    }
+
+    public int getId(String modName, String name, IdType idType) {
+        File configDir = new File(Minecraft.getMinecraftDir(), "/mods/" + modName + "/");
 
         if (configDir.exists() || configDir.mkdir()) {
             File idFile = new File(configDir, "ids.properties");

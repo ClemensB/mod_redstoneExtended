@@ -355,7 +355,7 @@
     </library>
     <library name="Resources">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/../mod_redstoneExtended_resources" />
+        <root url="file://$PROJECT_DIR$/../resources" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

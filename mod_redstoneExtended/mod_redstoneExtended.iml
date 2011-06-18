@@ -8,7 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/deploy" />
     </content>
-    <content url="file://$MODULE_DIR$/../mod_redstoneExtended_resources" />
+    <content url="file://$MODULE_DIR$/../resources" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="RUNTIME" name="Resources" level="project" />
