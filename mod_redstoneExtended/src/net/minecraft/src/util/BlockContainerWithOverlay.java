@@ -6,16 +6,16 @@ import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 
 public abstract class BlockContainerWithOverlay extends BlockContainer implements IBlockWithOverlayEx {
-    public BlockContainerWithOverlay(int id, Material material) {
+    protected BlockContainerWithOverlay(int id, Material material) {
         super(id, material);
     }
-
-    @Override
-    public abstract TileEntity getBlockEntity();
 
     protected BlockContainerWithOverlay(int id, int texture, Material material) {
         super(id, texture, material);
     }
+
+    @Override
+    public abstract TileEntity getBlockEntity();
 
     @Override
     public boolean shouldOverlayBeRendered(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
