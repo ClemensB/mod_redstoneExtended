@@ -2,7 +2,7 @@ package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.World;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.util.TextureManager;
 
 public class BlockRedstoneJKFlipFlop extends BlockRedstoneFlipFlop {
     private static final int textureInputs = TextureManager.getInstance().getTerrainTexture("/flipFlops/JKFlipFlop/inputs.png");

@@ -1,32 +1,33 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.lasers;
 
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 
-public class TileEntityLaser extends TileEntity {
-    public int orientation = 0;
-    public int distance = 0;
-
+public class TileEntityLaserFocusLens extends TileEntity {
     public LaserMode mode = new LaserMode();
 
-    public TileEntityLaser() {
+    public int distance = 0;
+
+    public int operatingMode = 0;
+
+    public TileEntityLaserFocusLens() {
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        orientation = nbtTagCompound.getByte("Orientation");
-        distance = nbtTagCompound.getShort("Distance");
         mode = LaserMode.readFromNBT(nbtTagCompound.getCompoundTag("Mode"));
+        distance = nbtTagCompound.getShort("Distance");
+        operatingMode = nbtTagCompound.getByte("OperatingMode");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setByte("Orientation", (byte)orientation);
-        nbtTagCompound.setShort("Distance", (short)distance);
         NBTTagCompound modeTag = new NBTTagCompound();
         LaserMode.writeToNBT(modeTag, mode);
         nbtTagCompound.setCompoundTag("Mode", modeTag);
+        nbtTagCompound.setShort("Distance", (short)distance);
+        nbtTagCompound.setByte("OperatingMode", (byte)operatingMode);
     }
 }

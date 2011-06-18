@@ -1,10 +1,10 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.lasers;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.BlockContainerWithOverlay;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.util.BlockContainerWithOverlay;
+import net.minecraft.src.util.ColorRGB;
+import net.minecraft.src.util.DirectionUtil;
+import net.minecraft.src.util.TextureManager;
 
 import java.util.Random;
 

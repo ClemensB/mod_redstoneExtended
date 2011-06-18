@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.util;
 
 import net.minecraft.src.IBlockAccess;
 

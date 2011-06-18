@@ -1,14 +1,14 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.lasers;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.Util.DirectionUtil;
-import net.minecraft.src.redstoneExtended.Util.Position;
+import net.minecraft.src.util.DirectionUtil;
+import net.minecraft.src.util.Position;
 
 import java.util.Random;
 
 public class BlockLaser extends BlockContainer implements ILaserEmitter {
     public BlockLaser(int id) {
-        super(id, Block.glass.blockIndexInTexture, Materials.laser);
+        super(id, Block.glass.blockIndexInTexture, LaserMaterials.laser);
     }
 
     @Override

@@ -3,7 +3,7 @@ package net.minecraft.src.redstoneExtended;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.World;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.util.TextureManager;
 
 import java.util.Random;
 

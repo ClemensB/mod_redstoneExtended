@@ -1,13 +1,12 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.util;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.Tessellator;
-import net.minecraft.src.redstoneExtended.Util.*;
 import org.lwjgl.opengl.GL11;
 
-public class MyRenderBlocks {
+public class Renderers {
     public static boolean renderStandardBlockWithOverlay(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
@@ -121,7 +120,7 @@ public class MyRenderBlocks {
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    public static boolean renderBlockTorch(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
+    public static boolean renderBlockTorch(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z, double positionInCeilingY) {
         int orientation = iBlockAccess.getBlockMetadata(x, y, z) & 0x7;
         Tessellator tessellator = Tessellator.instance;
         float brightness = block.getBlockBrightness(iBlockAccess, x, y, z);
@@ -149,7 +148,7 @@ public class MyRenderBlocks {
                 renderBlocks.renderTorchAtAngle(block, x, y, z, 0.0D, 0.0D);
                 break;
             case 6:
-                RenderUtil.renderTorchOnCeiling(block, x, y + BlockRedstoneLightBulb.positionInCeilingY, z);
+                RenderUtil.renderTorchOnCeiling(block, x, y + positionInCeilingY, z);
                 break;
         }
         return true;

@@ -1,9 +1,10 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.LoggingUtil;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.util.BlockWithOverlay;
+import net.minecraft.src.util.ColorRGB;
+import net.minecraft.src.util.LoggingUtil;
+import net.minecraft.src.util.TextureManager;
 
 import java.util.Random;
 

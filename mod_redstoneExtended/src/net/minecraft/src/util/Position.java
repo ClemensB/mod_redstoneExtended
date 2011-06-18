@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended.Util;
+package net.minecraft.src.util;
 
 public class Position implements Cloneable {
     public int X = 0;

@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended.Util;
+package net.minecraft.src.util;
 
 public class Vector2d {
     public double X = 0D;

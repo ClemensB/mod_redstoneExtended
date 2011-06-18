@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.lasers;
 
 import net.minecraft.src.NBTTagCompound;
 

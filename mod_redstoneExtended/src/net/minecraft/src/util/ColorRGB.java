@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended.Util;
+package net.minecraft.src.util;
 
 import net.minecraft.src.NBTTagCompound;
 

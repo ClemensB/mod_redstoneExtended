@@ -1,9 +1,6 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.util;
 
 import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
 
 public interface IBlockWithOverlayEx extends IBlockWithOverlay {
     public Vector3d getOverlayOffset(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer);

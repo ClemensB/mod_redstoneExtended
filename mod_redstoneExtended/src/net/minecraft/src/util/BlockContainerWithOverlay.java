@@ -1,19 +1,19 @@
-package net.minecraft.src.redstoneExtended;
+package net.minecraft.src.util;
 
-import net.minecraft.src.Block;
+import net.minecraft.src.BlockContainer;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Material;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
+import net.minecraft.src.TileEntity;
 
-public abstract class BlockWithOverlay extends Block implements IBlockWithOverlayEx {
-    public BlockWithOverlay(int id, Material material) {
+public abstract class BlockContainerWithOverlay extends BlockContainer implements IBlockWithOverlayEx {
+    public BlockContainerWithOverlay(int id, Material material) {
         super(id, material);
     }
 
-    BlockWithOverlay(int id, int texture, Material material) {
+    @Override
+    public abstract TileEntity getBlockEntity();
+
+    protected BlockContainerWithOverlay(int id, int texture, Material material) {
         super(id, texture, material);
     }
 

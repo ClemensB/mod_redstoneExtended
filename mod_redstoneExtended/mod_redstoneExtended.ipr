@@ -245,6 +245,7 @@
         <w>lzma</w>
         <w>minecraft</w>
         <w>mltemp</w>
+        <w>renderers</w>
         <w>reobf</w>
         <w>reobfuscate</w>
         <w>totalcleanupkeepsaves</w>

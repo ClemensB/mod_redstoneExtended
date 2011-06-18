@@ -1,10 +1,7 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
-import net.minecraft.src.redstoneExtended.Util.Vector2d;
-import net.minecraft.src.redstoneExtended.Util.Vector3d;
+import net.minecraft.src.util.*;
 
 public class BlockRedstoneLightSensor extends BlockContainerWithOverlay {
     private final int textureSun = TextureManager.getInstance().getTerrainTexture("/lightSensor/sun.png");

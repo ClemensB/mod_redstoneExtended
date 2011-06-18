@@ -1,4 +1,4 @@
-package net.minecraft.src.redstoneExtended.Util;
+package net.minecraft.src.util;
 
 public class LoggingUtil {
     public static void logInfo(String text) {

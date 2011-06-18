@@ -1,8 +1,7 @@
-package net.minecraft.src.redstoneExtended.Laser;
+package net.minecraft.src.lasers;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.BlockContainerWithOverlay;
-import net.minecraft.src.redstoneExtended.Util.*;
+import net.minecraft.src.util.*;
 
 import java.util.LinkedList;
 import java.util.Random;

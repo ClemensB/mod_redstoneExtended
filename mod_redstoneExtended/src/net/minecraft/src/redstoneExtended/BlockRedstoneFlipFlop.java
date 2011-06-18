@@ -1,7 +1,8 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
+import net.minecraft.src.util.BlockWithOverlay;
+import net.minecraft.src.util.ColorRGB;
 
 import java.util.Random;
 

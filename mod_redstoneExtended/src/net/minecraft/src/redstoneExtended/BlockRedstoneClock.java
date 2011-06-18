@@ -1,8 +1,9 @@
 package net.minecraft.src.redstoneExtended;
 
 import net.minecraft.src.*;
-import net.minecraft.src.redstoneExtended.Util.ColorRGB;
-import net.minecraft.src.redstoneExtended.Util.TextureManager;
+import net.minecraft.src.util.BlockContainerWithOverlay;
+import net.minecraft.src.util.ColorRGB;
+import net.minecraft.src.util.TextureManager;
 
 public class BlockRedstoneClock extends BlockContainerWithOverlay {
     private static final int texture = TextureManager.getInstance().getTerrainTexture("/clock/clock.png");
