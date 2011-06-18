@@ -34,10 +34,6 @@ public class mod_redstoneExtended extends BaseMod {
     public final Block blockRedstoneRandom;
     public final Block blockRedstoneHardenedTorchActive;
     public final Block blockRedstoneHardenedTorchIdle;
-    public final Block blockLaserEmitter;
-    public final Block blockLaser;
-    public final Block blockLaserFocusLens;
-    public final Block blockLaserMirror;
     public final Block blockCheat;
 
 
@@ -76,10 +72,6 @@ public class mod_redstoneExtended extends BaseMod {
         blockRedstoneRandom = (new BlockRedstoneRandom(IdManager.getInstance().getId("redstoneRandom", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundStoneFootstep).setBlockName("redstoneRandom");
         blockRedstoneHardenedTorchIdle = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchIdle", IdManager.IdType.Block), TextureManager.getInstance().getTerrainTexture("/hardenedTorch/idle.png"), false)).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
         blockRedstoneHardenedTorchActive = (new BlockRedstoneHardenedTorch(IdManager.getInstance().getId("redstoneHardenedTorchActive", IdManager.IdType.Block), TextureManager.getInstance().getTerrainTexture("/hardenedTorch/active.png"), true)).setHardness(0.0F).setLightValue(0.5F).setStepSound(Block.soundMetalFootstep).setBlockName("redstoneHardenedTorch");
-        blockLaser = (new net.minecraft.src.lasers.BlockLaser(IdManager.getInstance().getId("laser", IdManager.IdType.Block))).setHardness(-1.0F).setResistance(6000000F).setLightValue(0.625F).setStepSound(Block.soundGlassFootstep).setBlockName("laser");
-        blockLaserEmitter = (new net.minecraft.src.lasers.BlockLaserEmitter(IdManager.getInstance().getId("laserEmitter", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserEmitter");
-        blockLaserFocusLens = (new net.minecraft.src.lasers.BlockLaserFocusLens(IdManager.getInstance().getId("laserFocusLens", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserFocusLens");
-        blockLaserMirror = (new net.minecraft.src.lasers.BlockLaserMirror(IdManager.getInstance().getId("laserMirror", IdManager.IdType.Block))).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setBlockName("laserMirror");
         blockCheat = (new BlockCheat(IdManager.getInstance().getId("cheatBlock", IdManager.IdType.Block))).setHardness(0.0F).setStepSound(Block.soundMetalFootstep).setBlockName("cheatBlock");
 
 
@@ -108,10 +100,6 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.RegisterBlock(blockRedstoneRandom);
         ModLoader.RegisterBlock(blockRedstoneHardenedTorchIdle);
         ModLoader.RegisterBlock(blockRedstoneHardenedTorchActive, ItemRedstoneHardenedTorch.class);
-        ModLoader.RegisterBlock(blockLaserEmitter);
-        ModLoader.RegisterBlock(blockLaser);
-        ModLoader.RegisterBlock(blockLaserFocusLens);
-        ModLoader.RegisterBlock(blockLaserMirror);
         ModLoader.RegisterBlock(blockCheat);
 
 
@@ -132,9 +120,6 @@ public class mod_redstoneExtended extends BaseMod {
         ModLoader.AddName(blockRedstoneRandom, "Random Number Generator");
         ModLoader.AddLocalization(blockRedstoneHardenedTorchActive.getBlockName() + ".hardened.name", "Hardened Redstone Torch");
         ModLoader.AddLocalization(blockRedstoneHardenedTorchActive.getBlockName() + ".highSpeed.name", "High Speed Redstone Torch");
-        ModLoader.AddName(blockLaserEmitter, "Laser Emitter");
-        ModLoader.AddName(blockLaserFocusLens, "Laser Focus Lens");
-        ModLoader.AddName(blockLaserMirror, "Laser Mirror");
         ModLoader.AddName(blockCheat, "Cheat Block");
 
 
@@ -224,18 +209,6 @@ public class mod_redstoneExtended extends BaseMod {
 
         ModLoader.AddRecipe(new ItemStack(blockRedstoneHardenedTorchActive, 1, 1), new Object[] {
                 " _ ", "_I_", '_', Item.redstone, 'I', new ItemStack(blockRedstoneHardenedTorchActive, 1, 0)
-        });
-
-        ModLoader.AddRecipe(new ItemStack(blockLaserEmitter, 1), new Object[] {
-                "OOO", "O_#", "OOO", 'O', Block.stone, '_', Item.redstone, '#', Block.glass
-        });
-
-        ModLoader.AddRecipe(new ItemStack(blockLaserFocusLens, 1), new Object[] {
-                "OOO", "###", "OOO", 'O', Block.stone, '#', Block.glass
-        });
-
-        ModLoader.AddRecipe(new ItemStack(blockLaserMirror, 1), new Object[] {
-                "#OO", "###", "#OO", 'O', Block.stone, '#', Block.glass
         });
 
         if (LoggingUtil.isDebug()) {
