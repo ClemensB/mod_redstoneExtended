@@ -3,7 +3,7 @@ package net.minecraft.src.redstoneExtended;
 import net.minecraft.src.mod_redstoneExtended;
 import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
-public class BlockRedstoneLogicGateOR extends BlockRedstoneLogicGateBase {
+public class BlockRedstoneLogicGateOR extends BlockRedstoneLogicGate {
     private static final int textureBase = TextureManager.getInstance().getTerrainTexture("/logicGates/OR/base.png");
     private static final int textureInputA = TextureManager.getInstance().getTerrainTexture("/logicGates/OR/inputA.png");
     private static final int textureInputB = TextureManager.getInstance().getTerrainTexture("/logicGates/OR/inputB.png");

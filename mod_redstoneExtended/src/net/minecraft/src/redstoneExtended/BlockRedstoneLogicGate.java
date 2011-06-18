@@ -7,10 +7,10 @@ import net.minecraft.src.redstoneExtended.Util.TextureManager;
 
 import java.util.Random;
 
-public abstract class BlockRedstoneLogicGateBase extends BlockWithOverlay {
+public abstract class BlockRedstoneLogicGate extends BlockWithOverlay {
     private final boolean active;
 
-    BlockRedstoneLogicGateBase(int id, boolean isActive) {
+    BlockRedstoneLogicGate(int id, boolean isActive) {
         super(id, Block.stairSingle.getBlockTextureFromSideAndMetadata(1, 0), Material.circuits);
         active = isActive;
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
