@@ -44,17 +44,17 @@ public class mod_lasers extends BaseMod {
     }
 
     private void registerRecipes() {
-        ModLoader.AddRecipe(new ItemStack(blockLaserEmitter, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockLaserEmitter, 1),
                 "OOO", "O_#", "OOO", 'O', Block.stone, '_', Item.redstone, '#', Block.glass
-        });
+        );
 
-        ModLoader.AddRecipe(new ItemStack(blockLaserFocusLens, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockLaserFocusLens, 1),
                 "OOO", "###", "OOO", 'O', Block.stone, '#', Block.glass
-        });
+        );
 
-        ModLoader.AddRecipe(new ItemStack(blockLaserMirror, 1), new Object[] {
+        ModLoader.AddRecipe(new ItemStack(blockLaserMirror, 1),
                 "#OO", "###", "#OO", 'O', Block.stone, '#', Block.glass
-        });
+        );
     }
 
     @Override
