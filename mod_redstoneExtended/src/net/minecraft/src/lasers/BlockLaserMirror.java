@@ -79,6 +79,12 @@ public class BlockLaserMirror extends BlockContainerWithOverlay implements ILase
     }
 
     @Override
+    public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1 &&
+                getState(iBlockAccess, x, y, z));
+    }
+
+    @Override
     public int tickRate() {
         return 1;
     }
