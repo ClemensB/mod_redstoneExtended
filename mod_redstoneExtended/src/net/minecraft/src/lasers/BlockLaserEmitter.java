@@ -102,8 +102,10 @@ public class BlockLaserEmitter extends BlockContainerWithOverlay implements ILas
 
     @Override
     public ColorRGB getOverlayColorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        ColorRGB color = operatingModes[getOperatingMode(iBlockAccess, x, y, z)].color.getClone().multiply(
+                getState(iBlockAccess, x, y, z) ? 1F : 0.5F);
         return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1) ?
-                operatingModes[getOperatingMode(iBlockAccess, x, y, z)].color : ColorRGB.Colors.Gray;
+                color : ColorRGB.Colors.Gray;
     }
 
     @Override
@@ -114,6 +116,11 @@ public class BlockLaserEmitter extends BlockContainerWithOverlay implements ILas
     @Override
     public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
         return (side != DirectionUtil.invertDirection(getOrientation(iBlockAccess, x, y, z)) && layer == 1);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLightingInGUI(int side, int layer) {
+        return side != 2 && layer == 1;
     }
 
     @Override

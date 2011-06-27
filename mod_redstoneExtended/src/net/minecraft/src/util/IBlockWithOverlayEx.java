@@ -28,4 +28,6 @@ public interface IBlockWithOverlayEx extends IBlockWithOverlay {
     public ColorRGB getOverlayColorMultiplierInGUI(int side, int layer);
 
     public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer);
+
+    public boolean shouldOverlayIgnoreLightingInGUI(int side, int layer);
 }

@@ -113,6 +113,7 @@ public class Renderers {
                         Vector2d textureOffset = new Vector2d(0D);
                         Vector2d textureScale = new Vector2d(1D);
                         ColorRGB colorMultiplier = ColorRGB.Colors.White;
+                        boolean ignoreLighting = false;
 
                         if (block instanceof IBlockWithOverlayEx) {
                             IBlockWithOverlayEx iBlockWithOverlayEx = (IBlockWithOverlayEx)block;
@@ -123,13 +124,19 @@ public class Renderers {
                             textureOffset = iBlockWithOverlayEx.getOverlayTextureOffsetInGUI(face, layer);
                             textureScale = iBlockWithOverlayEx.getOverlayTextureScaleInGUI(face, layer);
                             colorMultiplier = iBlockWithOverlayEx.getOverlayColorMultiplierInGUI(face, layer);
+                            ignoreLighting = iBlockWithOverlayEx.shouldOverlayIgnoreLightingInGUI(face, layer);
                         }
+
+                        float colorR = (ignoreLighting ? 1F : lightingColorMultiplierR) *
+                                ((float)colorMultiplier.R / 255);
+                        float colorG = (ignoreLighting ? 1F : lightingColorMultiplierG) *
+                                ((float)colorMultiplier.G / 255);
+                        float colorB = (ignoreLighting ? 1F : lightingColorMultiplierB) *
+                                ((float)colorMultiplier.B / 255);
 
                         tessellator.startDrawingQuads();
                         tessellator.setNormal((float)normal.X, (float)normal.Y, (float)normal.Z);
-                        tessellator.setColorOpaque_F(lightingColorMultiplierR * ((float)colorMultiplier.R / 255F),
-                                lightingColorMultiplierG * ((float)colorMultiplier.G / 255F),
-                                lightingColorMultiplierB * ((float)colorMultiplier.B / 255F));
+                        tessellator.setColorOpaque_F(colorR, colorG, colorB);
 
                         RenderUtil.renderBlockFaceEx(block, face, new Vector3d(0D), textureId,
                                 layer, offset, scale, rotation, textureOffset, textureScale);

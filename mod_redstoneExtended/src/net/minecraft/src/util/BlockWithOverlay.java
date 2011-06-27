@@ -95,6 +95,11 @@ public abstract class BlockWithOverlay extends Block implements IBlockWithOverla
 
     @Override
     public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return shouldOverlayIgnoreLightingInGUI(side, layer);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLightingInGUI(int side, int layer) {
         return false;
     }
 }

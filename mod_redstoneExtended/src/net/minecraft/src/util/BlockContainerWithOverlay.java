@@ -99,6 +99,11 @@ public abstract class BlockContainerWithOverlay extends BlockContainer implement
 
     @Override
     public boolean shouldOverlayIgnoreLighting(IBlockAccess iBlockAccess, int x, int y, int z, int side, int layer) {
+        return shouldOverlayIgnoreLightingInGUI(side, layer);
+    }
+
+    @Override
+    public boolean shouldOverlayIgnoreLightingInGUI(int side, int layer) {
         return false;
     }
 }

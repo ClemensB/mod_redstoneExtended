@@ -64,6 +64,13 @@ public class ColorRGB implements Cloneable {
                 (B == color.B));
     }
 
+    public ColorRGB multiply(float factor) {
+        R = (int)((float)R * factor);
+        G = (int)((float)G * factor);
+        B = (int)((float)B * factor);
+        return this;
+    }
+
     public static final class Colors {
         public static final ColorRGB White = new ColorRGB(255);
         public static final ColorRGB Gray = new ColorRGB(128);
