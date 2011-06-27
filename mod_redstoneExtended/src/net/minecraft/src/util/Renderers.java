@@ -4,10 +4,14 @@ import net.minecraft.src.Block;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.Tessellator;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.nio.FloatBuffer;
+
 public class Renderers {
-    public static boolean renderStandardBlockWithOverlay(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z) {
+    public static boolean renderStandardBlockWithOverlay(RenderBlocks renderBlocks, IBlockAccess iBlockAccess,
+                                                         Block block, int x, int y, int z) {
         renderBlocks.renderStandardBlock(block, x, y, z);
 
         if (block instanceof IBlockWithOverlay) {
@@ -30,14 +34,19 @@ public class Renderers {
                             offset = iBlockWithOverlayEx.getOverlayOffset(iBlockAccess, x, y, z, face, layer);
                             scale = iBlockWithOverlayEx.getOverlayScale(iBlockAccess, x, y, z, face, layer);
                             rotation = iBlockWithOverlayEx.getOverlayRotation(iBlockAccess, x, y, z, face, layer);
-                            textureOffset = iBlockWithOverlayEx.getOverlayTextureOffset(iBlockAccess, x, y, z, face, layer);
-                            textureScale = iBlockWithOverlayEx.getOverlayTextureScale(iBlockAccess, x, y, z, face, layer);
-                            colorMultiplier = iBlockWithOverlayEx.getOverlayColorMultiplier(iBlockAccess, x, y, z, face, layer);
-                            ignoreLighting = iBlockWithOverlayEx.shouldOverlayIgnoreLighting(iBlockAccess, x, y, z, face, layer);
+                            textureOffset = iBlockWithOverlayEx.getOverlayTextureOffset(iBlockAccess, x, y, z,
+                                    face, layer);
+                            textureScale = iBlockWithOverlayEx.getOverlayTextureScale(iBlockAccess, x, y, z,
+                                    face, layer);
+                            colorMultiplier = iBlockWithOverlayEx.getOverlayColorMultiplier(iBlockAccess, x, y, z,
+                                    face, layer);
+                            ignoreLighting = iBlockWithOverlayEx.shouldOverlayIgnoreLighting(iBlockAccess, x, y, z,
+                                    face, layer);
                         }
 
                         RenderUtil.renderFaceOfBlockEx(iBlockAccess, block, face, new Position(x, y, z), textureId,
-                                layer, offset, scale, rotation, textureOffset, textureScale, colorMultiplier, ignoreLighting);
+                                layer, offset, scale, rotation, textureOffset, textureScale, colorMultiplier,
+                                ignoreLighting);
                     }
                 }
             }
@@ -46,8 +55,15 @@ public class Renderers {
         return true;
     }
 
-    public static void renderStandardBlockWithOverlayInv(RenderBlocks renderBlocks, Block block, int metadata) {
+    public static void renderStandardBlockWithOverlayInv(Block block, int metadata) {
         Tessellator tessellator = Tessellator.instance;
+
+        FloatBuffer colorFloatBuffer = BufferUtils.createFloatBuffer(16);
+        GL11.glGetFloat(GL11.GL_CURRENT_COLOR, colorFloatBuffer);
+
+        float lightingColorMultiplierR = colorFloatBuffer.get(0);
+        float lightingColorMultiplierG = colorFloatBuffer.get(1);
+        float lightingColorMultiplierB = colorFloatBuffer.get(2);
 
         block.setBlockBoundsForItemRender();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -78,10 +94,14 @@ public class Renderers {
                 }
 
                 tessellator.startDrawingQuads();
-                tessellator.setColorOpaque(255, 255, 255);
+                tessellator.setColorOpaque_F(lightingColorMultiplierR, lightingColorMultiplierG,
+                        lightingColorMultiplierB);
                 tessellator.setNormal((float)normal.X, (float)normal.Y, (float)normal.Z);
-                RenderUtil.renderBlockFaceEx(block, face, new Vector3d(0D), block.getBlockTextureFromSideAndMetadata(face, metadata),
+
+                RenderUtil.renderBlockFaceEx(block, face, new Vector3d(0D),
+                        block.getBlockTextureFromSideAndMetadata(face, metadata),
                         0, new Vector3d(0D), new Vector3d(1D), 0D, new Vector2d(0D), new Vector2d(1D));
+
                 tessellator.draw();
 
                 for (int layer = 0; layer < 8; layer++) {
@@ -107,10 +127,13 @@ public class Renderers {
 
                         tessellator.startDrawingQuads();
                         tessellator.setNormal((float)normal.X, (float)normal.Y, (float)normal.Z);
-                        tessellator.setColorOpaque(colorMultiplier.R, colorMultiplier.G, colorMultiplier.B);
+                        tessellator.setColorOpaque_F(lightingColorMultiplierR * ((float)colorMultiplier.R / 255F),
+                                lightingColorMultiplierG * ((float)colorMultiplier.G / 255F),
+                                lightingColorMultiplierB * ((float)colorMultiplier.B / 255F));
+
                         RenderUtil.renderBlockFaceEx(block, face, new Vector3d(0D), textureId,
                                 layer, offset, scale, rotation, textureOffset, textureScale);
-                        tessellator.setColorOpaque(255, 255, 255);
+
                         tessellator.draw();
                     }
                 }
@@ -120,7 +143,8 @@ public class Renderers {
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    public static boolean renderBlockTorch(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block, int x, int y, int z, double positionInCeilingY) {
+    public static boolean renderBlockTorch(RenderBlocks renderBlocks, IBlockAccess iBlockAccess, Block block,
+                                           int x, int y, int z, double positionInCeilingY) {
         int orientation = iBlockAccess.getBlockMetadata(x, y, z) & 0x7;
         Tessellator tessellator = Tessellator.instance;
         float brightness = block.getBlockBrightness(iBlockAccess, x, y, z);

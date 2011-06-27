@@ -71,7 +71,7 @@ public class mod_lasers extends BaseMod {
     @Override
     public void RenderInvBlock(RenderBlocks renderBlocks, Block block, int metadata, int renderType) {
         if (renderType == renderStandardBlockWithOverlay) {
-            Renderers.renderStandardBlockWithOverlayInv(renderBlocks, block, metadata);
+            Renderers.renderStandardBlockWithOverlayInv(block, metadata);
         }
     }
 
