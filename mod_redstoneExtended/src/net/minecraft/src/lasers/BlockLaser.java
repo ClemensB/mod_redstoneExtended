@@ -154,6 +154,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
         int parentBlockId = world.getBlockId(parentPos.X, parentPos.Y, parentPos.Z);
         if (!((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)).equals(getLaserMode(world, x, y, z))) {
             setLaserMode(world, x, y, z, ((ILaserEmitter)Block.blocksList[parentBlockId]).getLaserModeProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)));
+            world.markBlocksDirty(x, y, z, x, y, z);
             world.notifyBlocksOfNeighborChange(x, y, z, blockID);
         }
         if (!(((ILaserEmitter)Block.blocksList[parentBlockId]).getInitialDistanceProvidedInDirection(world, parentPos.X, parentPos.Y, parentPos.Z, getOrientation(world, x, y, z)) == getDistance(world, x, y, z))) {

@@ -81,6 +81,7 @@ class LaserUtil {
         if (blockUpdateNecessary) {
             world.markBlockAsNeedsUpdate(laserPos.X, laserPos.Y, laserPos.Z);
             world.notifyBlocksOfNeighborChange(laserPos.X, laserPos.Y, laserPos.Z, laserBlockId);
+            world.markBlocksDirty(laserPos.X, laserPos.Y, laserPos.Z, laserPos.X, laserPos.Y, laserPos.Z);
         }
     }
 }
