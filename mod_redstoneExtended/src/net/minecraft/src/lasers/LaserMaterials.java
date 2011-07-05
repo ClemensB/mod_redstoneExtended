@@ -8,6 +8,6 @@ class LaserMaterials {
     public static final Material laser;
 
     static {
-        laser = new MaterialTransparent(MapColor.Air_color);
+        laser = new MaterialTransparent(MapColor.airColor);
     }
 }

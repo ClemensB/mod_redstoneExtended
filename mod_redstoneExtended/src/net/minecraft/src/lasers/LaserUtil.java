@@ -19,7 +19,7 @@ class LaserUtil {
 
         if (laserEmitter.isProvidingLaserPowerInDirection(world, x, y, z, direction)) {
             if ((laserBlockId == 0) ||
-                    ((Block.blocksList[laserBlockId].blockMaterial.func_27283_g()) &&
+                    ((Block.blocksList[laserBlockId].blockMaterial.getIsGroundCover()) &&
                             (Block.blocksList[laserBlockId].blockMaterial != net.minecraft.src.lasers.LaserMaterials.laser)))
                 return true;
 
@@ -49,7 +49,7 @@ class LaserUtil {
 
         if (laserEmitter.isProvidingLaserPowerInDirection(world, x, y, z, direction)) {
             if ((laserBlockId == 0) ||
-                    ((Block.blocksList[laserBlockId].blockMaterial.func_27283_g()) &&
+                    ((Block.blocksList[laserBlockId].blockMaterial.getIsGroundCover()) &&
                             (Block.blocksList[laserBlockId].blockMaterial != net.minecraft.src.lasers.LaserMaterials.laser))) {
                 world.setBlock(laserPos.X, laserPos.Y, laserPos.Z, mod_lasers.getInstance().blockLaser.blockID);
 

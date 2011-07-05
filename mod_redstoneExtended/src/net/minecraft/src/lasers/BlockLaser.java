@@ -91,7 +91,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
             Position nextPos = new Position(x, y, z).moveInDirection(getOrientation(world, x, y, z));
             if (world.getBlockMaterial(nextPos.X, nextPos.Y, nextPos.Z).getBurning()) {
                 Position abovePos = nextPos.moveInDirection(0);
-                if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).func_27283_g())
+                if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).getIsGroundCover())
                     return true;
             }
         }
@@ -166,7 +166,7 @@ public class BlockLaser extends BlockContainer implements ILaserEmitter {
             Position nextPos = new Position(x, y, z).moveInDirection(getOrientation(world, x, y, z));
             if (world.getBlockMaterial(nextPos.X, nextPos.Y, nextPos.Z).getBurning()) {
                 Position abovePos = nextPos.moveInDirection(0);
-                if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).func_27283_g()) {
+                if (world.getBlockMaterial(abovePos.X, abovePos.Y, abovePos.Z).getIsGroundCover()) {
                     world.setBlockWithNotify(nextPos.X, nextPos.Y, nextPos.Z, Block.fire.blockID);
                 }
             }
